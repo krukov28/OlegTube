@@ -23,15 +23,6 @@
             padding: 16px;
         }
 
-        /* Анти-инспект: затемнение при открытии DevTools (не блокирует, но мешает) */
-        body:has(div[style*="block"]:not([style*="none"])) .app-container,
-        body:has(div[style*="block"]:not([style*="none"])) .auth-container {
-            filter: blur(5px);
-            pointer-events: none;
-            transition: 0.2s;
-        }
-
-        /* Контейнер для авторизации */
         .auth-container {
             max-width: 400px;
             width: 100%;
@@ -98,7 +89,6 @@
             font-size: 0.9rem;
         }
 
-        /* Основное приложение (скрыто до входа) */
         .app-container {
             max-width: 580px;
             width: 100%;
@@ -321,18 +311,6 @@
             border-radius: 16px;
             margin-top: 20px;
         }
-        
-        /* Блокировка выделения текста (затрудняет копирование) */
-        body {
-            user-select: none;
-            -webkit-user-select: none;
-        }
-        
-        /* Разрешаем выделение в полях ввода */
-        input, textarea {
-            user-select: text;
-            -webkit-user-select: text;
-        }
     </style>
 </head>
 <body>
@@ -419,49 +397,19 @@
         arrayUnion, 
         arrayRemove,
         setDoc,
-        onSnapshot,
-        writeBatch
+        onSnapshot
     } from "firebase/firestore";
     
-    // ========== ЗАЩИТА ОТ F12 И ИНСПЕКТИРОВАНИЯ ==========
-    // Блокировка клавиш разработчика
+    // ========== ЛЁГКАЯ ЗАЩИТА (не мешает пользователям) ==========
+    // Блокировка только самых частых комбинаций (без размытия)
     document.addEventListener('keydown', function(e) {
-        // F12, Ctrl+Shift+I, Ctrl+Shift+C, Ctrl+U, Ctrl+S
-        if (e.key === 'F12' || 
-            (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'C')) ||
-            (e.ctrlKey && e.key === 'u') ||
-            (e.ctrlKey && e.key === 's')) {
+        // Блокируем только F12 и Ctrl+Shift+I (самые частые)
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
             e.preventDefault();
+            console.log("🔒 Инструменты разработчика отключены");
             return false;
         }
     });
-    
-    // Блокировка правой кнопки мыши
-    document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-        return false;
-    });
-    
-    // Обнаружение открытого DevTools через проверку времени выполнения
-    setInterval(function() {
-        const start = performance.now();
-        debugger; // Если DevTools открыт, debugger замедлит выполнение
-        const end = performance.now();
-        if (end - start > 100) {
-            // DevTools открыт — очищаем консоль и показываем предупреждение
-            console.clear();
-            document.body.style.filter = 'blur(5px)';
-            setTimeout(() => {
-                alert('⚠️ Инструменты разработчика отключены для безопасности сайта');
-                document.body.style.filter = 'none';
-            }, 100);
-        }
-    }, 3000);
-    
-    // Очистка консоли каждые 100 мс (затрудняет чтение)
-    setInterval(() => {
-        console.clear();
-    }, 100);
     
     // ========== FIREBASE КОНФИГ ==========
     const firebaseConfig = {
@@ -484,14 +432,6 @@
     let allPosts = [];
     let unsubscribeRealtime = null;
     
-    // ========== ЗАЩИТА: проверка авторизации перед каждым действием ==========
-    function checkAuth() {
-        if (!currentUser) {
-            throw new Error("Не авторизован");
-        }
-        return true;
-    }
-    
     // ========== РЕГИСТРАЦИЯ И ВХОД ==========
     async function registerUser(username, password) {
         if (!username || !password) throw new Error("Заполните все поля");
@@ -508,8 +448,7 @@
         await setDoc(userRef, {
             username: username,
             password: password,
-            createdAt: new Date().toISOString(),
-            role: "user"
+            createdAt: new Date().toISOString()
         });
         
         return { username };
@@ -528,10 +467,10 @@
             throw new Error("Неверный пароль");
         }
         
-        return { username, userId: username, role: userData.role || "user" };
+        return { username, userId: username };
     }
     
-    // ========== ПОСТЫ С ПРОВЕРКОЙ АВТОРИЗАЦИИ ==========
+    // ========== ПОСТЫ ==========
     async function getAllPosts() {
         try {
             const q = query(collection(db, "posts"), orderBy("timestamp", "desc"));
@@ -548,27 +487,23 @@
     }
     
     async function addPost(text) {
-        checkAuth();
+        if (!currentUser) throw new Error("Не авторизован");
         if (!text.trim()) throw new Error("Пустой пост");
-        
-        // Очистка текста от потенциально опасного кода
-        const cleanText = text.trim().replace(/<script[^>]*>.*?<\/script>/gi, '');
         
         const newPost = {
             author: currentUser.username,
-            text: cleanText,
+            text: text.trim(),
             timestamp: new Date(),
             userId: currentUser.username,
             likes: [],
-            likesCount: 0,
-            userAgent: navigator.userAgent.substring(0, 100) // для защиты
+            likesCount: 0
         };
         
         await addDoc(collection(db, "posts"), newPost);
     }
     
     async function toggleLike(postId) {
-        checkAuth();
+        if (!currentUser) return;
         const postRef = doc(db, "posts", postId);
         const postSnap = await getDoc(postRef);
         if (!postSnap.exists()) return;
@@ -624,7 +559,7 @@
             if (m === '<') return '&lt;';
             if (m === '>') return '&gt;';
             return m;
-        }).replace(/[\\]/g, '&#92;');
+        });
     }
     
     async function renderFeed() {
@@ -638,9 +573,8 @@
         
         container.innerHTML = allPosts.map(post => {
             const hasLiked = post.likes?.includes(currentUser?.username);
-            const isAuthor = post.userId === currentUser?.username;
             return `
-                <div class="post-card" data-id="${post.id}">
+                <div class="post-card">
                     <div class="post-author">
                         <div class="avatar">${escapeHtml(post.author.charAt(0).toUpperCase())}</div>
                         <div>
@@ -662,7 +596,6 @@
         
         document.querySelectorAll('.like-btn').forEach(btn => {
             btn.onclick = async () => {
-                if (!currentUser) return;
                 await toggleLike(btn.dataset.id);
                 await loadPosts();
             };
@@ -701,20 +634,20 @@
     
     async function loadPosts() {
         allPosts = await getAllPosts();
-        if (currentPanel === 'home' && currentUser) await renderFeed();
-        if (currentPanel === 'profile' && currentUser) await updateProfile();
+        if (currentPanel === 'home') await renderFeed();
+        if (currentPanel === 'profile') await updateProfile();
     }
     
     function setupRealtime() {
         if (unsubscribeRealtime) unsubscribeRealtime();
         unsubscribeRealtime = subscribeToPosts(async (posts) => {
             allPosts = posts;
-            if (currentPanel === 'home' && currentUser) await renderFeed();
-            if (currentPanel === 'search' && currentUser) {
+            if (currentPanel === 'home') await renderFeed();
+            if (currentPanel === 'search') {
                 const input = document.getElementById('searchInput');
                 if (input?.value) await performSearch(input.value);
             }
-            if (currentPanel === 'profile' && currentUser) await updateProfile();
+            if (currentPanel === 'profile') await updateProfile();
         });
     }
     
@@ -751,7 +684,6 @@
     const postInput = document.getElementById('postTextInput');
     
     function openModal() {
-        if (!currentUser) return;
         postInput.value = '';
         modal.classList.add('active');
     }
@@ -759,10 +691,6 @@
         modal.classList.remove('active');
     }
     async function submitPost() {
-        if (!currentUser) {
-            alert("Авторизуйтесь для создания поста");
-            return;
-        }
         const text = postInput.value;
         if (!text.trim()) {
             alert("Напишите что-нибудь");
@@ -853,10 +781,7 @@
     loginBtn.onclick = handleAuth;
     loginPassword.onkeypress = (e) => { if (e.key === 'Enter') handleAuth(); };
     
-    // Защита от подмены данных в консоли
-    Object.freeze(window);
-    
-    console.log("🚀 OlegTube с усиленной защитой готов!");
+    console.log("🚀 OlegTube готов!");
 </script>
 </body>
 </html>
