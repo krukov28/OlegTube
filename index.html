@@ -3,33 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>OlegTube — Вход</title>
+    <title>OlegTube — Социальная сеть</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Анти-инспекция: защита от выделения и копирования */
-        * {
-            -webkit-tap-highlight-color: transparent;
-            user-select: none; /* Запрет выделения текста */
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-        }
-        
-        /* Разрешаем выделение только в полях ввода */
-        input, textarea {
-            user-select: text;
-            -webkit-user-select: text;
-            -moz-user-select: text;
-            -ms-user-select: text;
-        }
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        /* Защита от print screen и скриншотов через затемнение */
         body {
             font-family: 'Roboto', sans-serif;
             background: #d0e2f2;
@@ -39,14 +21,9 @@
             min-height: 100vh;
             margin: 0;
             padding: 16px;
-            position: relative;
-        }
-        
-        /* Анти-отладка: блокировка правой кнопки мыши */
-        body {
-            pointer-events: auto;
         }
 
+        /* АВТОРИЗАЦИЯ */
         .auth-container {
             max-width: 400px;
             width: 100%;
@@ -113,6 +90,7 @@
             font-size: 0.9rem;
         }
 
+        /* ОСНОВНОЕ ПРИЛОЖЕНИЕ */
         .app-container {
             max-width: 580px;
             width: 100%;
@@ -200,6 +178,7 @@
             font-size: 0.95rem;
             margin-top: 12px;
             color: #1a2c3e;
+            word-break: break-word;
         }
         .post-actions {
             margin-top: 14px;
@@ -287,6 +266,7 @@
             border: 1px solid #bdd4e8;
             margin: 16px 0;
             font-family: inherit;
+            resize: vertical;
         }
         .modal-actions button {
             padding: 8px 20px;
@@ -335,22 +315,9 @@
             border-radius: 16px;
             margin-top: 20px;
         }
-        
-        /* Защита от screenshot detection */
-        .watermark {
-            position: fixed;
-            bottom: 5px;
-            right: 5px;
-            font-size: 8px;
-            color: rgba(0,0,0,0.1);
-            pointer-events: none;
-            z-index: 9999;
-        }
     </style>
 </head>
 <body>
-
-<div class="watermark">OlegTube™</div>
 
 <!-- ЭКРАН АВТОРИЗАЦИИ -->
 <div id="authScreen" class="auth-container">
@@ -362,7 +329,7 @@
     <button id="showRegisterBtn" class="auth-btn switch-btn">Зарегистрироваться</button>
 </div>
 
-<!-- ОСНОВНОЕ ПРИЛОЖЕНИЕ (скрыто) -->
+<!-- ОСНОВНОЕ ПРИЛОЖЕНИЕ -->
 <div id="appScreen" class="app-container" style="display: none;">
     <div class="app-header">
         <h1>OlegTube</h1>
@@ -397,7 +364,7 @@
     </div>
 </div>
 
-<!-- Модалка создания поста -->
+<!-- МОДАЛКА СОЗДАНИЯ ПОСТА -->
 <div id="createModal" class="modal-overlay">
     <div class="modal-card">
         <h3>Новый пост</h3>
@@ -435,139 +402,57 @@
         arrayRemove,
         setDoc,
         onSnapshot,
-        limit,
+        limit
     } from "firebase/firestore";
     
-    // ========== РАСШИРЕННАЯ ЗАЩИТА ==========
-    
-    // 1. Защита от открытия DevTools
-    (function() {
-        let devtools = false;
-        
-        // Проверка через изменение размера окна (метод для DevTools в отдельном окне)
-        const checkDevTools = () => {
-            const widthDiff = window.outerWidth - window.innerWidth > 160;
-            const heightDiff = window.outerHeight - window.innerHeight > 160;
-            if (widthDiff || heightDiff) {
-                if (!devtools) {
-                    devtools = true;
-                    document.body.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #d0e2f2; color: #e74c3c; font-family: monospace; text-align: center; padding: 20px;"><div><h1>🔒 Доступ запрещен</h1><p>Инструменты разработчика отключены для безопасности приложения.</p><button onclick="location.reload()" style="margin-top:20px; padding:10px 20px; background:#3b6e9e; color:white; border:none; border-radius:8px; cursor:pointer;">Перезагрузить страницу</button></div></div>';
-                    document.body.style.overflow = 'hidden';
-                }
-            }
-        };
-        
-        setInterval(checkDevTools, 1000);
-        
-        // Блокировка контекстного меню (правая кнопка мыши)
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-            return false;
-        });
-        
-        // Блокировка клавиш F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+S
-        document.addEventListener('keydown', function(e) {
-            // F12
-            if (e.key === 'F12') {
-                e.preventDefault();
-                return false;
-            }
-            // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
-            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) {
-                e.preventDefault();
-                return false;
-            }
-            // Ctrl+U (просмотр исходного кода)
-            if (e.ctrlKey && e.key === 'u') {
-                e.preventDefault();
-                return false;
-            }
-            // Ctrl+S (сохранение)
-            if (e.ctrlKey && e.key === 's') {
-                e.preventDefault();
-                return false;
-            }
-            // Ctrl+P (печать)
-            if (e.ctrlKey && e.key === 'p') {
-                e.preventDefault();
-                return false;
-            }
-        });
-        
-        // Защита от отладки через console.log перехват
-        const originalConsoleLog = console.log;
-        console.log = function() {
-            // Не даем выводить в консоль важную информацию
-            const args = Array.from(arguments);
-            if (args.some(arg => typeof arg === 'string' && (arg.includes('firebase') || arg.includes('config') || arg.includes('apiKey')))) {
-                return;
-            }
-            originalConsoleLog.apply(console, args);
-        };
-        
-        // Очищаем консоль при попытке открытия
-        setInterval(() => {
-            if (window.console && window.console.clear) {
-                // Не даем очищать консоль полностью
-            }
-        }, 100);
-        
-        // Защита от копирования кода
-        document.addEventListener('copy', function(e) {
-            e.preventDefault();
-            return false;
-        });
-        
-        // Защита от cut
-        document.addEventListener('cut', function(e) {
-            e.preventDefault();
-            return false;
-        });
-        
-        // Блокировка drag and drop
-        document.addEventListener('dragstart', function(e) {
-            e.preventDefault();
-            return false;
-        });
-        
-        // Обнаружение попытки открытия DevTools через debugger
-        function detectDevTools() {
-            const start = performance.now();
-            debugger;
-            const end = performance.now();
-            if (end - start > 100) {
-                document.body.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #d0e2f2; color: #e74c3c; font-family: monospace; text-align: center; padding: 20px;"><div><h1>🔒 Обнаружена отладка</h1><p>Пожалуйста, закройте инструменты разработчика и обновите страницу.</p><button onclick="location.reload()" style="margin-top:20px; padding:10px 20px; background:#3b6e9e; color:white; border:none; border-radius:8px; cursor:pointer;">Перезагрузить</button></div></div>';
-            }
-        }
-        
-        setInterval(detectDevTools, 2000);
-        
-        // Защита от записи экрана (проверка медиа-запросов)
-        if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
-            // Приложение в режиме PWA
-        }
-    })();
-    
-    // ========== FIREBASE КОНФИГ (обфусцирован) ==========
-    const _0x4e3d = ['AIzaSyDuJfaJAvigdDsCkeLoHpM3QG30YANa5tU', 'olegtub-69d16.firebaseapp.com', 'olegtub-69d16', 'olegtub-69d16.firebasestorage.app', '899139233363', '1:899139233363:web:d18229151ec65c5cd4c8a6'];
-    
+    // ========== FIREBASE КОНФИГ ==========
     const firebaseConfig = {
-        apiKey: _0x4e3d[0],
-        authDomain: _0x4e3d[1],
-        projectId: _0x4e3d[2],
-        storageBucket: _0x4e3d[3],
-        messagingSenderId: _0x4e3d[4],
-        appId: _0x4e3d[5]
+        apiKey: "AIzaSyDuJfaJAvigdDsCkeLoHpM3QG30YANa5tU",
+        authDomain: "olegtub-69d16.firebaseapp.com",
+        projectId: "olegtub-69d16",
+        storageBucket: "olegtub-69d16.firebasestorage.app",
+        messagingSenderId: "899139233363",
+        appId: "1:899139233363:web:d18229151ec65c5cd4c8a6"
     };
     
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    
+    console.log("✅ Firebase подключен");
     
     // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
     let currentUser = null;
     let currentPanel = 'home';
     let allPosts = [];
     let unsubscribeRealtime = null;
+    
+    // ========== АВТО-СОЗДАНИЕ КОЛЛЕКЦИИ POSTS ==========
+    async function ensurePostsCollection() {
+        try {
+            const q = query(collection(db, "posts"), limit(1));
+            const snapshot = await getDocs(q);
+            
+            if (snapshot.empty) {
+                console.log("🛠 Коллекция 'posts' пуста. Создаю стартовый пост...");
+                await addDoc(collection(db, "posts"), {
+                    author: "OlegTube System",
+                    text: "✅ База данных восстановлена! Теперь всё работает. Создавайте посты! 🎉",
+                    timestamp: new Date(),
+                    userId: "system",
+                    likes: [],
+                    likesCount: 0,
+                    createdAt: new Date().toISOString()
+                });
+                console.log("✅ Стартовый пост создан!");
+                return true;
+            }
+            console.log("✅ Коллекция 'posts' существует");
+            return true;
+        } catch (error) {
+            console.error("❌ Ошибка при проверке коллекции:", error);
+            return false;
+        }
+    }
     
     // ========== РЕГИСТРАЦИЯ И ВХОД ==========
     async function registerUser(username, password) {
@@ -856,38 +741,14 @@
         });
     }
     
-        // ========== ИНИЦИАЛИЗАЦИЯ UI ==========
+    // ========== ИНИЦИАЛИЗАЦИЯ UI ==========
     const navHome = document.getElementById('navHome');
     const navSearch = document.getElementById('navSearch');
     const navProfile = document.getElementById('navProfile');
     const createBtn = document.getElementById('navCreatePost');
     const confirmPost = document.getElementById('confirmPostBtn');
     const cancelModal = document.getElementById('cancelModalBtn');
-    //const modal = document.getElementById('createModal');
-    const postInput = document.getElementById('postTextInput');
     const logoutBtn = document.getElementById('logoutBtn');
-
-    // Функция авто-восстановления коллекции
-    async function checkAndRestoreCollection() {
-        try {
-            const q = query(collection(db, "posts"), limit(1));
-            const snapshot = await getDocs(q);
-            
-            if (snapshot.empty) {
-                console.log("🛠 Коллекция пуста. Создаю стартовый пост...");
-                await addDoc(collection(db, "posts"), {
-                    author: "OlegTube Admin",
-                    text: "Система восстановлена. База данных снова в строю! 🛡️",
-                    timestamp: new Date(),
-                    userId: "system",
-                    likes: [],
-                    likesCount: 0
-                });
-            }
-        } catch (e) {
-            console.error("Ошибка проверки коллекции:", e);
-        }
-    }
     
     navHome.onclick = () => setActivePanel('home');
     navSearch.onclick = () => setActivePanel('search');
@@ -897,15 +758,22 @@
     cancelModal.onclick = closeModal;
     modal.onclick = (e) => { if (e.target === modal) closeModal(); };
     logoutBtn.onclick = () => showAuthScreen();
-
-    // Добавляем импорт limit в начало, где firestore
-    // import { ..., limit } from "firebase/firestore";
-
-    // Вызываем проверку при старте приложения
-    checkAndRestoreCollection();
     
-    console.log("🚀 Приложение загружено и защищено");
-
+    // ========== АВТОРИЗАЦИЯ ==========
+    const loginBtn = document.getElementById('loginBtn');
+    const showRegisterBtn = document.getElementById('showRegisterBtn');
+    const loginName = document.getElementById('loginName');
+    const loginPassword = document.getElementById('loginPassword');
+    const authError = document.getElementById('authError');
+    
+    let isLoginMode = true;
+    
+    function setMode(login) {
+        isLoginMode = login;
+        loginBtn.innerText = login ? "Войти" : "Зарегистрироваться";
+        showRegisterBtn.innerText = login ? "Зарегистрироваться" : "Назад к входу";
+        authError.innerText = "";
+    }
     
     showRegisterBtn.onclick = () => setMode(!isLoginMode);
     
@@ -935,7 +803,11 @@
     loginBtn.onclick = handleAuth;
     loginPassword.onkeypress = (e) => { if (e.key === 'Enter') handleAuth(); };
     
-    console.log("🚀 Приложение загружено");
+    // ========== ЗАПУСК ==========
+    await ensurePostsCollection();
+    
+    console.log("🚀 OlegTube готов!");
+    showAuthScreen();
 </script>
 </body>
 </html>
