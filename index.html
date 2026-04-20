@@ -405,6 +405,83 @@
         limit
     } from "firebase/firestore";
     
+    // ========== ЗАЩИТА ОТ F12 И ИНСТРУМЕНТОВ РАЗРАБОТЧИКА ==========
+    (function() {
+        // Блокировка клавиш для открытия DevTools
+        document.addEventListener('keydown', function(e) {
+            // F12
+            if (e.key === 'F12') {
+                e.preventDefault();
+                return false;
+            }
+            // Ctrl+Shift+I (Windows/Linux)
+            if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+                e.preventDefault();
+                return false;
+            }
+            // Ctrl+Shift+J (Windows/Linux)
+            if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+                e.preventDefault();
+                return false;
+            }
+            // Ctrl+Shift+C (Windows/Linux)
+            if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+                e.preventDefault();
+                return false;
+            }
+            // Ctrl+U (просмотр исходного кода)
+            if (e.ctrlKey && e.key === 'u') {
+                e.preventDefault();
+                return false;
+            }
+            // Cmd+Option+I (Mac)
+            if (e.metaKey && e.altKey && e.key === 'I') {
+                e.preventDefault();
+                return false;
+            }
+            // Cmd+Option+J (Mac)
+            if (e.metaKey && e.altKey && e.key === 'J') {
+                e.preventDefault();
+                return false;
+            }
+            // Cmd+Option+C (Mac)
+            if (e.metaKey && e.altKey && e.key === 'C') {
+                e.preventDefault();
+                return false;
+            }
+            // Cmd+U (Mac)
+            if (e.metaKey && e.key === 'u') {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        // Блокировка правой кнопки мыши (контекстное меню)
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        // Предупреждение при попытке открыть DevTools через консоль
+        console.log("%c🔒 Инструменты разработчика отключены в целях безопасности", "color: #e74c3c; font-size: 14px;");
+        
+        // Детект открытого DevTools через проверку времени выполнения debugger
+        let devToolsOpen = false;
+        const checkDevTools = () => {
+            const start = performance.now();
+            debugger;
+            const end = performance.now();
+            if (end - start > 100 && !devToolsOpen) {
+                devToolsOpen = true;
+                document.body.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #d0e2f2; color: #e74c3c; font-family: monospace; text-align: center; padding: 20px;"><div><h1>🔒 Доступ запрещен</h1><p>Инструменты разработчика отключены для безопасности.</p><button onclick="location.reload()" style="margin-top:20px; padding:10px 20px; background:#3b6e9e; color:white; border:none; border-radius:8px; cursor:pointer;">Перезагрузить страницу</button></div></div>';
+                document.body.style.overflow = 'hidden';
+            }
+        };
+        
+        // Проверяем каждые 2 секунды
+        setInterval(checkDevTools, 2000);
+    })();
+    
     // ========== FIREBASE КОНФИГ ==========
     const firebaseConfig = {
         apiKey: "AIzaSyDuJfaJAvigdDsCkeLoHpM3QG30YANa5tU",
