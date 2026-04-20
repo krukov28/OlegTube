@@ -435,6 +435,7 @@
         arrayRemove,
         setDoc,
         onSnapshot
+        limit
     } from "firebase/firestore";
     
     // ========== РАСШИРЕННАЯ ЗАЩИТА ==========
@@ -855,14 +856,38 @@
         });
     }
     
-    // ========== ИНИЦИАЛИЗАЦИЯ UI ==========
+        // ========== ИНИЦИАЛИЗАЦИЯ UI ==========
     const navHome = document.getElementById('navHome');
     const navSearch = document.getElementById('navSearch');
     const navProfile = document.getElementById('navProfile');
     const createBtn = document.getElementById('navCreatePost');
     const confirmPost = document.getElementById('confirmPostBtn');
     const cancelModal = document.getElementById('cancelModalBtn');
+    const modal = document.getElementById('createModal');
+    const postInput = document.getElementById('postTextInput');
     const logoutBtn = document.getElementById('logoutBtn');
+
+    // Функция авто-восстановления коллекции
+    async function checkAndRestoreCollection() {
+        try {
+            const q = query(collection(db, "posts"), limit(1));
+            const snapshot = await getDocs(q);
+            
+            if (snapshot.empty) {
+                console.log("🛠 Коллекция пуста. Создаю стартовый пост...");
+                await addDoc(collection(db, "posts"), {
+                    author: "OlegTube Admin",
+                    text: "Система восстановлена. База данных снова в строю! 🛡️",
+                    timestamp: new Date(),
+                    userId: "system",
+                    likes: [],
+                    likesCount: 0
+                });
+            }
+        } catch (e) {
+            console.error("Ошибка проверки коллекции:", e);
+        }
+    }
     
     navHome.onclick = () => setActivePanel('home');
     navSearch.onclick = () => setActivePanel('search');
@@ -872,22 +897,15 @@
     cancelModal.onclick = closeModal;
     modal.onclick = (e) => { if (e.target === modal) closeModal(); };
     logoutBtn.onclick = () => showAuthScreen();
+
+    // Добавляем импорт limit в начало, где firestore
+    // import { ..., limit } from "firebase/firestore";
+
+    // Вызываем проверку при старте приложения
+    checkAndRestoreCollection();
     
-    // ========== АВТОРИЗАЦИЯ ==========
-    const loginBtn = document.getElementById('loginBtn');
-    const showRegisterBtn = document.getElementById('showRegisterBtn');
-    const loginName = document.getElementById('loginName');
-    const loginPassword = document.getElementById('loginPassword');
-    const authError = document.getElementById('authError');
-    
-    let isLoginMode = true;
-    
-    function setMode(login) {
-        isLoginMode = login;
-        loginBtn.innerText = login ? "Войти" : "Зарегистрироваться";
-        showRegisterBtn.innerText = login ? "Зарегистрироваться" : "Назад к входу";
-        authError.innerText = "";
-    }
+    console.log("🚀 Приложение загружено и защищено");
+
     
     showRegisterBtn.onclick = () => setMode(!isLoginMode);
     
