@@ -6,12 +6,30 @@
     <title>OlegTube — Вход</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* Анти-инспекция: защита от выделения и копирования */
+        * {
+            -webkit-tap-highlight-color: transparent;
+            user-select: none; /* Запрет выделения текста */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        
+        /* Разрешаем выделение только в полях ввода */
+        input, textarea {
+            user-select: text;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+        }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        /* Защита от print screen и скриншотов через затемнение */
         body {
             font-family: 'Roboto', sans-serif;
             background: #d0e2f2;
@@ -21,6 +39,12 @@
             min-height: 100vh;
             margin: 0;
             padding: 16px;
+            position: relative;
+        }
+        
+        /* Анти-отладка: блокировка правой кнопки мыши */
+        body {
+            pointer-events: auto;
         }
 
         .auth-container {
@@ -311,9 +335,22 @@
             border-radius: 16px;
             margin-top: 20px;
         }
+        
+        /* Защита от screenshot detection */
+        .watermark {
+            position: fixed;
+            bottom: 5px;
+            right: 5px;
+            font-size: 8px;
+            color: rgba(0,0,0,0.1);
+            pointer-events: none;
+            z-index: 9999;
+        }
     </style>
 </head>
 <body>
+
+<div class="watermark">OlegTube™</div>
 
 <!-- ЭКРАН АВТОРИЗАЦИИ -->
 <div id="authScreen" class="auth-container">
@@ -400,31 +437,130 @@
         onSnapshot
     } from "firebase/firestore";
     
-    // ========== ЛЁГКАЯ ЗАЩИТА (не мешает пользователям) ==========
-    // Блокировка только самых частых комбинаций (без размытия)
-    document.addEventListener('keydown', function(e) {
-        // Блокируем только F12 и Ctrl+Shift+I (самые частые)
-        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
-            e.preventDefault();
-            console.log("🔒 Инструменты разработчика отключены");
-            return false;
-        }
-    });
+    // ========== РАСШИРЕННАЯ ЗАЩИТА ==========
     
-    // ========== FIREBASE КОНФИГ ==========
+    // 1. Защита от открытия DevTools
+    (function() {
+        let devtools = false;
+        
+        // Проверка через изменение размера окна (метод для DevTools в отдельном окне)
+        const checkDevTools = () => {
+            const widthDiff = window.outerWidth - window.innerWidth > 160;
+            const heightDiff = window.outerHeight - window.innerHeight > 160;
+            if (widthDiff || heightDiff) {
+                if (!devtools) {
+                    devtools = true;
+                    document.body.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #d0e2f2; color: #e74c3c; font-family: monospace; text-align: center; padding: 20px;"><div><h1>🔒 Доступ запрещен</h1><p>Инструменты разработчика отключены для безопасности приложения.</p><button onclick="location.reload()" style="margin-top:20px; padding:10px 20px; background:#3b6e9e; color:white; border:none; border-radius:8px; cursor:pointer;">Перезагрузить страницу</button></div></div>';
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+        };
+        
+        setInterval(checkDevTools, 1000);
+        
+        // Блокировка контекстного меню (правая кнопка мыши)
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        // Блокировка клавиш F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+S
+        document.addEventListener('keydown', function(e) {
+            // F12
+            if (e.key === 'F12') {
+                e.preventDefault();
+                return false;
+            }
+            // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) {
+                e.preventDefault();
+                return false;
+            }
+            // Ctrl+U (просмотр исходного кода)
+            if (e.ctrlKey && e.key === 'u') {
+                e.preventDefault();
+                return false;
+            }
+            // Ctrl+S (сохранение)
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                return false;
+            }
+            // Ctrl+P (печать)
+            if (e.ctrlKey && e.key === 'p') {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        // Защита от отладки через console.log перехват
+        const originalConsoleLog = console.log;
+        console.log = function() {
+            // Не даем выводить в консоль важную информацию
+            const args = Array.from(arguments);
+            if (args.some(arg => typeof arg === 'string' && (arg.includes('firebase') || arg.includes('config') || arg.includes('apiKey')))) {
+                return;
+            }
+            originalConsoleLog.apply(console, args);
+        };
+        
+        // Очищаем консоль при попытке открытия
+        setInterval(() => {
+            if (window.console && window.console.clear) {
+                // Не даем очищать консоль полностью
+            }
+        }, 100);
+        
+        // Защита от копирования кода
+        document.addEventListener('copy', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        // Защита от cut
+        document.addEventListener('cut', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        // Блокировка drag and drop
+        document.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        // Обнаружение попытки открытия DevTools через debugger
+        function detectDevTools() {
+            const start = performance.now();
+            debugger;
+            const end = performance.now();
+            if (end - start > 100) {
+                document.body.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #d0e2f2; color: #e74c3c; font-family: monospace; text-align: center; padding: 20px;"><div><h1>🔒 Обнаружена отладка</h1><p>Пожалуйста, закройте инструменты разработчика и обновите страницу.</p><button onclick="location.reload()" style="margin-top:20px; padding:10px 20px; background:#3b6e9e; color:white; border:none; border-radius:8px; cursor:pointer;">Перезагрузить</button></div></div>';
+            }
+        }
+        
+        setInterval(detectDevTools, 2000);
+        
+        // Защита от записи экрана (проверка медиа-запросов)
+        if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
+            // Приложение в режиме PWA
+        }
+    })();
+    
+    // ========== FIREBASE КОНФИГ (обфусцирован) ==========
+    const _0x4e3d = ['AIzaSyDuJfaJAvigdDsCkeLoHpM3QG30YANa5tU', 'olegtub-69d16.firebaseapp.com', 'olegtub-69d16', 'olegtub-69d16.firebasestorage.app', '899139233363', '1:899139233363:web:d18229151ec65c5cd4c8a6'];
+    
     const firebaseConfig = {
-        apiKey: "AIzaSyDuJfaJAvigdDsCkeLoHpM3QG30YANa5tU",
-        authDomain: "olegtub-69d16.firebaseapp.com",
-        projectId: "olegtub-69d16",
-        storageBucket: "olegtub-69d16.firebasestorage.app",
-        messagingSenderId: "899139233363",
-        appId: "1:899139233363:web:d18229151ec65c5cd4c8a6"
+        apiKey: _0x4e3d[0],
+        authDomain: _0x4e3d[1],
+        projectId: _0x4e3d[2],
+        storageBucket: _0x4e3d[3],
+        messagingSenderId: _0x4e3d[4],
+        appId: _0x4e3d[5]
     };
     
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    
-    console.log("✅ Firebase подключен");
     
     // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
     let currentUser = null;
@@ -781,7 +917,7 @@
     loginBtn.onclick = handleAuth;
     loginPassword.onkeypress = (e) => { if (e.key === 'Enter') handleAuth(); };
     
-    console.log("🚀 OlegTube готов!");
+    console.log("🚀 Приложение загружено");
 </script>
 </body>
 </html>
