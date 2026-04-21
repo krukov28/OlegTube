@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>OlegTube — Лента</title>
+    <title>OlegTube — Лента + Современные чаты (Исправлено)</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -175,7 +175,7 @@
         }
         .modal-actions button.primary { background: #3b6e9e; color: white; }
         
-        /* ========== СПИСОК ЧАТОВ (СОВРЕМЕННЫЙ ВИД) ========== */
+        /* ========== СПИСОК ЧАТОВ ========== */
         .chats-main-container {
             background: transparent;
             border-radius: 12px;
@@ -222,7 +222,7 @@
         .chat-last-msg { font-size: 0.75rem; color: #6c8eae; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
         .chat-time { font-size: 0.7rem; color: #6c8eae; }
         
-        /* ========== ОКНО ЧАТА (СТИЛЬ ИЗ ВТОРОГО КОДА) ========== */
+        /* ========== ОКНО ЧАТА ========== */
         .chat-window-modern {
             position: absolute;
             top: 0;
@@ -334,7 +334,6 @@
         }
         .chat-input-modern button:hover { background: #2c5a7c; }
         
-        /* поиск пользователей */
         .user-list-modern {
             background: white;
             border-radius: 12px;
@@ -417,18 +416,13 @@
     </div>
 
     <div class="feed-area" id="mainContentArea" style="position: relative;">
-        <!-- Лента постов -->
         <div id="feedPanel">
             <div id="postsContainer"></div>
         </div>
-        
-        <!-- Поиск -->
         <div id="searchPanel" class="hide">
             <input type="text" id="searchInput" class="search-input" placeholder="🔍 Поиск постов...">
             <div id="searchResultsContainer"></div>
         </div>
-        
-        <!-- Сообщения (современный вид чатов) -->
         <div id="messagesPanel" class="hide">
             <div id="chatsMainContainer">
                 <button id="startNewChatMainBtn" class="new-chat-btn"><i class="fas fa-plus-circle"></i> Новый диалог</button>
@@ -439,10 +433,7 @@
                 <input type="text" id="searchUsersInput" class="search-input" placeholder="🔍 Поиск пользователей...">
                 <div id="allUsersList"></div>
             </div>
-            <!-- контейнер для чата будет добавлен динамически -->
         </div>
-        
-        <!-- Профиль -->
         <div id="profilePanel" class="hide">
             <div class="profile-card">
                 <div class="big-avatar" id="profileAvatar"></div>
@@ -464,7 +455,6 @@
     </div>
 </div>
 
-<!-- МОДАЛКА ПОСТА -->
 <div id="createModal" class="modal-overlay">
     <div class="modal-card">
         <h3>Новый пост</h3>
@@ -514,7 +504,6 @@
     let currentChatPartner = null;
     let messagesUnsubscribe = null;
     
-    // ========== ВСПОМОГАТЕЛЬНЫЕ ==========
     function escapeHtml(str) {
         if (!str) return '';
         return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
@@ -529,7 +518,6 @@
         return `${Math.floor(diff / 1440)} дн назад`;
     }
     
-    // ========== ПОЛЬЗОВАТЕЛИ ==========
     async function getUserVerifiedStatus(username) {
         const userRef = doc(db, "users", username);
         const snap = await getDoc(userRef);
@@ -560,7 +548,6 @@
         return { username };
     }
     
-    // ========== ПОСТЫ ==========
     async function getAllPosts() {
         const q = query(collection(db, "posts"), orderBy("timestamp", "desc"));
         const snapshot = await getDocs(q);
@@ -655,7 +642,6 @@
         document.getElementById('userVerifiedStatus').innerText = isVerified ? "✅ Верифицирован" : "❌ Не верифицирован";
     }
     
-    // ========== ЛИЧНЫЕ СООБЩЕНИЯ (СОВРЕМЕННЫЙ ИНТЕРФЕЙС) ==========
     async function getOrCreateChatId(otherUsername) {
         const chatId = [currentUser.username, otherUsername].sort().join('_');
         const chatRef = doc(db, "chats", chatId);
@@ -798,7 +784,6 @@
         };
     }
     
-    // ========== НАВИГАЦИЯ И ИНИТ ==========
     function setActivePanel(panel) {
         document.getElementById('feedPanel').classList.add('hide');
         document.getElementById('searchPanel').classList.add('hide');
@@ -823,6 +808,12 @@
         if (panel === 'profile') navProfile.classList.add('active');
     }
     
+    // ========== ИСПРАВЛЕННАЯ РАБОТА С МОДАЛКОЙ ==========
+    function closeModal() {
+        document.getElementById('createModal').classList.remove('active');
+        document.getElementById('postTextInput').value = '';
+    }
+    
     const navHome = document.getElementById('navHome');
     const navSearch = document.getElementById('navSearch');
     const navMessages = document.getElementById('navMessages');
@@ -839,9 +830,20 @@
     navMessages.onclick = () => setActivePanel('messages');
     navProfile.onclick = () => setActivePanel('profile');
     createBtn.onclick = () => { postInput.value = ''; modal.classList.add('active'); };
-    confirmPost.onclick = async () => { if (postInput.value.trim()) { await addPost(postInput.value); closeModal(); await loadPosts(); } };
-    cancelModal.onclick = () => modal.classList.remove('active');
-    modal.onclick = (e) => { if (e.target === modal) modal.classList.remove('active'); };
+    
+    // ИСПРАВЛЕННЫЙ ОБРАБОТЧИК - теперь окно закрывается!
+    confirmPost.onclick = async () => { 
+        if (postInput.value.trim()) { 
+            await addPost(postInput.value); 
+            closeModal();  // теперь окно закрывается
+            await loadPosts(); 
+        } else {
+            alert("Напишите что-нибудь");
+        }
+    };
+    
+    cancelModal.onclick = closeModal;
+    modal.onclick = (e) => { if (e.target === modal) closeModal(); };
     logoutBtn.onclick = () => { if (unsubscribeRealtime) unsubscribeRealtime(); if (chatsUnsubscribe) chatsUnsubscribe(); if (messagesUnsubscribe) messagesUnsubscribe(); document.getElementById('appScreen').style.display = 'none'; document.getElementById('authScreen').style.display = 'block'; currentUser = null; };
     
     document.getElementById('searchInput').addEventListener('input', (e) => performSearch(e.target.value));
@@ -852,7 +854,6 @@
         renderChatsListModern();
     };
     
-    // ========== АВТОРИЗАЦИЯ ==========
     const loginBtn = document.getElementById('loginBtn');
     const showRegisterBtn = document.getElementById('showRegisterBtn');
     const authError = document.getElementById('authError');
@@ -873,7 +874,7 @@
     }
     loginBtn.onclick = handleAuth;
     document.getElementById('loginPassword').onkeypress = (e) => { if (e.key === 'Enter') handleAuth(); };
-    // авто-создание тестового поста
+    
     async function ensurePosts() {
         const q = query(collection(db, "posts"), limit(1));
         const snap = await getDocs(q);
