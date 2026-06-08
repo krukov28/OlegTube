@@ -102,11 +102,16 @@
             width: 100%;
             padding: 16px;
             gap: 16px;
+            position: relative;
+            align-items: flex-start;
         }
         
         .left-menu {
             width: 200px;
             flex-shrink: 0;
+            position: sticky;
+            top: 60px;
+            align-self: flex-start;
         }
         .menu-item {
             display: flex;
@@ -119,6 +124,7 @@
             cursor: pointer;
             font-size: 14px;
             color: #2c3e50;
+            transition: all 0.2s;
         }
         .menu-item i { width: 20px; color: #2a5885; }
         .menu-item:hover { background: #e5ebf1; }
@@ -126,6 +132,7 @@
         
         .content-panel {
             flex: 1;
+            min-width: 0;
         }
         
         .post-card {
@@ -160,6 +167,15 @@
             color: #2a5885;
             cursor: pointer;
             font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .verified-badge {
+            color: #2a5885;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
         }
         .post-author-name:hover { text-decoration: underline; }
         .post-date {
@@ -190,6 +206,86 @@
         }
         .post-action:hover { color: #2a5885; }
         .post-action.liked { color: #e64646; }
+        
+        .comments-section {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #edeef0;
+        }
+        .comment {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .comment-avatar {
+            width: 32px;
+            height: 32px;
+            background: #2a5885;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .comment-content {
+            flex: 1;
+        }
+        .comment-author {
+            font-weight: 600;
+            font-size: 12px;
+            color: #2a5885;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .comment-text {
+            font-size: 12px;
+            color: #2c3e50;
+            margin-top: 2px;
+        }
+        .comment-date {
+            font-size: 10px;
+            color: #939393;
+            margin-top: 4px;
+        }
+        .add-comment {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .add-comment input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #d3d9de;
+            border-radius: 20px;
+            font-size: 12px;
+            outline: none;
+        }
+        .add-comment button {
+            padding: 6px 12px;
+            background: #2a5885;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .show-comments-btn {
+            font-size: 12px;
+            color: #6c7a8e;
+            cursor: pointer;
+        }
+        .show-comments-btn:hover {
+            color: #2a5885;
+        }
         
         .profile-card {
             background: white;
@@ -227,6 +323,10 @@
             font-weight: 600;
             color: #2c3e50;
             margin-bottom: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
         }
         .profile-stats {
             display: flex;
@@ -293,22 +393,6 @@
             font-size: 16px;
             color: #2c3e50;
             margin-bottom: 12px;
-        }
-        .profile-post-item {
-            background: #edeef0;
-            border-radius: 4px;
-            padding: 12px;
-            margin-bottom: 8px;
-        }
-        .profile-post-text {
-            font-size: 13px;
-            color: #2c3e50;
-            margin-bottom: 6px;
-            word-break: break-word;
-        }
-        .profile-post-date {
-            font-size: 11px;
-            color: #939393;
         }
         
         .chat-list {
@@ -435,8 +519,44 @@
         .loading { text-align: center; padding: 40px; color: #939393; }
         
         @media (max-width: 700px) {
-            .left-menu { display: none; }
-            .main-layout { padding: 12px; }
+            .left-menu { 
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                top: auto;
+                width: 100%;
+                background: white;
+                display: flex;
+                padding: 8px;
+                gap: 4px;
+                z-index: 200;
+                border-top: 1px solid #edeef0;
+                box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            }
+            .left-menu .menu-item {
+                flex: 1;
+                justify-content: center;
+                flex-direction: column;
+                padding: 8px 4px;
+                text-align: center;
+                font-size: 11px;
+                margin-bottom: 0;
+            }
+            .left-menu .menu-item i {
+                font-size: 20px;
+                margin: 0;
+            }
+            .left-menu .menu-item span {
+                font-size: 10px;
+            }
+            .main-layout { 
+                padding: 12px;
+                padding-bottom: 70px;
+            }
+            .content-panel {
+                margin-bottom: 60px;
+            }
         }
         
         .modal-overlay {
@@ -567,8 +687,8 @@
     import { initializeApp } from "firebase/app";
     import { 
         getFirestore, collection, addDoc, getDocs, getDoc,
-        query, orderBy, where, doc, updateDoc, 
-        arrayUnion, arrayRemove, setDoc, onSnapshot, limit
+        query, where, doc, updateDoc, 
+        arrayUnion, arrayRemove, setDoc, onSnapshot, limit, orderBy
     } from "firebase/firestore";
     
     const firebaseConfig = {
@@ -591,6 +711,8 @@
     let unsubscribeChats = null;
     let currentChatUnsubscribe = null;
     let currentChatWindow = null;
+    let commentsStates = new Map();
+    let userVerificationCache = new Map();
     
     function escapeHtml(str) {
         if (!str) return '';
@@ -606,6 +728,21 @@
         return `${Math.floor(diff / 1440)} дн назад`;
     }
     
+    async function isUserVerified(username) {
+        if (userVerificationCache.has(username)) {
+            return userVerificationCache.get(username);
+        }
+        try {
+            const userRef = doc(db, "users", username);
+            const userSnap = await getDoc(userRef);
+            const verified = userSnap.data()?.isVerified || false;
+            userVerificationCache.set(username, verified);
+            return verified;
+        } catch (error) {
+            return false;
+        }
+    }
+    
     async function registerUser(username, password) {
         if (!username || !password) throw new Error("Заполните поля");
         if (username.length < 3) throw new Error("Имя минимум 3 символа");
@@ -619,7 +756,7 @@
             username: username,
             password: password,
             createdAt: new Date().toISOString(),
-            isVerified: false,
+            isVerified: username === "OlegTube" || username === "Admin",
             followers: [],
             subscriptions: []
         });
@@ -636,13 +773,18 @@
     
     async function getAllPosts() {
         try {
-            const q = query(collection(db, "posts"), orderBy("timestamp", "desc"));
-            const snapshot = await getDocs(q);
-            return snapshot.docs.map(doc => ({
+            const snapshot = await getDocs(collection(db, "posts"));
+            let posts = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data(),
                 timestamp: doc.data().timestamp?.toDate ? doc.data().timestamp.toDate() : new Date(doc.data().timestamp)
             }));
+            posts.sort((a, b) => b.timestamp - a.timestamp);
+            
+            for (let post of posts) {
+                post.authorVerified = await isUserVerified(post.author);
+            }
+            return posts;
         } catch (error) {
             console.error("Error getting posts:", error);
             return [];
@@ -660,6 +802,7 @@
             userId: currentUser.username,
             likes: [],
             likesCount: 0,
+            commentsCount: 0,
             authorVerified: userSnap.data()?.isVerified || false
         });
     }
@@ -683,17 +826,62 @@
         }
     }
     
+    async function addComment(postId, text) {
+        if (!text.trim()) return;
+        const commentsRef = collection(db, "posts", postId, "comments");
+        await addDoc(commentsRef, {
+            author: currentUser.username,
+            text: text.trim(),
+            timestamp: new Date()
+        });
+        
+        const postRef = doc(db, "posts", postId);
+        const postSnap = await getDoc(postRef);
+        if (postSnap.exists()) {
+            const currentCount = postSnap.data().commentsCount || 0;
+            await updateDoc(postRef, {
+                commentsCount: currentCount + 1
+            });
+        }
+    }
+    
+    async function getComments(postId) {
+        try {
+            const commentsRef = collection(db, "posts", postId, "comments");
+            const q = query(commentsRef, orderBy("timestamp", "asc"));
+            const snapshot = await getDocs(q);
+            const comments = [];
+            for (const doc of snapshot.docs) {
+                const comment = {
+                    id: doc.id,
+                    ...doc.data(),
+                    timestamp: doc.data().timestamp?.toDate ? doc.data().timestamp.toDate() : new Date(doc.data().timestamp)
+                };
+                comment.authorVerified = await isUserVerified(comment.author);
+                comments.push(comment);
+            }
+            return comments;
+        } catch (error) {
+            console.error("Error getting comments:", error);
+            return [];
+        }
+    }
+    
     async function getUserPosts(username) {
         try {
-            // Ищем посты где author равен username
-            const q = query(collection(db, "posts"), where("author", "==", username), orderBy("timestamp", "desc"));
+            const q = query(collection(db, "posts"), where("author", "==", username));
             const snapshot = await getDocs(q);
-            console.log(`Найдено постов для ${username}:`, snapshot.size);
-            return snapshot.docs.map(doc => ({
+            let posts = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data(),
                 timestamp: doc.data().timestamp?.toDate ? doc.data().timestamp.toDate() : new Date(doc.data().timestamp)
             }));
+            posts.sort((a, b) => b.timestamp - a.timestamp);
+            
+            for (let post of posts) {
+                post.authorVerified = await isUserVerified(post.author);
+            }
+            return posts;
         } catch (error) {
             console.error("Error getting user posts:", error);
             return [];
@@ -725,38 +913,71 @@
         await renderFeed();
     }
     
-    async function renderFeed() {
-        const container = document.getElementById('postsContainer');
-        if (!container) return;
+    function renderPost(post) {
+        const hasLiked = post.likes?.includes(currentUser.username);
+        const showComments = commentsStates.get(post.id) || false;
+        const verifiedBadge = post.authorVerified ? '<i class="fas fa-check-circle verified-badge" style="color:#2a5885;"></i>' : '';
         
-        if (allPosts.length === 0) {
-            container.innerHTML = '<div class="loading">Нет постов. Создайте первый!</div>';
+        return `
+            <div class="post-card" data-post-id="${post.id}">
+                <div class="post-header">
+                    <div class="post-avatar" data-user="${post.author}">${escapeHtml(post.author.charAt(0).toUpperCase())}</div>
+                    <div class="post-author-info">
+                        <div class="post-author-name" data-user="${post.author}">
+                            ${escapeHtml(post.author)} ${verifiedBadge}
+                        </div>
+                        <div class="post-date">${formatDate(post.timestamp)}</div>
+                    </div>
+                </div>
+                <div class="post-text">${escapeHtml(post.text)}</div>
+                <div class="post-actions">
+                    <div class="post-action like-btn" data-id="${post.id}">
+                        <i class="${hasLiked ? 'fas fa-heart' : 'far fa-heart'}"></i>
+                        <span class="likes-count">${post.likesCount || 0}</span>
+                    </div>
+                    <div class="post-action show-comments-btn" data-id="${post.id}">
+                        <i class="far fa-comment"></i>
+                        <span class="comments-count">${post.commentsCount || 0} комментариев</span>
+                    </div>
+                </div>
+                <div class="comments-section" style="display: ${showComments ? 'block' : 'none'}">
+                    <div id="comments-${post.id}" class="comments-list"></div>
+                    <div class="add-comment">
+                        <input type="text" id="comment-input-${post.id}" placeholder="Написать комментарий...">
+                        <button class="submit-comment-btn" data-post-id="${post.id}">Отправить</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    async function loadCommentsForPost(postId, container) {
+        const comments = await getComments(postId);
+        const commentsContainer = container || document.getElementById(`comments-${postId}`);
+        if (!commentsContainer) return;
+        
+        if (comments.length === 0) {
+            commentsContainer.innerHTML = '<div style="padding: 8px; color: #939393; font-size: 12px;">Нет комментариев. Будьте первым!</div>';
             return;
         }
         
-        container.innerHTML = allPosts.map(post => {
-            const hasLiked = post.likes?.includes(currentUser.username);
+        commentsContainer.innerHTML = comments.map(comment => {
+            const verifiedBadge = comment.authorVerified ? '<i class="fas fa-check-circle" style="color:#2a5885; font-size: 10px;"></i>' : '';
             return `
-                <div class="post-card">
-                    <div class="post-header">
-                        <div class="post-avatar" data-user="${post.author}">${escapeHtml(post.author.charAt(0).toUpperCase())}</div>
-                        <div class="post-author-info">
-                            <div class="post-author-name" data-user="${post.author}">${escapeHtml(post.author)}</div>
-                            <div class="post-date">${formatDate(post.timestamp)}</div>
+                <div class="comment">
+                    <div class="comment-avatar" data-user="${comment.author}">${escapeHtml(comment.author.charAt(0).toUpperCase())}</div>
+                    <div class="comment-content">
+                        <div class="comment-author" data-user="${comment.author}">
+                            ${escapeHtml(comment.author)} ${verifiedBadge}
                         </div>
-                    </div>
-                    <div class="post-text">${escapeHtml(post.text)}</div>
-                    <div class="post-actions">
-                        <div class="post-action like-btn" data-id="${post.id}">
-                            <i class="${hasLiked ? 'fas fa-heart' : 'far fa-heart'}"></i>
-                            <span>${post.likesCount || 0}</span>
-                        </div>
+                        <div class="comment-text">${escapeHtml(comment.text)}</div>
+                        <div class="comment-date">${formatDate(comment.timestamp)}</div>
                     </div>
                 </div>
             `;
         }).join('');
         
-        document.querySelectorAll('.post-avatar, .post-author-name').forEach(el => {
+        commentsContainer.querySelectorAll('.comment-avatar, .comment-author').forEach(el => {
             const user = el.dataset.user;
             if (user && user !== currentUser.username) {
                 el.onclick = (e) => {
@@ -767,14 +988,167 @@
                 el.style.cursor = 'pointer';
             }
         });
+    }
+    
+    async function handleAddComment(postId, inputElement, isProfileView = false) {
+        if (inputElement && inputElement.value.trim()) {
+            await addComment(postId, inputElement.value);
+            inputElement.value = '';
+            
+            const commentsContainer = document.getElementById(`comments-${postId}`);
+            if (commentsContainer) {
+                await loadCommentsForPost(postId, commentsContainer);
+            }
+            
+            const postCard = inputElement.closest('.post-card');
+            if (postCard) {
+                const commentsCountSpan = postCard.querySelector('.comments-count');
+                if (commentsCountSpan) {
+                    const currentText = commentsCountSpan.innerText;
+                    const currentCount = parseInt(currentText) || 0;
+                    commentsCountSpan.innerText = `${currentCount + 1} комментариев`;
+                }
+            }
+            
+            if (isProfileView || (currentPanel === 'profile' && viewingProfile)) {
+                await refreshProfilePosts();
+            }
+        }
+    }
+    
+    async function refreshProfilePosts() {
+        if (currentPanel === 'profile' && viewingProfile) {
+            const posts = await getUserPosts(viewingProfile);
+            const postsContainerDiv = document.getElementById('profilePostsList');
+            if (postsContainerDiv) {
+                const currentScroll = postsContainerDiv.scrollTop;
+                postsContainerDiv.innerHTML = posts.map(post => renderPost(post)).join('');
+                attachPostHandlers(postsContainerDiv);
+                postsContainerDiv.scrollTop = currentScroll;
+            }
+        }
+    }
+    
+    function attachPostHandlers(container) {
+        if (!container) return;
         
-        document.querySelectorAll('.like-btn').forEach(btn => {
-            btn.onclick = async (e) => {
+        container.querySelectorAll('.post-avatar, .post-author-name').forEach(el => {
+            const user = el.dataset.user;
+            if (user && user !== currentUser.username) {
+                const newEl = el.cloneNode(true);
+                el.parentNode.replaceChild(newEl, el);
+                newEl.onclick = (e) => {
+                    e.stopPropagation();
+                    showProfile(user);
+                    setPanel('profile');
+                };
+                newEl.style.cursor = 'pointer';
+            }
+        });
+        
+        container.querySelectorAll('.like-btn').forEach(btn => {
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            newBtn.onclick = async (e) => {
                 e.stopPropagation();
-                await toggleLike(btn.dataset.id);
-                await loadPosts();
+                const postId = newBtn.dataset.id;
+                await toggleLike(postId);
+                
+                const postCard = newBtn.closest('.post-card');
+                if (postCard) {
+                    const postIdFromCard = postCard.dataset.postId;
+                    const updatedPosts = await getAllPosts();
+                    const updatedPost = updatedPosts.find(p => p.id === postIdFromCard);
+                    if (updatedPost) {
+                        const likesSpan = newBtn.querySelector('.likes-count');
+                        const heartIcon = newBtn.querySelector('i');
+                        const hasLiked = updatedPost.likes?.includes(currentUser.username);
+                        if (likesSpan) likesSpan.innerText = updatedPost.likesCount || 0;
+                        if (heartIcon) {
+                            if (hasLiked) {
+                                heartIcon.classList.remove('far');
+                                heartIcon.classList.add('fas');
+                            } else {
+                                heartIcon.classList.remove('fas');
+                                heartIcon.classList.add('far');
+                            }
+                        }
+                    }
+                }
+                
+                if (currentPanel === 'profile' && viewingProfile) {
+                    await refreshProfilePosts();
+                }
             };
         });
+        
+        container.querySelectorAll('.show-comments-btn').forEach(btn => {
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            newBtn.onclick = async (e) => {
+                e.stopPropagation();
+                const postId = newBtn.dataset.id;
+                const currentState = commentsStates.get(postId) || false;
+                commentsStates.set(postId, !currentState);
+                
+                const postCard = newBtn.closest('.post-card');
+                if (postCard) {
+                    const commentsSection = postCard.querySelector('.comments-section');
+                    if (commentsSection) {
+                        commentsSection.style.display = !currentState ? 'block' : 'none';
+                        if (!currentState) {
+                            const commentsContainer = document.getElementById(`comments-${postId}`);
+                            if (commentsContainer) {
+                                await loadCommentsForPost(postId, commentsContainer);
+                            }
+                        }
+                    }
+                }
+            };
+        });
+        
+        container.querySelectorAll('.submit-comment-btn').forEach(btn => {
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            const postId = newBtn.dataset.postId;
+            const input = document.getElementById(`comment-input-${postId}`);
+            if (input) {
+                newBtn.onclick = async (e) => {
+                    e.stopPropagation();
+                    const isProfileView = currentPanel === 'profile';
+                    await handleAddComment(postId, input, isProfileView);
+                };
+            }
+        });
+        
+        container.querySelectorAll('.add-comment input').forEach(input => {
+            const newInput = input.cloneNode(true);
+            input.parentNode.replaceChild(newInput, input);
+            const postId = newInput.id.replace('comment-input-', '');
+            const btn = newInput.parentElement.querySelector('.submit-comment-btn');
+            if (btn) {
+                newInput.onkeypress = async (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const isProfileView = currentPanel === 'profile';
+                        await handleAddComment(postId, newInput, isProfileView);
+                    }
+                };
+            }
+        });
+    }
+    
+    async function renderFeed() {
+        const container = document.getElementById('postsContainer');
+        if (!container) return;
+        
+        if (allPosts.length === 0) {
+            container.innerHTML = '<div class="loading">Нет постов. Создайте первый!</div>';
+            return;
+        }
+        
+        container.innerHTML = allPosts.map(post => renderPost(post)).join('');
+        attachPostHandlers(container);
     }
     
     async function showProfile(username) {
@@ -797,6 +1171,7 @@
             const posts = await getUserPosts(username);
             const isOwn = username === currentUser.username;
             const isSubscribed = !isOwn && (userData.followers || []).includes(currentUser.username);
+            const isVerified = userData.isVerified || false;
             
             let totalLikes = 0;
             posts.forEach(p => totalLikes += p.likesCount || 0);
@@ -845,8 +1220,10 @@
                     <div class="profile-cover"></div>
                     <div class="profile-info">
                         <div class="profile-avatar-large">${escapeHtml(username.charAt(0).toUpperCase())}</div>
-                        <div class="profile-name">${escapeHtml(username)}</div>
-                        ${userData.isVerified ? '<div style="color:#2a5885; font-size:13px;"><i class="fas fa-check-circle"></i> Верифицирован</div>' : ''}
+                        <div class="profile-name">
+                            ${escapeHtml(username)}
+                            ${isVerified ? '<i class="fas fa-check-circle" style="color:#2a5885;"></i>' : ''}
+                        </div>
                         <div style="font-size:12px; color:#939393; margin-top:8px;">Присоединился: ${new Date(userData.createdAt).toLocaleDateString()}</div>
                     </div>
                     ${statsHtml}
@@ -860,12 +1237,8 @@
                 if (posts.length === 0) {
                     postsContainerDiv.innerHTML = '<div class="loading">Нет записей</div>';
                 } else {
-                    postsContainerDiv.innerHTML = posts.map(post => `
-                        <div class="profile-post-item">
-                            <div class="profile-post-text">${escapeHtml(post.text)}</div>
-                            <div class="profile-post-date">${formatDate(post.timestamp)} · ${post.likesCount || 0} лайков</div>
-                        </div>
-                    `).join('');
+                    postsContainerDiv.innerHTML = posts.map(post => renderPost(post)).join('');
+                    attachPostHandlers(postsContainerDiv);
                 }
             }
             
@@ -931,29 +1304,8 @@
             return;
         }
         
-        container.innerHTML = results.map(post => `
-            <div class="post-card">
-                <div class="post-header">
-                    <div class="post-avatar" data-user="${post.author}">${escapeHtml(post.author.charAt(0).toUpperCase())}</div>
-                    <div class="post-author-info">
-                        <div class="post-author-name" data-user="${post.author}">${escapeHtml(post.author)}</div>
-                        <div class="post-date">${formatDate(post.timestamp)}</div>
-                    </div>
-                </div>
-                <div class="post-text">${escapeHtml(post.text)}</div>
-            </div>
-        `).join('');
-        
-        document.querySelectorAll('#searchResults .post-avatar, #searchResults .post-author-name').forEach(el => {
-            const user = el.dataset.user;
-            if (user && user !== currentUser.username) {
-                el.onclick = () => {
-                    showProfile(user);
-                    setPanel('profile');
-                };
-                el.style.cursor = 'pointer';
-            }
-        });
+        container.innerHTML = results.map(post => renderPost(post)).join('');
+        attachPostHandlers(container);
     }
     
     async function getOrCreateChatId(otherUsername) {
@@ -1046,12 +1398,21 @@
         document.body.appendChild(win);
         currentChatWindow = win;
         
-        const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
+        const q = query(collection(db, "chats", chatId, "messages"));
         currentChatUnsubscribe = onSnapshot(q, (snap) => {
+            let messages = snap.docs.map(docMsg => ({
+                ...docMsg.data(),
+                id: docMsg.id
+            }));
+            messages.sort((a, b) => {
+                const timeA = a.timestamp?.toDate ? a.timestamp.toDate() : 0;
+                const timeB = b.timestamp?.toDate ? b.timestamp.toDate() : 0;
+                return timeA - timeB;
+            });
+            
             const msgsDiv = document.getElementById('chatMessagesList');
             if (!msgsDiv) return;
-            msgsDiv.innerHTML = snap.docs.map(docMsg => {
-                const m = docMsg.data();
+            msgsDiv.innerHTML = messages.map(m => {
                 const isMe = m.senderId === currentUser.username;
                 const time = m.timestamp?.toDate ? m.timestamp.toDate().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
                 return `<div class="chat-message ${isMe ? 'out' : 'in'}">${escapeHtml(m.text)}<div style="font-size:10px; opacity:0.7; margin-top:4px;">${time}</div></div>`;
@@ -1263,7 +1624,7 @@
             await loadPosts();
             
             if (unsubscribePosts) unsubscribePosts();
-            const q = query(collection(db, "posts"), orderBy("timestamp", "desc"));
+            const q = query(collection(db, "posts"));
             unsubscribePosts = onSnapshot(q, async () => {
                 await loadPosts();
             });
@@ -1286,11 +1647,12 @@
             if (snap.empty) {
                 await addDoc(collection(db, "posts"), {
                     author: "OlegTube",
-                    text: "Добро пожаловать в OlegTube! 🎉\n\nКликайте на аватар пользователя, чтобы открыть профиль и подписаться!",
+                    text: "Добро пожаловать в OlegTube! 🎉\n\nКликайте на аватар пользователя, чтобы открыть профиль и подписаться!\n\nТеперь доступны комментарии к постам!\n\nВерифицированные пользователи отмечены галочкой ✓",
                     timestamp: new Date(),
                     userId: "OlegTube",
                     likes: [],
                     likesCount: 0,
+                    commentsCount: 0,
                     authorVerified: true
                 });
                 console.log("Тестовый пост создан");
