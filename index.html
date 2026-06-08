@@ -418,84 +418,37 @@
             justify-content: center;
             color: white;
             font-weight: bold;
+            position: relative;
+        }
+        .online-dot {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 12px;
+            height: 12px;
+            background: #4bb34b;
+            border-radius: 50%;
+            border: 2px solid white;
         }
         .chat-info { flex: 1; }
-        .chat-name { font-weight: 600; color: #2c3e50; margin-bottom: 4px; }
+        .chat-name { 
+            font-weight: 600; 
+            color: #2c3e50; 
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
         .chat-last-msg { font-size: 12px; color: #939393; }
-        
-        .chat-window {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 350px;
-            height: 480px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            display: flex;
-            flex-direction: column;
-            z-index: 1000;
+        .chat-status {
+            font-size: 11px;
+            color: #939393;
+            margin-top: 2px;
         }
-        .chat-window-header {
-            background: #2a5885;
-            color: white;
-            padding: 12px;
-            border-radius: 8px 8px 0 0;
-            display: flex;
-            justify-content: space-between;
-        }
-        .chat-window-header button {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
-        }
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .chat-message {
-            max-width: 75%;
-            padding: 8px 12px;
-            border-radius: 16px;
-            font-size: 13px;
-        }
-        .chat-message.out {
-            background: #2a5885;
-            color: white;
-            align-self: flex-end;
-        }
-        .chat-message.in {
-            background: #edeef0;
-            color: #2c3e50;
-            align-self: flex-start;
-        }
-        .chat-input-area {
-            display: flex;
-            gap: 8px;
-            padding: 12px;
-            border-top: 1px solid #edeef0;
-        }
-        .chat-input-area input {
-            flex: 1;
-            padding: 8px 12px;
-            border: 1px solid #d3d9de;
-            border-radius: 20px;
-            outline: none;
-        }
-        .chat-input-area button {
-            background: #2a5885;
-            color: white;
-            border: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            cursor: pointer;
+        .typing-indicator {
+            color: #2a5885;
+            font-size: 11px;
+            font-style: italic;
         }
         
         .new-chat-btn {
@@ -517,6 +470,103 @@
         }
         .hide { display: none; }
         .loading { text-align: center; padding: 40px; color: #939393; }
+        
+        /* Полноэкранный чат */
+        .chat-fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-fullscreen-header {
+            background: #2a5885;
+            color: white;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .chat-fullscreen-header .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .chat-fullscreen-header .chat-user-info {
+            flex: 1;
+        }
+        .chat-fullscreen-header .chat-user-name {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .chat-fullscreen-header .chat-user-status {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        .chat-messages-full {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: #edeef0;
+        }
+        .chat-input-full {
+            display: flex;
+            gap: 12px;
+            padding: 12px 16px;
+            background: white;
+            border-top: 1px solid #edeef0;
+        }
+        .chat-input-full input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #d3d9de;
+            border-radius: 24px;
+            outline: none;
+            font-size: 14px;
+        }
+        .chat-input-full button {
+            background: #2a5885;
+            color: white;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        .chat-message {
+            max-width: 75%;
+            padding: 8px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+        }
+        .chat-message.out {
+            background: #2a5885;
+            color: white;
+            align-self: flex-end;
+        }
+        .chat-message.in {
+            background: white;
+            color: #2c3e50;
+            align-self: flex-start;
+        }
         
         @media (max-width: 700px) {
             .left-menu { 
@@ -600,6 +650,15 @@
             cursor: pointer;
         }
         .modal-actions .primary { background: #2a5885; color: white; }
+        
+        .friend-badge {
+            background: #e5ebf1;
+            color: #2a5885;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 8px;
+        }
     </style>
 </head>
 <body>
@@ -652,7 +711,7 @@
                 <div id="chatsList" class="chat-list"></div>
                 <div id="newChatUsers" style="display: none;">
                     <button id="backToChatsBtn" class="new-chat-btn" style="background:#6c7a8e;"><i class="fas fa-arrow-left"></i> Назад</button>
-                    <input type="text" id="searchUserInput" class="search-input" placeholder="Поиск пользователей...">
+                    <input type="text" id="searchUserInput" class="search-input" placeholder="Поиск среди друзей...">
                     <div id="usersList"></div>
                 </div>
             </div>
@@ -710,9 +769,10 @@
     let unsubscribePosts = null;
     let unsubscribeChats = null;
     let currentChatUnsubscribe = null;
-    let currentChatWindow = null;
-    let commentsStates = new Map();
-    let userVerificationCache = new Map();
+    let currentTypingTimeout = null;
+    let typingListeners = new Map();
+    let userStatusListeners = new Map();
+    let userStatuses = new Map();
     
     function escapeHtml(str) {
         if (!str) return '';
@@ -728,19 +788,125 @@
         return `${Math.floor(diff / 1440)} дн назад`;
     }
     
+    function formatLastSeen(timestamp) {
+        if (!timestamp) return "был(а) давно";
+        const lastSeen = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+        const now = new Date();
+        const diff = Math.floor((now - lastSeen) / 60000);
+        
+        if (diff < 1) return "онлайн";
+        if (diff < 60) return `был(а) ${diff} мин назад`;
+        if (diff < 1440) return `был(а) ${Math.floor(diff / 60)} ч назад`;
+        return `был(а) ${lastSeen.toLocaleDateString()} в ${lastSeen.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
+    }
+    
+    async function updateUserStatus() {
+        if (!currentUser) return;
+        const userRef = doc(db, "users", currentUser.username);
+        await updateDoc(userRef, {
+            lastSeen: new Date(),
+            isOnline: true
+        }).catch(() => {});
+    }
+    
+    function startOnlineTracking() {
+        updateUserStatus();
+        const interval = setInterval(() => {
+            if (currentUser) {
+                updateUserStatus();
+            } else {
+                clearInterval(interval);
+            }
+        }, 30000);
+        
+        window.addEventListener('beforeunload', async () => {
+            if (currentUser) {
+                const userRef = doc(db, "users", currentUser.username);
+                await updateDoc(userRef, {
+                    isOnline: false,
+                    lastSeen: new Date()
+                }).catch(() => {});
+            }
+        });
+    }
+    
+    async function getUserStatus(username) {
+        if (userStatuses.has(username)) {
+            return userStatuses.get(username);
+        }
+        
+        const userRef = doc(db, "users", username);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+            const data = userSnap.data();
+            const status = {
+                isOnline: data.isOnline || false,
+                lastSeen: data.lastSeen
+            };
+            userStatuses.set(username, status);
+            return status;
+        }
+        return { isOnline: false, lastSeen: null };
+    }
+    
+    function subscribeToUserStatus(username, callback) {
+        if (userStatusListeners.has(username)) {
+            userStatusListeners.get(username)();
+        }
+        
+        const userRef = doc(db, "users", username);
+        const unsubscribe = onSnapshot(userRef, (doc) => {
+            if (doc.exists()) {
+                const data = doc.data();
+                const status = {
+                    isOnline: data.isOnline || false,
+                    lastSeen: data.lastSeen
+                };
+                userStatuses.set(username, status);
+                callback(status);
+            }
+        });
+        userStatusListeners.set(username, unsubscribe);
+        return unsubscribe;
+    }
+    
+    async function setTyping(chatId, isTyping) {
+        if (!currentUser) return;
+        const typingRef = doc(db, "typing", chatId);
+        if (isTyping) {
+            await setDoc(typingRef, {
+                [currentUser.username]: true,
+                timestamp: new Date()
+            }, { merge: true });
+        } else {
+            await updateDoc(typingRef, {
+                [currentUser.username]: false
+            }).catch(() => {});
+        }
+    }
+    
+    function subscribeToTyping(chatId, callback) {
+        if (typingListeners.has(chatId)) {
+            typingListeners.get(chatId)();
+        }
+        
+        const typingRef = doc(db, "typing", chatId);
+        const unsubscribe = onSnapshot(typingRef, (doc) => {
+            if (doc.exists()) {
+                const data = doc.data();
+                callback(data);
+            } else {
+                callback({});
+            }
+        });
+        typingListeners.set(chatId, unsubscribe);
+        return unsubscribe;
+    }
+    
     async function isUserVerified(username) {
-        if (userVerificationCache.has(username)) {
-            return userVerificationCache.get(username);
-        }
-        try {
-            const userRef = doc(db, "users", username);
-            const userSnap = await getDoc(userRef);
-            const verified = userSnap.data()?.isVerified || false;
-            userVerificationCache.set(username, verified);
-            return verified;
-        } catch (error) {
-            return false;
-        }
+        const userRef = doc(db, "users", username);
+        const userSnap = await getDoc(userRef);
+        return userSnap.data()?.isVerified || false;
     }
     
     async function registerUser(username, password) {
@@ -758,7 +924,9 @@
             createdAt: new Date().toISOString(),
             isVerified: username === "OlegTube" || username === "Admin",
             followers: [],
-            subscriptions: []
+            subscriptions: [],
+            isOnline: true,
+            lastSeen: new Date()
         });
         return { username };
     }
@@ -768,6 +936,11 @@
         const snap = await getDoc(userRef);
         if (!snap.exists()) throw new Error("Пользователь не найден");
         if (snap.data().password !== password) throw new Error("Неверный пароль");
+        
+        await updateDoc(userRef, {
+            isOnline: true,
+            lastSeen: new Date()
+        });
         return { username };
     }
     
@@ -780,10 +953,6 @@
                 timestamp: doc.data().timestamp?.toDate ? doc.data().timestamp.toDate() : new Date(doc.data().timestamp)
             }));
             posts.sort((a, b) => b.timestamp - a.timestamp);
-            
-            for (let post of posts) {
-                post.authorVerified = await isUserVerified(post.author);
-            }
             return posts;
         } catch (error) {
             console.error("Error getting posts:", error);
@@ -793,8 +962,6 @@
     
     async function addPost(text) {
         if (!text.trim()) throw new Error("Пост не может быть пустым");
-        const userRef = doc(db, "users", currentUser.username);
-        const userSnap = await getDoc(userRef);
         await addDoc(collection(db, "posts"), {
             author: currentUser.username,
             text: text.trim(),
@@ -803,7 +970,7 @@
             likes: [],
             likesCount: 0,
             commentsCount: 0,
-            authorVerified: userSnap.data()?.isVerified || false
+            authorVerified: await isUserVerified(currentUser.username)
         });
     }
     
@@ -850,17 +1017,11 @@
             const commentsRef = collection(db, "posts", postId, "comments");
             const q = query(commentsRef, orderBy("timestamp", "asc"));
             const snapshot = await getDocs(q);
-            const comments = [];
-            for (const doc of snapshot.docs) {
-                const comment = {
-                    id: doc.id,
-                    ...doc.data(),
-                    timestamp: doc.data().timestamp?.toDate ? doc.data().timestamp.toDate() : new Date(doc.data().timestamp)
-                };
-                comment.authorVerified = await isUserVerified(comment.author);
-                comments.push(comment);
-            }
-            return comments;
+            return snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+                timestamp: doc.data().timestamp?.toDate ? doc.data().timestamp.toDate() : new Date(doc.data().timestamp)
+            }));
         } catch (error) {
             console.error("Error getting comments:", error);
             return [];
@@ -877,10 +1038,6 @@
                 timestamp: doc.data().timestamp?.toDate ? doc.data().timestamp.toDate() : new Date(doc.data().timestamp)
             }));
             posts.sort((a, b) => b.timestamp - a.timestamp);
-            
-            for (let post of posts) {
-                post.authorVerified = await isUserVerified(post.author);
-            }
             return posts;
         } catch (error) {
             console.error("Error getting user posts:", error);
@@ -904,19 +1061,14 @@
             await updateDoc(doc(db, "users", targetUsername), { followers: arrayUnion(currentUser.username) });
         }
         
-        if (viewingProfile === targetUsername) {
-            await showProfile(targetUsername);
-        }
-        if (currentPanel === 'profile' && (!viewingProfile || viewingProfile === currentUser.username)) {
-            await showMyProfile();
-        }
+        if (viewingProfile === targetUsername) await showProfile(targetUsername);
+        if (currentPanel === 'profile' && (!viewingProfile || viewingProfile === currentUser.username)) await showMyProfile();
         await renderFeed();
     }
     
     function renderPost(post) {
         const hasLiked = post.likes?.includes(currentUser.username);
         const showComments = commentsStates.get(post.id) || false;
-        const verifiedBadge = post.authorVerified ? '<i class="fas fa-check-circle verified-badge" style="color:#2a5885;"></i>' : '';
         
         return `
             <div class="post-card" data-post-id="${post.id}">
@@ -924,7 +1076,8 @@
                     <div class="post-avatar" data-user="${post.author}">${escapeHtml(post.author.charAt(0).toUpperCase())}</div>
                     <div class="post-author-info">
                         <div class="post-author-name" data-user="${post.author}">
-                            ${escapeHtml(post.author)} ${verifiedBadge}
+                            ${escapeHtml(post.author)}
+                            ${post.authorVerified ? '<i class="fas fa-check-circle" style="color:#2a5885; font-size: 14px;"></i>' : ''}
                         </div>
                         <div class="post-date">${formatDate(post.timestamp)}</div>
                     </div>
@@ -933,27 +1086,37 @@
                 <div class="post-actions">
                     <div class="post-action like-btn" data-id="${post.id}">
                         <i class="${hasLiked ? 'fas fa-heart' : 'far fa-heart'}"></i>
-                        <span class="likes-count">${post.likesCount || 0}</span>
+                        <span>${post.likesCount || 0}</span>
                     </div>
                     <div class="post-action show-comments-btn" data-id="${post.id}">
                         <i class="far fa-comment"></i>
-                        <span class="comments-count">${post.commentsCount || 0} комментариев</span>
+                        <span>${post.commentsCount || 0} комментариев</span>
                     </div>
                 </div>
                 <div class="comments-section" style="display: ${showComments ? 'block' : 'none'}">
                     <div id="comments-${post.id}" class="comments-list"></div>
                     <div class="add-comment">
                         <input type="text" id="comment-input-${post.id}" placeholder="Написать комментарий...">
-                        <button class="submit-comment-btn" data-post-id="${post.id}">Отправить</button>
+                        <button onclick="window.addCommentToPost('${post.id}')">Отправить</button>
                     </div>
                 </div>
             </div>
         `;
     }
     
-    async function loadCommentsForPost(postId, container) {
+    window.addCommentToPost = async function(postId) {
+        const input = document.getElementById(`comment-input-${postId}`);
+        if (input && input.value.trim()) {
+            await addComment(postId, input.value);
+            input.value = '';
+            await loadCommentsForPost(postId);
+            await loadPosts();
+        }
+    };
+    
+    async function loadCommentsForPost(postId) {
         const comments = await getComments(postId);
-        const commentsContainer = container || document.getElementById(`comments-${postId}`);
+        const commentsContainer = document.getElementById(`comments-${postId}`);
         if (!commentsContainer) return;
         
         if (comments.length === 0) {
@@ -961,72 +1124,24 @@
             return;
         }
         
-        commentsContainer.innerHTML = comments.map(comment => {
-            const verifiedBadge = comment.authorVerified ? '<i class="fas fa-check-circle" style="color:#2a5885; font-size: 10px;"></i>' : '';
-            return `
-                <div class="comment">
-                    <div class="comment-avatar" data-user="${comment.author}">${escapeHtml(comment.author.charAt(0).toUpperCase())}</div>
-                    <div class="comment-content">
-                        <div class="comment-author" data-user="${comment.author}">
-                            ${escapeHtml(comment.author)} ${verifiedBadge}
-                        </div>
-                        <div class="comment-text">${escapeHtml(comment.text)}</div>
-                        <div class="comment-date">${formatDate(comment.timestamp)}</div>
-                    </div>
+        commentsContainer.innerHTML = comments.map(comment => `
+            <div class="comment">
+                <div class="comment-avatar" data-user="${comment.author}">${escapeHtml(comment.author.charAt(0).toUpperCase())}</div>
+                <div class="comment-content">
+                    <div class="comment-author" data-user="${comment.author}">${escapeHtml(comment.author)}</div>
+                    <div class="comment-text">${escapeHtml(comment.text)}</div>
+                    <div class="comment-date">${formatDate(comment.timestamp)}</div>
                 </div>
-            `;
-        }).join('');
+            </div>
+        `).join('');
         
         commentsContainer.querySelectorAll('.comment-avatar, .comment-author').forEach(el => {
             const user = el.dataset.user;
             if (user && user !== currentUser.username) {
-                el.onclick = (e) => {
-                    e.stopPropagation();
-                    showProfile(user);
-                    setPanel('profile');
-                };
+                el.onclick = () => showProfile(user);
                 el.style.cursor = 'pointer';
             }
         });
-    }
-    
-    async function handleAddComment(postId, inputElement, isProfileView = false) {
-        if (inputElement && inputElement.value.trim()) {
-            await addComment(postId, inputElement.value);
-            inputElement.value = '';
-            
-            const commentsContainer = document.getElementById(`comments-${postId}`);
-            if (commentsContainer) {
-                await loadCommentsForPost(postId, commentsContainer);
-            }
-            
-            const postCard = inputElement.closest('.post-card');
-            if (postCard) {
-                const commentsCountSpan = postCard.querySelector('.comments-count');
-                if (commentsCountSpan) {
-                    const currentText = commentsCountSpan.innerText;
-                    const currentCount = parseInt(currentText) || 0;
-                    commentsCountSpan.innerText = `${currentCount + 1} комментариев`;
-                }
-            }
-            
-            if (isProfileView || (currentPanel === 'profile' && viewingProfile)) {
-                await refreshProfilePosts();
-            }
-        }
-    }
-    
-    async function refreshProfilePosts() {
-        if (currentPanel === 'profile' && viewingProfile) {
-            const posts = await getUserPosts(viewingProfile);
-            const postsContainerDiv = document.getElementById('profilePostsList');
-            if (postsContainerDiv) {
-                const currentScroll = postsContainerDiv.scrollTop;
-                postsContainerDiv.innerHTML = posts.map(post => renderPost(post)).join('');
-                attachPostHandlers(postsContainerDiv);
-                postsContainerDiv.scrollTop = currentScroll;
-            }
-        }
     }
     
     function attachPostHandlers(container) {
@@ -1035,118 +1150,45 @@
         container.querySelectorAll('.post-avatar, .post-author-name').forEach(el => {
             const user = el.dataset.user;
             if (user && user !== currentUser.username) {
-                const newEl = el.cloneNode(true);
-                el.parentNode.replaceChild(newEl, el);
-                newEl.onclick = (e) => {
+                el.onclick = (e) => {
                     e.stopPropagation();
                     showProfile(user);
                     setPanel('profile');
                 };
-                newEl.style.cursor = 'pointer';
             }
         });
         
         container.querySelectorAll('.like-btn').forEach(btn => {
-            const newBtn = btn.cloneNode(true);
-            btn.parentNode.replaceChild(newBtn, btn);
-            newBtn.onclick = async (e) => {
-                e.stopPropagation();
-                const postId = newBtn.dataset.id;
-                await toggleLike(postId);
-                
-                const postCard = newBtn.closest('.post-card');
-                if (postCard) {
-                    const postIdFromCard = postCard.dataset.postId;
-                    const updatedPosts = await getAllPosts();
-                    const updatedPost = updatedPosts.find(p => p.id === postIdFromCard);
-                    if (updatedPost) {
-                        const likesSpan = newBtn.querySelector('.likes-count');
-                        const heartIcon = newBtn.querySelector('i');
-                        const hasLiked = updatedPost.likes?.includes(currentUser.username);
-                        if (likesSpan) likesSpan.innerText = updatedPost.likesCount || 0;
-                        if (heartIcon) {
-                            if (hasLiked) {
-                                heartIcon.classList.remove('far');
-                                heartIcon.classList.add('fas');
-                            } else {
-                                heartIcon.classList.remove('fas');
-                                heartIcon.classList.add('far');
-                            }
-                        }
-                    }
-                }
-                
-                if (currentPanel === 'profile' && viewingProfile) {
-                    await refreshProfilePosts();
-                }
+            btn.onclick = async () => {
+                await toggleLike(btn.dataset.id);
+                await loadPosts();
             };
         });
         
         container.querySelectorAll('.show-comments-btn').forEach(btn => {
-            const newBtn = btn.cloneNode(true);
-            btn.parentNode.replaceChild(newBtn, btn);
-            newBtn.onclick = async (e) => {
-                e.stopPropagation();
-                const postId = newBtn.dataset.id;
+            btn.onclick = async () => {
+                const postId = btn.dataset.id;
                 const currentState = commentsStates.get(postId) || false;
                 commentsStates.set(postId, !currentState);
-                
-                const postCard = newBtn.closest('.post-card');
+                const postCard = btn.closest('.post-card');
                 if (postCard) {
                     const commentsSection = postCard.querySelector('.comments-section');
                     if (commentsSection) {
                         commentsSection.style.display = !currentState ? 'block' : 'none';
-                        if (!currentState) {
-                            const commentsContainer = document.getElementById(`comments-${postId}`);
-                            if (commentsContainer) {
-                                await loadCommentsForPost(postId, commentsContainer);
-                            }
-                        }
+                        if (!currentState) await loadCommentsForPost(postId);
                     }
                 }
             };
-        });
-        
-        container.querySelectorAll('.submit-comment-btn').forEach(btn => {
-            const newBtn = btn.cloneNode(true);
-            btn.parentNode.replaceChild(newBtn, btn);
-            const postId = newBtn.dataset.postId;
-            const input = document.getElementById(`comment-input-${postId}`);
-            if (input) {
-                newBtn.onclick = async (e) => {
-                    e.stopPropagation();
-                    const isProfileView = currentPanel === 'profile';
-                    await handleAddComment(postId, input, isProfileView);
-                };
-            }
-        });
-        
-        container.querySelectorAll('.add-comment input').forEach(input => {
-            const newInput = input.cloneNode(true);
-            input.parentNode.replaceChild(newInput, input);
-            const postId = newInput.id.replace('comment-input-', '');
-            const btn = newInput.parentElement.querySelector('.submit-comment-btn');
-            if (btn) {
-                newInput.onkeypress = async (e) => {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        const isProfileView = currentPanel === 'profile';
-                        await handleAddComment(postId, newInput, isProfileView);
-                    }
-                };
-            }
         });
     }
     
     async function renderFeed() {
         const container = document.getElementById('postsContainer');
         if (!container) return;
-        
         if (allPosts.length === 0) {
             container.innerHTML = '<div class="loading">Нет постов. Создайте первый!</div>';
             return;
         }
-        
         container.innerHTML = allPosts.map(post => renderPost(post)).join('');
         attachPostHandlers(container);
     }
@@ -1155,13 +1197,11 @@
         viewingProfile = username;
         const container = document.getElementById('profileContent');
         if (!container) return;
-        
         container.innerHTML = '<div class="loading">Загрузка...</div>';
         
         try {
             const userRef = doc(db, "users", username);
             const userSnap = await getDoc(userRef);
-            
             if (!userSnap.exists()) {
                 container.innerHTML = '<div class="loading">Пользователь не найден</div>';
                 return;
@@ -1171,48 +1211,10 @@
             const posts = await getUserPosts(username);
             const isOwn = username === currentUser.username;
             const isSubscribed = !isOwn && (userData.followers || []).includes(currentUser.username);
-            const isVerified = userData.isVerified || false;
+            const status = await getUserStatus(username);
             
             let totalLikes = 0;
             posts.forEach(p => totalLikes += p.likesCount || 0);
-            
-            let statsHtml = `
-                <div class="profile-stats">
-                    <div class="profile-stat">
-                        <div class="profile-stat-number">${posts.length}</div>
-                        <div class="profile-stat-label">записей</div>
-                    </div>
-                    <div class="profile-stat">
-                        <div class="profile-stat-number">${userData.followers?.length || 0}</div>
-                        <div class="profile-stat-label">подписчиков</div>
-                    </div>
-                    <div class="profile-stat">
-                        <div class="profile-stat-number">${userData.subscriptions?.length || 0}</div>
-                        <div class="profile-stat-label">подписок</div>
-                    </div>
-                    <div class="profile-stat">
-                        <div class="profile-stat-number">${totalLikes}</div>
-                        <div class="profile-stat-label">лайков</div>
-                    </div>
-                </div>
-            `;
-            
-            let actionsHtml = '';
-            if (!isOwn) {
-                actionsHtml = `
-                    <div class="profile-actions">
-                        <button class="profile-btn ${isSubscribed ? 'subscribed' : ''}" id="subscribeProfileBtn">
-                            <i class="fas ${isSubscribed ? 'fa-check' : 'fa-user-plus'}"></i>
-                            ${isSubscribed ? 'Вы подписаны' : 'Подписаться'}
-                        </button>
-                        <button class="profile-btn secondary" id="messageProfileBtn">
-                            <i class="fas fa-envelope"></i> Сообщение
-                        </button>
-                    </div>
-                `;
-            }
-            
-            let postsHtml = '<div class="profile-posts"><h4>Записи</h4><div id="profilePostsList"></div></div>';
             
             container.innerHTML = `
                 <div class="profile-card">
@@ -1222,13 +1224,28 @@
                         <div class="profile-avatar-large">${escapeHtml(username.charAt(0).toUpperCase())}</div>
                         <div class="profile-name">
                             ${escapeHtml(username)}
-                            ${isVerified ? '<i class="fas fa-check-circle" style="color:#2a5885;"></i>' : ''}
+                            ${userData.isVerified ? '<i class="fas fa-check-circle" style="color:#2a5885;"></i>' : ''}
+                        </div>
+                        <div class="profile-status" style="font-size:12px; color:#939393; margin-top:4px;">
+                            ${formatLastSeen(status.lastSeen)}
                         </div>
                         <div style="font-size:12px; color:#939393; margin-top:8px;">Присоединился: ${new Date(userData.createdAt).toLocaleDateString()}</div>
                     </div>
-                    ${statsHtml}
-                    ${actionsHtml}
-                    ${postsHtml}
+                    <div class="profile-stats">
+                        <div class="profile-stat"><div class="profile-stat-number">${posts.length}</div><div class="profile-stat-label">записей</div></div>
+                        <div class="profile-stat"><div class="profile-stat-number">${userData.followers?.length || 0}</div><div class="profile-stat-label">подписчиков</div></div>
+                        <div class="profile-stat"><div class="profile-stat-number">${userData.subscriptions?.length || 0}</div><div class="profile-stat-label">подписок</div></div>
+                        <div class="profile-stat"><div class="profile-stat-number">${totalLikes}</div><div class="profile-stat-label">лайков</div></div>
+                    </div>
+                    ${!isOwn ? `
+                        <div class="profile-actions">
+                            <button class="profile-btn ${isSubscribed ? 'subscribed' : ''}" id="subscribeProfileBtn">
+                                <i class="fas ${isSubscribed ? 'fa-check' : 'fa-user-plus'}"></i> ${isSubscribed ? 'Вы подписаны' : 'Подписаться'}
+                            </button>
+                            <button class="profile-btn secondary" id="messageProfileBtn"><i class="fas fa-envelope"></i> Сообщение</button>
+                        </div>
+                    ` : ''}
+                    <div class="profile-posts"><h4>Записи</h4><div id="profilePostsList"></div></div>
                 </div>
             `;
             
@@ -1243,31 +1260,15 @@
             }
             
             if (!isOwn) {
-                const backBtn = document.getElementById('profileBackBtn');
-                if (backBtn) {
-                    backBtn.onclick = () => {
-                        viewingProfile = null;
-                        setPanel('home');
-                    };
-                }
-                
-                const subscribeBtn = document.getElementById('subscribeProfileBtn');
-                if (subscribeBtn) {
-                    subscribeBtn.onclick = () => toggleSubscribe(username);
-                }
-                
-                const messageBtn = document.getElementById('messageProfileBtn');
-                if (messageBtn) {
-                    messageBtn.onclick = async () => {
-                        const chatId = await getOrCreateChatId(username);
-                        openChatWindow(chatId, username);
-                        setPanel('messages');
-                    };
-                }
+                document.getElementById('profileBackBtn')?.addEventListener('click', () => { viewingProfile = null; setPanel('home'); });
+                document.getElementById('subscribeProfileBtn')?.addEventListener('click', () => toggleSubscribe(username));
+                document.getElementById('messageProfileBtn')?.addEventListener('click', async () => {
+                    const chatId = await getOrCreateChatId(username);
+                    openFullscreenChat(chatId, username);
+                });
             }
         } catch (error) {
-            console.error('Error loading profile:', error);
-            container.innerHTML = `<div class="loading">Ошибка загрузки профиля: ${error.message}</div>`;
+            container.innerHTML = `<div class="loading">Ошибка загрузки профиля</div>`;
         }
     }
     
@@ -1279,33 +1280,6 @@
     async function loadPosts() {
         allPosts = await getAllPosts();
         if (currentPanel === 'home') await renderFeed();
-        if (currentPanel === 'search') {
-            const input = document.getElementById('searchInput');
-            if (input?.value) await searchPosts(input.value);
-        }
-    }
-    
-    async function searchPosts(query) {
-        const container = document.getElementById('searchResults');
-        if (!container) return;
-        
-        if (!query.trim()) {
-            container.innerHTML = '<div class="loading">Введите текст для поиска</div>';
-            return;
-        }
-        
-        const results = allPosts.filter(p => 
-            p.author.toLowerCase().includes(query.toLowerCase()) || 
-            p.text.toLowerCase().includes(query.toLowerCase())
-        );
-        
-        if (results.length === 0) {
-            container.innerHTML = '<div class="loading">Ничего не найдено</div>';
-            return;
-        }
-        
-        container.innerHTML = results.map(post => renderPost(post)).join('');
-        attachPostHandlers(container);
     }
     
     async function getOrCreateChatId(otherUsername) {
@@ -1335,6 +1309,95 @@
         });
     }
     
+    function openFullscreenChat(chatId, partnerName) {
+        const chatHTML = `
+            <div id="fullscreenChat" class="chat-fullscreen">
+                <div class="chat-fullscreen-header">
+                    <button class="back-btn" id="closeFullscreenChat"><i class="fas fa-arrow-left"></i></button>
+                    <div class="chat-user-info">
+                        <div class="chat-user-name">${escapeHtml(partnerName)}</div>
+                        <div class="chat-user-status" id="chatUserStatus">загрузка...</div>
+                    </div>
+                </div>
+                <div class="chat-messages-full" id="chatMessagesFull"></div>
+                <div class="chat-input-full">
+                    <input type="text" id="chatMessageFull" placeholder="Сообщение...">
+                    <button id="sendChatFull"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', chatHTML);
+        
+        let typingTimeout = null;
+        let isTyping = false;
+        
+        const messagesDiv = document.getElementById('chatMessagesFull');
+        const input = document.getElementById('chatMessageFull');
+        const sendBtn = document.getElementById('sendChatFull');
+        const statusDiv = document.getElementById('chatUserStatus');
+        
+        subscribeToUserStatus(partnerName, (status) => {
+            if (statusDiv) {
+                statusDiv.innerHTML = formatLastSeen(status.lastSeen);
+            }
+        });
+        
+        subscribeToTyping(chatId, (typingData) => {
+            if (typingData && typingData[partnerName]) {
+                if (statusDiv && !statusDiv.innerHTML.includes('печатает')) {
+                    statusDiv.innerHTML = 'печатает...';
+                }
+            } else if (statusDiv) {
+                getUserStatus(partnerName).then(status => {
+                    statusDiv.innerHTML = formatLastSeen(status.lastSeen);
+                });
+            }
+        });
+        
+        input.addEventListener('input', () => {
+            if (!isTyping) {
+                isTyping = true;
+                setTyping(chatId, true);
+            }
+            if (typingTimeout) clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(() => {
+                isTyping = false;
+                setTyping(chatId, false);
+            }, 1000);
+        });
+        
+        const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
+        const unsubscribe = onSnapshot(q, (snap) => {
+            const messages = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            messagesDiv.innerHTML = messages.map(m => {
+                const isMe = m.senderId === currentUser.username;
+                const time = m.timestamp?.toDate ? m.timestamp.toDate().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
+                return `<div class="chat-message ${isMe ? 'out' : 'in'}">${escapeHtml(m.text)}<div style="font-size:10px; opacity:0.7; margin-top:4px;">${time}</div></div>`;
+            }).join('');
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        });
+        
+        const sendMessageHandler = async () => {
+            if (input.value.trim()) {
+                await sendMessage(chatId, input.value);
+                input.value = '';
+                if (typingTimeout) clearTimeout(typingTimeout);
+                await setTyping(chatId, false);
+                isTyping = false;
+            }
+        };
+        
+        sendBtn.onclick = sendMessageHandler;
+        input.onkeypress = (e) => { if (e.key === 'Enter') sendMessageHandler(); };
+        
+        document.getElementById('closeFullscreenChat').onclick = () => {
+            unsubscribe();
+            if (typingTimeout) clearTimeout(typingTimeout);
+            setTyping(chatId, false);
+            document.getElementById('fullscreenChat').remove();
+        };
+    }
+    
     function loadChats() {
         const container = document.getElementById('chatsList');
         if (!container) return;
@@ -1347,6 +1410,8 @@
                 const chat = { id: docSnap.id, ...docSnap.data() };
                 const other = chat.participants.find(p => p !== currentUser.username);
                 chat.otherUser = other;
+                const status = await getUserStatus(other);
+                chat.status = status;
                 chats.push(chat);
             }
             chats.sort((a,b) => {
@@ -1362,79 +1427,25 @@
             
             container.innerHTML = chats.map(chat => `
                 <div class="chat-item" data-chat="${chat.id}" data-user="${chat.otherUser}">
-                    <div class="chat-avatar">${escapeHtml(chat.otherUser?.charAt(0).toUpperCase() || '?')}</div>
+                    <div class="chat-avatar">
+                        ${escapeHtml(chat.otherUser?.charAt(0).toUpperCase() || '?')}
+                        ${chat.status.isOnline ? '<div class="online-dot"></div>' : ''}
+                    </div>
                     <div class="chat-info">
-                        <div class="chat-name">${escapeHtml(chat.otherUser || 'Unknown')}</div>
+                        <div class="chat-name">
+                            ${escapeHtml(chat.otherUser || 'Unknown')}
+                            ${chat.status.isOnline ? '<span style="color:#4bb34b; font-size:11px;">онлайн</span>' : ''}
+                        </div>
                         <div class="chat-last-msg">${escapeHtml(chat.lastMessage?.substring(0, 50) || 'Новый диалог')}</div>
+                        <div class="chat-status">${formatLastSeen(chat.status.lastSeen)}</div>
                     </div>
                 </div>
             `).join('');
             
             document.querySelectorAll('.chat-item').forEach(el => {
-                el.onclick = () => openChatWindow(el.dataset.chat, el.dataset.user);
+                el.onclick = () => openFullscreenChat(el.dataset.chat, el.dataset.user);
             });
         });
-    }
-    
-    function openChatWindow(chatId, partnerName) {
-        if (currentChatWindow) {
-            currentChatWindow.remove();
-            if (currentChatUnsubscribe) currentChatUnsubscribe();
-        }
-        
-        const win = document.createElement('div');
-        win.className = 'chat-window';
-        win.innerHTML = `
-            <div class="chat-window-header">
-                <span>${escapeHtml(partnerName)}</span>
-                <button id="closeChatWin">✕</button>
-            </div>
-            <div class="chat-messages" id="chatMessagesList"></div>
-            <div class="chat-input-area">
-                <input type="text" id="chatMessageInput" placeholder="Сообщение...">
-                <button id="sendChatMsg"><i class="fas fa-paper-plane"></i></button>
-            </div>
-        `;
-        document.body.appendChild(win);
-        currentChatWindow = win;
-        
-        const q = query(collection(db, "chats", chatId, "messages"));
-        currentChatUnsubscribe = onSnapshot(q, (snap) => {
-            let messages = snap.docs.map(docMsg => ({
-                ...docMsg.data(),
-                id: docMsg.id
-            }));
-            messages.sort((a, b) => {
-                const timeA = a.timestamp?.toDate ? a.timestamp.toDate() : 0;
-                const timeB = b.timestamp?.toDate ? b.timestamp.toDate() : 0;
-                return timeA - timeB;
-            });
-            
-            const msgsDiv = document.getElementById('chatMessagesList');
-            if (!msgsDiv) return;
-            msgsDiv.innerHTML = messages.map(m => {
-                const isMe = m.senderId === currentUser.username;
-                const time = m.timestamp?.toDate ? m.timestamp.toDate().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
-                return `<div class="chat-message ${isMe ? 'out' : 'in'}">${escapeHtml(m.text)}<div style="font-size:10px; opacity:0.7; margin-top:4px;">${time}</div></div>`;
-            }).join('');
-            msgsDiv.scrollTop = msgsDiv.scrollHeight;
-        });
-        
-        document.getElementById('closeChatWin').onclick = () => {
-            if (currentChatUnsubscribe) currentChatUnsubscribe();
-            win.remove();
-            currentChatWindow = null;
-        };
-        document.getElementById('sendChatMsg').onclick = async () => {
-            const input = document.getElementById('chatMessageInput');
-            if (input.value.trim()) {
-                await sendMessage(chatId, input.value);
-                input.value = '';
-            }
-        };
-        document.getElementById('chatMessageInput').onkeypress = (e) => {
-            if (e.key === 'Enter') document.getElementById('sendChatMsg').click();
-        };
     }
     
     async function showNewChatUsers() {
@@ -1443,20 +1454,38 @@
         if (chatsList) chatsList.style.display = 'none';
         if (newChatUsers) newChatUsers.style.display = 'block';
         
-        const usersSnap = await getDocs(collection(db, "users"));
-        const users = usersSnap.docs.map(doc => ({ username: doc.id })).filter(u => u.username !== currentUser.username);
+        const currentUserRef = doc(db, "users", currentUser.username);
+        const currentUserSnap = await getDoc(currentUserRef);
+        const currentUserData = currentUserSnap.data();
+        
+        const followers = currentUserData.followers || [];
+        const subscriptions = currentUserData.subscriptions || [];
+        const friendsSet = new Set();
+        followers.forEach(f => { if (subscriptions.includes(f)) friendsSet.add(f); });
+        subscriptions.forEach(s => { if (followers.includes(s)) friendsSet.add(s); });
+        
+        const friendsList = Array.from(friendsSet);
+        
+        if (friendsList.length === 0) {
+            const container = document.getElementById('usersList');
+            if (container) {
+                container.innerHTML = '<div class="loading">У вас пока нет друзей. Подпишитесь на кого-нибудь, чтобы начать диалог!</div>';
+            }
+            return;
+        }
+        
         const container = document.getElementById('usersList');
         if (!container) return;
         
         const render = (list) => {
             if (list.length === 0) {
-                container.innerHTML = '<div class="loading">Нет других пользователей</div>';
+                container.innerHTML = '<div class="loading">Друзья не найдены</div>';
                 return;
             }
             container.innerHTML = list.map(u => `
-                <div class="chat-item" data-user="${u.username}">
-                    <div class="chat-avatar">${escapeHtml(u.username.charAt(0).toUpperCase())}</div>
-                    <div><strong>${escapeHtml(u.username)}</strong></div>
+                <div class="chat-item" data-user="${u}">
+                    <div class="chat-avatar">${escapeHtml(u.charAt(0).toUpperCase())}</div>
+                    <div><strong>${escapeHtml(u)}</strong><span class="friend-badge">друг</span></div>
                 </div>
             `).join('');
             
@@ -1464,7 +1493,7 @@
                 el.onclick = async () => {
                     const target = el.dataset.user;
                     const chatId = await getOrCreateChatId(target);
-                    openChatWindow(chatId, target);
+                    openFullscreenChat(chatId, target);
                     if (chatsList) chatsList.style.display = 'block';
                     if (newChatUsers) newChatUsers.style.display = 'none';
                     loadChats();
@@ -1472,13 +1501,13 @@
             });
         };
         
-        render(users);
+        render(friendsList);
         
         const searchInput = document.getElementById('searchUserInput');
         if (searchInput) {
             searchInput.oninput = (e) => {
                 const term = e.target.value.toLowerCase();
-                render(users.filter(u => u.username.toLowerCase().includes(term)));
+                render(friendsList.filter(u => u.toLowerCase().includes(term)));
             };
         }
     }
@@ -1489,176 +1518,126 @@
         const messagesPanel = document.getElementById('messagesPanel');
         const profilePanel = document.getElementById('profilePanel');
         
-        if (feedPanel) feedPanel.classList.add('hide');
-        if (searchPanel) searchPanel.classList.add('hide');
-        if (messagesPanel) messagesPanel.classList.add('hide');
-        if (profilePanel) profilePanel.classList.add('hide');
+        feedPanel?.classList.add('hide');
+        searchPanel?.classList.add('hide');
+        messagesPanel?.classList.add('hide');
+        profilePanel?.classList.add('hide');
         
         if (panel === 'home') {
-            if (feedPanel) feedPanel.classList.remove('hide');
+            feedPanel?.classList.remove('hide');
             currentPanel = 'home';
             renderFeed();
         } else if (panel === 'search') {
-            if (searchPanel) searchPanel.classList.remove('hide');
+            searchPanel?.classList.remove('hide');
             currentPanel = 'search';
         } else if (panel === 'messages') {
-            if (messagesPanel) messagesPanel.classList.remove('hide');
-            const chatsList = document.getElementById('chatsList');
-            const newChatUsers = document.getElementById('newChatUsers');
-            if (chatsList) chatsList.style.display = 'block';
-            if (newChatUsers) newChatUsers.style.display = 'none';
-            if (currentChatWindow) {
-                currentChatWindow.remove();
-                currentChatWindow = null;
-            }
+            messagesPanel?.classList.remove('hide');
+            document.getElementById('chatsList').style.display = 'block';
+            document.getElementById('newChatUsers').style.display = 'none';
             loadChats();
             currentPanel = 'messages';
         } else if (panel === 'profile') {
-            if (profilePanel) profilePanel.classList.remove('hide');
-            if (viewingProfile && viewingProfile !== currentUser.username) {
-                showProfile(viewingProfile);
-            } else {
-                showMyProfile();
-            }
+            profilePanel?.classList.remove('hide');
+            if (viewingProfile && viewingProfile !== currentUser.username) showProfile(viewingProfile);
+            else showMyProfile();
             currentPanel = 'profile';
         }
         
-        const menuIds = ['menuHome', 'menuSearch', 'menuMessages', 'menuProfile'];
-        menuIds.forEach(id => {
-            const item = document.getElementById(id);
-            if (item) item.classList.remove('active');
+        ['menuHome', 'menuSearch', 'menuMessages', 'menuProfile'].forEach(id => {
+            document.getElementById(id)?.classList.remove('active');
         });
-        
-        const activeMenuId = `menu${panel.charAt(0).toUpperCase() + panel.slice(1)}`;
-        const activeItem = document.getElementById(activeMenuId);
-        if (activeItem) activeItem.classList.add('active');
+        document.getElementById(`menu${panel.charAt(0).toUpperCase() + panel.slice(1)}`)?.classList.add('active');
     }
     
     document.getElementById('menuHome')?.addEventListener('click', () => setPanel('home'));
     document.getElementById('menuSearch')?.addEventListener('click', () => setPanel('search'));
     document.getElementById('menuMessages')?.addEventListener('click', () => setPanel('messages'));
-    document.getElementById('menuProfile')?.addEventListener('click', () => {
-        viewingProfile = null;
-        setPanel('profile');
-    });
-    document.getElementById('menuCreatePost')?.addEventListener('click', () => {
-        document.getElementById('createPostModal').classList.add('active');
-    });
-    
+    document.getElementById('menuProfile')?.addEventListener('click', () => { viewingProfile = null; setPanel('profile'); });
+    document.getElementById('menuCreatePost')?.addEventListener('click', () => document.getElementById('createPostModal').classList.add('active'));
     document.getElementById('submitPostBtn')?.addEventListener('click', async () => {
         const text = document.getElementById('postText')?.value;
-        if (text && text.trim()) {
+        if (text?.trim()) {
             await addPost(text);
             document.getElementById('createPostModal').classList.remove('active');
             document.getElementById('postText').value = '';
             await loadPosts();
-            if (currentPanel === 'profile') {
-                await showMyProfile();
-            }
-        } else {
-            alert('Напишите что-нибудь');
+            if (currentPanel === 'profile') await showMyProfile();
         }
     });
-    
-    document.getElementById('cancelPostBtn')?.addEventListener('click', () => {
-        document.getElementById('createPostModal').classList.remove('active');
-    });
-    
+    document.getElementById('cancelPostBtn')?.addEventListener('click', () => document.getElementById('createPostModal').classList.remove('active'));
     document.getElementById('newChatBtn')?.addEventListener('click', () => showNewChatUsers());
     document.getElementById('backToChatsBtn')?.addEventListener('click', () => {
-        const chatsList = document.getElementById('chatsList');
-        const newChatUsers = document.getElementById('newChatUsers');
-        if (chatsList) chatsList.style.display = 'block';
-        if (newChatUsers) newChatUsers.style.display = 'none';
+        document.getElementById('chatsList').style.display = 'block';
+        document.getElementById('newChatUsers').style.display = 'none';
         loadChats();
     });
-    
-    document.getElementById('searchInput')?.addEventListener('input', (e) => searchPosts(e.target.value));
-    
-    document.getElementById('logoutBtn')?.addEventListener('click', () => {
+    document.getElementById('logoutBtn')?.addEventListener('click', async () => {
+        if (currentUser) {
+            const userRef = doc(db, "users", currentUser.username);
+            await updateDoc(userRef, { isOnline: false, lastSeen: new Date() }).catch(() => {});
+        }
         if (unsubscribePosts) unsubscribePosts();
         if (unsubscribeChats) unsubscribeChats();
-        if (currentChatUnsubscribe) currentChatUnsubscribe();
-        if (currentChatWindow) currentChatWindow.remove();
         document.getElementById('appScreen').style.display = 'none';
         document.getElementById('authScreen').style.display = 'block';
         currentUser = null;
-        viewingProfile = null;
     });
     
     const loginBtn = document.getElementById('loginBtn');
     const showRegisterBtn = document.getElementById('showRegisterBtn');
     const authError = document.getElementById('authError');
-    const authSuccess = document.getElementById('authSuccess');
     let isLoginMode = true;
     
-    if (showRegisterBtn) {
-        showRegisterBtn.onclick = () => {
-            isLoginMode = !isLoginMode;
-            if (loginBtn) loginBtn.innerText = isLoginMode ? "Войти" : "Зарегистрироваться";
-            showRegisterBtn.innerText = isLoginMode ? "Зарегистрироваться" : "Назад к входу";
-            if (authError) authError.innerText = "";
-            if (authSuccess) authSuccess.innerText = "";
-        };
-    }
+    showRegisterBtn.onclick = () => {
+        isLoginMode = !isLoginMode;
+        loginBtn.innerText = isLoginMode ? "Войти" : "Зарегистрироваться";
+        showRegisterBtn.innerText = isLoginMode ? "Зарегистрироваться" : "Назад к входу";
+        authError.innerText = "";
+    };
     
     async function handleAuth() {
         const username = document.getElementById('loginName')?.value.trim();
         const password = document.getElementById('loginPassword')?.value.trim();
         if (!username || !password) {
-            if (authError) authError.innerText = "Заполните все поля";
+            authError.innerText = "Заполните все поля";
             return;
         }
         try {
-            if (isLoginMode) {
-                await loginUser(username, password);
-                if (authSuccess) authSuccess.innerText = "Вход выполнен!";
-            } else {
-                await registerUser(username, password);
-                if (authSuccess) authSuccess.innerText = "Регистрация успешна!";
-            }
+            if (isLoginMode) await loginUser(username, password);
+            else await registerUser(username, password);
+            
             currentUser = { username };
-            viewingProfile = null;
             document.getElementById('authScreen').style.display = 'none';
             document.getElementById('appScreen').style.display = 'flex';
             await loadPosts();
+            startOnlineTracking();
             
-            if (unsubscribePosts) unsubscribePosts();
             const q = query(collection(db, "posts"));
-            unsubscribePosts = onSnapshot(q, async () => {
-                await loadPosts();
-            });
-            
+            unsubscribePosts = onSnapshot(q, () => loadPosts());
             setPanel('home');
         } catch (err) {
-            if (authError) authError.innerText = err.message;
+            authError.innerText = err.message;
         }
     }
     
-    if (loginBtn) loginBtn.onclick = handleAuth;
-    document.getElementById('loginPassword')?.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') handleAuth();
-    });
+    loginBtn.onclick = handleAuth;
+    document.getElementById('loginPassword')?.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleAuth(); });
     
+    let commentsStates = new Map();
     async function initTestPost() {
-        try {
-            const q = query(collection(db, "posts"), limit(1));
-            const snap = await getDocs(q);
-            if (snap.empty) {
-                await addDoc(collection(db, "posts"), {
-                    author: "OlegTube",
-                    text: "Добро пожаловать в OlegTube! 🎉\n\nКликайте на аватар пользователя, чтобы открыть профиль и подписаться!\n\nТеперь доступны комментарии к постам!\n\nВерифицированные пользователи отмечены галочкой ✓",
-                    timestamp: new Date(),
-                    userId: "OlegTube",
-                    likes: [],
-                    likesCount: 0,
-                    commentsCount: 0,
-                    authorVerified: true
-                });
-                console.log("Тестовый пост создан");
-            }
-        } catch (error) {
-            console.error("Error creating test post:", error);
+        const q = query(collection(db, "posts"), limit(1));
+        const snap = await getDocs(q);
+        if (snap.empty) {
+            await addDoc(collection(db, "posts"), {
+                author: "OlegTube",
+                text: "Добро пожаловать в OlegTube! 🎉\n\nНовые возможности:\n✓ Статус 'онлайн' и 'был в сети'\n✓ Индикатор 'печатает...' в чате\n✓ Полноэкранные чаты на телефоне\n✓ Общение только с друзьями",
+                timestamp: new Date(),
+                userId: "OlegTube",
+                likes: [],
+                likesCount: 0,
+                commentsCount: 0,
+                authorVerified: true
+            });
         }
     }
     initTestPost();
