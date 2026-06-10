@@ -169,9 +169,6 @@
         .call-btn:hover {
             background: rgba(255,255,255,0.3);
         }
-        .call-btn.in-call {
-            background: #e64646;
-        }
         
         .call-modal {
             position: fixed;
@@ -184,6 +181,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
             visibility: hidden;
             opacity: 0;
             transition: 0.3s;
@@ -198,6 +196,8 @@
             padding: 40px;
             text-align: center;
             min-width: 300px;
+            max-width: 400px;
+            width: 90%;
         }
         .call-avatar {
             width: 100px;
@@ -222,12 +222,22 @@
         }
         .call-status {
             color: #aaa;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .call-timer {
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
             margin-bottom: 30px;
+            font-variant-numeric: tabular-nums;
+            font-family: monospace;
         }
         .call-actions {
             display: flex;
             gap: 20px;
             justify-content: center;
+            flex-wrap: wrap;
         }
         .call-action-btn {
             width: 60px;
@@ -237,6 +247,9 @@
             cursor: pointer;
             font-size: 24px;
             transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .call-action-btn:active {
             transform: scale(0.9);
@@ -258,7 +271,26 @@
             color: white;
         }
         .call-action-btn.mic.muted {
-            background: #666;
+            background: #e64646;
+        }
+        .call-action-btn.speaker {
+            background: #2a5885;
+            color: white;
+        }
+        .call-action-btn.speaker.active {
+            background: #4bb34b;
+        }
+        .call-btn-label {
+            color: white;
+            font-size: 12px;
+            margin-top: 8px;
+            text-align: center;
+        }
+        .call-action-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
         }
         
         .app-container {
@@ -1158,9 +1190,9 @@
                 padding: 30px;
             }
             .call-action-btn {
-                width: 70px;
-                height: 70px;
-                font-size: 28px;
+                width: 65px;
+                height: 65px;
+                font-size: 26px;
             }
             .call-avatar {
                 width: 80px;
@@ -1300,6 +1332,7 @@
         <div class="call-avatar" id="callAvatar"></div>
         <div class="call-name" id="callName"></div>
         <div class="call-status" id="callStatus">Звонок...</div>
+        <div class="call-timer" id="callTimer" style="display: none;">00:00</div>
         <div class="call-actions" id="callActions"></div>
     </div>
 </div>
@@ -1315,7 +1348,7 @@
 
 <script type="module">
     import { initializeApp } from "firebase/app";
-    import { getFirestore, collection, addDoc, getDocs, getDoc, query, where, doc, updateDoc, arrayUnion, arrayRemove, setDoc, onSnapshot, orderBy, deleteDoc, serverTimestamp } from "firebase/firestore";
+    import { getFirestore, collection, addDoc, getDocs, getDoc, query, where, doc, updateDoc, arrayUnion, arrayRemove, setDoc, onSnapshot, orderBy, deleteDoc } from "firebase/firestore";
     
     const firebaseConfig = {
         apiKey: "AIzaSyDuJfaJAvigdDsCkeLoHpM3QG30YANa5tU",
@@ -1346,6 +1379,9 @@
     let currentCall = null;
     let callListeners = new Map();
     let remoteAudio = null;
+    let callTimerInterval = null;
+    let callStartTime = null;
+    let isSpeakerOn = false;
     
     const configuration = {
         iceServers: [
@@ -1402,6 +1438,51 @@
         return `${Math.floor(diff / 1440)} дн назад`;
     }
     
+    function formatCallTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+    
+    function startCallTimer() {
+        callStartTime = Date.now();
+        const timerEl = document.getElementById('callTimer');
+        timerEl.style.display = 'block';
+        timerEl.textContent = '00:00';
+        
+        if (callTimerInterval) clearInterval(callTimerInterval);
+        callTimerInterval = setInterval(() => {
+            const elapsed = Math.floor((Date.now() - callStartTime) / 1000);
+            timerEl.textContent = formatCallTime(elapsed);
+        }, 1000);
+    }
+    
+    function stopCallTimer() {
+        if (callTimerInterval) {
+            clearInterval(callTimerInterval);
+            callTimerInterval = null;
+        }
+        callStartTime = null;
+        const timerEl = document.getElementById('callTimer');
+        if (timerEl) timerEl.style.display = 'none';
+    }
+    
+    function setSpeakerMode(on) {
+        if (remoteAudio) {
+            if (on) {
+                remoteAudio.setSinkId?.('speaker').catch(() => {
+                    // Fallback: меняем громкость
+                    remoteAudio.volume = 1.0;
+                });
+            } else {
+                remoteAudio.setSinkId?.('default').catch(() => {
+                    remoteAudio.volume = 1.0;
+                });
+            }
+        }
+        isSpeakerOn = on;
+    }
+    
     async function startCall(partnerName, isIncoming = false, callId = null) {
         if (currentCall) {
             showToast('У вас уже активен звонок');
@@ -1436,7 +1517,7 @@
                 console.log('Call document created:', actualCallId);
             }
             
-            currentCall = { callId: actualCallId, partnerName, isIncoming };
+            currentCall = { callId: actualCallId, partnerName, isIncoming, isActive: false };
             
             peerConnection.onicecandidate = async (event) => {
                 if (event.candidate) {
@@ -1465,6 +1546,11 @@
                 remoteAudio = new Audio();
                 remoteAudio.srcObject = event.streams[0];
                 remoteAudio.autoplay = true;
+                
+                if (isSpeakerOn) {
+                    setSpeakerMode(true);
+                }
+                
                 const playPromise = remoteAudio.play();
                 if (playPromise !== undefined) {
                     playPromise.catch(e => console.log('Play error:', e));
@@ -1473,6 +1559,12 @@
             
             peerConnection.onconnectionstatechange = () => {
                 console.log('Connection state:', peerConnection.connectionState);
+                if (peerConnection.connectionState === 'connected' && !currentCall?.isActive) {
+                    currentCall.isActive = true;
+                    updateDoc(doc(db, "calls", actualCallId), { status: 'active' }).catch(() => {});
+                    showCallModal(partnerName, 'active');
+                    startCallTimer();
+                }
                 if (peerConnection.connectionState === 'disconnected' || 
                     peerConnection.connectionState === 'failed' ||
                     peerConnection.connectionState === 'closed') {
@@ -1482,6 +1574,12 @@
             
             peerConnection.oniceconnectionstatechange = () => {
                 console.log('ICE connection state:', peerConnection.iceConnectionState);
+                if (peerConnection.iceConnectionState === 'connected' && !currentCall?.isActive) {
+                    currentCall.isActive = true;
+                    updateDoc(doc(db, "calls", actualCallId), { status: 'active' }).catch(() => {});
+                    showCallModal(partnerName, 'active');
+                    startCallTimer();
+                }
                 if (peerConnection.iceConnectionState === 'disconnected' ||
                     peerConnection.iceConnectionState === 'failed') {
                     endCall();
@@ -1518,7 +1616,7 @@
             const callSnap = await getDoc(callRef);
             const callData = callSnap.data();
             
-            if (!callData || callData.status !== 'calling') {
+            if (!callData || (callData.status !== 'calling' && callData.status !== 'active')) {
                 showToast('Звонок уже завершён');
                 return;
             }
@@ -1530,7 +1628,7 @@
                 peerConnection.addTrack(track, localStream);
             });
             
-            currentCall = { callId, partnerName: callerName, isIncoming: false };
+            currentCall = { callId, partnerName: callerName, isIncoming: false, isActive: false };
             
             if (callData.offer) {
                 await peerConnection.setRemoteDescription(new RTCSessionDescription(callData.offer));
@@ -1546,7 +1644,7 @@
                     type: answer.type,
                     sdp: answer.sdp
                 }, 
-                status: 'active' 
+                status: 'connecting' 
             });
             
             peerConnection.onicecandidate = async (event) => {
@@ -1584,6 +1682,11 @@
                 remoteAudio = new Audio();
                 remoteAudio.srcObject = event.streams[0];
                 remoteAudio.autoplay = true;
+                
+                if (isSpeakerOn) {
+                    setSpeakerMode(true);
+                }
+                
                 const playPromise = remoteAudio.play();
                 if (playPromise !== undefined) {
                     playPromise.catch(e => console.log('Play error:', e));
@@ -1591,6 +1694,13 @@
             };
             
             peerConnection.onconnectionstatechange = () => {
+                console.log('Connection state:', peerConnection.connectionState);
+                if (peerConnection.connectionState === 'connected' && !currentCall?.isActive) {
+                    currentCall.isActive = true;
+                    updateDoc(callRef, { status: 'active' }).catch(() => {});
+                    showCallModal(callerName, 'active');
+                    startCallTimer();
+                }
                 if (peerConnection.connectionState === 'disconnected' || 
                     peerConnection.connectionState === 'failed' ||
                     peerConnection.connectionState === 'closed') {
@@ -1599,13 +1709,20 @@
             };
             
             peerConnection.oniceconnectionstatechange = () => {
+                console.log('ICE connection state:', peerConnection.iceConnectionState);
+                if (peerConnection.iceConnectionState === 'connected' && !currentCall?.isActive) {
+                    currentCall.isActive = true;
+                    updateDoc(callRef, { status: 'active' }).catch(() => {});
+                    showCallModal(callerName, 'active');
+                    startCallTimer();
+                }
                 if (peerConnection.iceConnectionState === 'disconnected' ||
                     peerConnection.iceConnectionState === 'failed') {
                     endCall();
                 }
             };
             
-            showCallModal(callerName, 'active');
+            showCallModal(callerName, 'connecting');
             playSound('call');
             
             listenForIceCandidates(callId);
@@ -1623,6 +1740,13 @@
             const data = snap.data();
             if (!data || !peerConnection) return;
             
+            // Обновляем статус звонка
+            if (data.status === 'active' && currentCall && !currentCall.isActive) {
+                currentCall.isActive = true;
+                showCallModal(currentCall.partnerName, 'active');
+                startCallTimer();
+            }
+            
             if (data.iceCandidates) {
                 for (const candidate of data.iceCandidates) {
                     try {
@@ -1635,7 +1759,8 @@
                 }
             }
             
-            if (data.answer && !peerConnection.currentRemoteDescription && currentCall && !currentCall.isIncoming) {
+            // Принимаем answer от звонящего
+            if (data.answer && !peerConnection.currentRemoteDescription) {
                 try {
                     await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
                     console.log('Remote description set from listener');
@@ -1649,6 +1774,8 @@
     
     async function endCall() {
         console.log('Ending call');
+        stopCallTimer();
+        
         if (currentCall) {
             if (currentCall.callId) {
                 try {
@@ -1673,6 +1800,7 @@
                 iceUnsub();
                 callListeners.delete(`ice_${currentCall.callId}`);
             }
+            isSpeakerOn = false;
             currentCall = null;
         }
         closeCallModal();
@@ -1683,6 +1811,7 @@
         const callAvatar = document.getElementById('callAvatar');
         const callName = document.getElementById('callName');
         const callStatus = document.getElementById('callStatus');
+        const callTimer = document.getElementById('callTimer');
         const callActions = document.getElementById('callActions');
         
         getUserProfile(partnerName).then(profile => {
@@ -1693,23 +1822,63 @@
         
         if (status === 'incoming') {
             callStatus.textContent = 'Входящий звонок...';
+            callTimer.style.display = 'none';
             callActions.innerHTML = `
-                <button class="call-action-btn accept" id="acceptCallBtn"><i class="fas fa-phone"></i></button>
-                <button class="call-action-btn decline" id="declineCallBtn"><i class="fas fa-times"></i></button>
+                <div class="call-action-wrapper">
+                    <button class="call-action-btn accept" id="acceptCallBtn"><i class="fas fa-phone"></i></button>
+                    <span class="call-btn-label">Принять</span>
+                </div>
+                <div class="call-action-wrapper">
+                    <button class="call-action-btn decline" id="declineCallBtn"><i class="fas fa-times"></i></button>
+                    <span class="call-btn-label">Отклонить</span>
+                </div>
             `;
             document.getElementById('acceptCallBtn').onclick = () => acceptCall(currentCall.callId, partnerName);
             document.getElementById('declineCallBtn').onclick = () => endCall();
         } else if (status === 'calling') {
             callStatus.textContent = 'Звоним...';
-            callActions.innerHTML = `<button class="call-action-btn end" id="endCallBtn"><i class="fas fa-phone-slash"></i></button>`;
+            callTimer.style.display = 'none';
+            callActions.innerHTML = `
+                <div class="call-action-wrapper">
+                    <button class="call-action-btn end" id="endCallBtn"><i class="fas fa-phone-slash"></i></button>
+                    <span class="call-btn-label">Отменить</span>
+                </div>
+            `;
+            document.getElementById('endCallBtn').onclick = () => endCall();
+        } else if (status === 'connecting') {
+            callStatus.textContent = 'Соединение...';
+            callTimer.style.display = 'none';
+            callActions.innerHTML = `
+                <div class="call-action-wrapper">
+                    <button class="call-action-btn end" id="endCallBtn"><i class="fas fa-phone-slash"></i></button>
+                    <span class="call-btn-label">Отменить</span>
+                </div>
+            `;
             document.getElementById('endCallBtn').onclick = () => endCall();
         } else if (status === 'active') {
             let muted = false;
             callStatus.textContent = 'В разговоре';
+            if (callStartTime) {
+                const elapsed = Math.floor((Date.now() - callStartTime) / 1000);
+                callTimer.textContent = formatCallTime(elapsed);
+                callTimer.style.display = 'block';
+            }
+            
             callActions.innerHTML = `
-                <button class="call-action-btn mic" id="micToggleBtn"><i class="fas fa-microphone"></i></button>
-                <button class="call-action-btn end" id="endCallBtn"><i class="fas fa-phone-slash"></i></button>
+                <div class="call-action-wrapper">
+                    <button class="call-action-btn mic" id="micToggleBtn"><i class="fas fa-microphone"></i></button>
+                    <span class="call-btn-label">Микрофон</span>
+                </div>
+                <div class="call-action-wrapper">
+                    <button class="call-action-btn speaker ${isSpeakerOn ? 'active' : ''}" id="speakerToggleBtn"><i class="fas fa-volume-up"></i></button>
+                    <span class="call-btn-label">Динамик</span>
+                </div>
+                <div class="call-action-wrapper">
+                    <button class="call-action-btn end" id="endCallBtn"><i class="fas fa-phone-slash"></i></button>
+                    <span class="call-btn-label">Завершить</span>
+                </div>
             `;
+            
             document.getElementById('micToggleBtn').addEventListener('click', () => {
                 if (localStream) {
                     muted = !muted;
@@ -1718,12 +1887,26 @@
                     if (muted) {
                         btn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
                         btn.classList.add('muted');
+                        btn.nextElementSibling.textContent = 'Выкл';
                     } else {
                         btn.innerHTML = '<i class="fas fa-microphone"></i>';
                         btn.classList.remove('muted');
+                        btn.nextElementSibling.textContent = 'Микрофон';
                     }
                 }
             });
+            
+            document.getElementById('speakerToggleBtn').addEventListener('click', () => {
+                isSpeakerOn = !isSpeakerOn;
+                setSpeakerMode(isSpeakerOn);
+                const btn = document.getElementById('speakerToggleBtn');
+                if (isSpeakerOn) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
             document.getElementById('endCallBtn').onclick = () => endCall();
         }
         
@@ -2430,6 +2613,7 @@
         if (unsubscribePosts) unsubscribePosts();
         if (unsubscribeChats) unsubscribeChats();
         if (unsubscribeCurrentChat) unsubscribeCurrentChat();
+        stopCallTimer();
         callListeners.forEach(unsub => unsub());
         callListeners.clear();
         if (peerConnection) peerConnection.close();
