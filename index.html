@@ -184,17 +184,33 @@
             margin-bottom: 12px;
             word-break: break-word;
         }
-        .post-image {
+        .post-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 8px;
             margin-bottom: 12px;
+        }
+        .post-image {
             border-radius: 8px;
             overflow: hidden;
             cursor: pointer;
+            background: #f5f5f5;
+            min-height: 120px;
         }
         .post-image img {
             width: 100%;
-            max-height: 400px;
+            height: 200px;
             object-fit: cover;
             display: block;
+            transition: transform 0.2s;
+        }
+        .post-image img:hover {
+            transform: scale(1.02);
+        }
+        /* Одна картинка — больше размер */
+        .post-images:has(.post-image:only-child) .post-image img {
+            max-height: 350px;
+            height: auto;
         }
         .post-actions {
             display: flex;
@@ -612,6 +628,12 @@
             .content-panel {
                 margin-bottom: 60px;
             }
+            .post-images {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+            .post-image img {
+                height: 150px;
+            }
         }
         
         .modal-overlay {
@@ -635,7 +657,9 @@
             border-radius: 8px;
             padding: 20px;
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
         }
         .modal-card h3 { margin-bottom: 16px; color: #2c3e50; }
         .modal-card textarea {
@@ -647,30 +671,40 @@
             resize: vertical;
             margin-bottom: 16px;
         }
-        .image-preview {
+        .images-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
             margin-bottom: 16px;
+        }
+        .image-preview-item {
             position: relative;
-            display: inline-block;
-        }
-        .image-preview img {
-            max-width: 100%;
-            max-height: 200px;
+            width: 100px;
+            height: 100px;
             border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #edeef0;
         }
-        .remove-image {
+        .image-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .remove-image-btn {
             position: absolute;
-            top: -8px;
-            right: -8px;
+            top: 4px;
+            right: 4px;
             background: #e64646;
             color: white;
             border: none;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 12px;
         }
         .image-upload-btn {
             background: #e5ebf1;
@@ -681,6 +715,10 @@
             cursor: pointer;
             text-align: center;
             margin-bottom: 16px;
+        }
+        .image-upload-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
         .modal-actions { display: flex; gap: 12px; justify-content: flex-end; }
         .modal-actions button {
@@ -800,15 +838,12 @@
 <div id="createPostModal" class="modal-overlay">
     <div class="modal-card">
         <h3>Новая запись</h3>
-        <textarea id="postText" rows="4" placeholder="Что у вас нового?"></textarea>
-        <div id="imagePreviewContainer" class="image-preview" style="display: none;">
-            <img id="previewImage" src="">
-            <button id="removeImageBtn" class="remove-image"><i class="fas fa-times"></i></button>
-        </div>
+        <textarea id="postText" rows="3" placeholder="Что у вас нового?"></textarea>
+        <div id="imagesPreviewContainer" class="images-preview"></div>
         <div class="image-upload-btn" id="uploadImageBtn">
-            <i class="fas fa-image"></i> Добавить фото (до 10MB)
+            <i class="fas fa-image"></i> Добавить фото (до 3 шт, до 500KB)
         </div>
-        <input type="file" id="imageInput" accept="image/*" style="display: none;">
+        <input type="file" id="imageInput" accept="image/*" multiple style="display: none;">
         <div id="uploadError" style="color: #e64646; font-size: 12px; margin-bottom: 12px; display: none;"></div>
         <div class="modal-actions">
             <button id="cancelPostBtn">Отмена</button>
@@ -856,7 +891,7 @@
     let typingListeners = new Map();
     let userStatusListeners = new Map();
     let userStatuses = new Map();
-    let currentImageFile = null;
+    let currentImageFiles = [];
     
     function escapeHtml(str) {
         if (!str) return '';
@@ -993,40 +1028,82 @@
         return userSnap.data()?.isVerified || false;
     }
     
-    // === ЗАГРУЗКА ФОТО НА FREEIMAGE.HOST ===
-    async function uploadImageToFreeImage(file) {
-        if (!file) return null;
+    // === СЖАТИЕ И КОНВЕРТАЦИЯ ФОТО ===
+    function resizeImage(file, maxWidth = 800, maxHeight = 800, quality = 0.7) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (e) => {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = () => {
+                    let width = img.width;
+                    let height = img.height;
+                    
+                    // Уменьшаем если слишком большое
+                    if (width > maxWidth) {
+                        height = (height * maxWidth) / width;
+                        width = maxWidth;
+                    }
+                    if (height > maxHeight) {
+                        width = (width * maxHeight) / height;
+                        height = maxHeight;
+                    }
+                    
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    canvas.toBlob((blob) => {
+                        resolve(blob);
+                    }, file.type, quality);
+                };
+                img.onerror = reject;
+            };
+            reader.onerror = reject;
+        });
+    }
+    
+    function blobToBase64(blob) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(blob);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+        });
+    }
+    
+    async function processImages(files) {
+        const maxFiles = 3;
+        const maxSizeKB = 500;
+        const results = [];
         
-        if (file.size > 10 * 1024 * 1024) {
-            throw new Error("Файл слишком большой. Максимальный размер 10MB");
-        }
-        
-        if (!file.type.startsWith('image/')) {
-            throw new Error("Можно загружать только изображения");
-        }
-        
-        const formData = new FormData();
-        formData.append('source', file);
-        formData.append('format', 'json');
-        
-        try {
-            const response = await fetch('https://freeimage.host/api/1/upload?key=6d207e02198a847aa98d0a2a901485a5', {
-                method: 'POST',
-                body: formData
-            });
+        for (let i = 0; i < Math.min(files.length, maxFiles); i++) {
+            const file = files[i];
             
-            const data = await response.json();
-            
-            if (data.image && data.image.url) {
-                console.log('Фото загружено:', data.image.url);
-                return data.image.url;
-            } else {
-                throw new Error(data.error?.message || 'Ошибка загрузки');
+            if (!file.type.startsWith('image/')) {
+                throw new Error(`Файл ${file.name} не является изображением`);
             }
-        } catch (error) {
-            console.error("Upload error:", error);
-            throw new Error("Ошибка загрузки фото: " + error.message);
+            
+            // Сжимаем изображение
+            let compressedBlob = await resizeImage(file, 800, 800, 0.7);
+            
+            // Проверяем размер после сжатия
+            if (compressedBlob.size > maxSizeKB * 1024) {
+                // Если всё ещё слишком большой, сжимаем сильнее
+                compressedBlob = await resizeImage(file, 600, 600, 0.5);
+                if (compressedBlob.size > maxSizeKB * 1024) {
+                    throw new Error(`Файл ${file.name} слишком большой даже после сжатия`);
+                }
+            }
+            
+            const base64 = await blobToBase64(compressedBlob);
+            results.push(base64);
         }
+        
+        return results;
     }
     
     async function registerUser(username, password) {
@@ -1080,8 +1157,8 @@
         }
     }
     
-    async function addPost(text, imageUrl) {
-        if ((!text || !text.trim()) && !imageUrl) {
+    async function addPost(text, imagesBase64) {
+        if ((!text || !text.trim()) && (!imagesBase64 || imagesBase64.length === 0)) {
             throw new Error("Напишите текст или добавьте фото");
         }
         await addDoc(collection(db, "posts"), {
@@ -1092,7 +1169,7 @@
             likes: [],
             likesCount: 0,
             commentsCount: 0,
-            imageUrl: imageUrl || null,
+            imagesBase64: imagesBase64 || [],
             authorVerified: await isUserVerified(currentUser.username)
         });
     }
@@ -1192,6 +1269,17 @@
     function renderPost(post) {
         const hasLiked = post.likes?.includes(currentUser.username);
         const showComments = commentsStates.get(post.id) || false;
+        const images = post.imagesBase64 || [];
+        
+        const imagesHtml = images.length > 0 ? `
+            <div class="post-images">
+                ${images.map(img => `
+                    <div class="post-image" data-image="${img}">
+                        <img src="${img}" alt="Post image" loading="lazy">
+                    </div>
+                `).join('')}
+            </div>
+        ` : '';
         
         return `
             <div class="post-card" data-post-id="${post.id}">
@@ -1206,7 +1294,7 @@
                     </div>
                 </div>
                 ${post.text ? `<div class="post-text">${escapeHtml(post.text)}</div>` : ''}
-                ${post.imageUrl ? `<div class="post-image" data-image="${post.imageUrl}"><img src="${post.imageUrl}" alt="Post image" loading="lazy"></div>` : ''}
+                ${imagesHtml}
                 <div class="post-actions">
                     <div class="post-action like-btn" data-id="${post.id}">
                         <i class="${hasLiked ? 'fas fa-heart' : 'far fa-heart'}"></i>
@@ -1684,40 +1772,72 @@
         document.getElementById(`menu${panel.charAt(0).toUpperCase() + panel.slice(1)}`)?.classList.add('active');
     }
     
-    // === ОБРАБОТЧИКИ ===
+    // === ОБРАБОТЧИКИ ЗАГРУЗКИ ФОТО ===
+    function updateImagePreviews() {
+        const container = document.getElementById('imagesPreviewContainer');
+        const uploadBtn = document.getElementById('uploadImageBtn');
+        
+        if (currentImageFiles.length === 0) {
+            container.innerHTML = '';
+            uploadBtn.classList.remove('disabled');
+            return;
+        }
+        
+        if (currentImageFiles.length >= 3) {
+            uploadBtn.classList.add('disabled');
+        } else {
+            uploadBtn.classList.remove('disabled');
+        }
+        
+        let html = '';
+        for (let i = 0; i < currentImageFiles.length; i++) {
+            const file = currentImageFiles[i];
+            const reader = new FileReader();
+            const previewUrl = URL.createObjectURL(file);
+            html += `
+                <div class="image-preview-item" data-index="${i}">
+                    <img src="${previewUrl}" alt="Preview">
+                    <button class="remove-image-btn" data-index="${i}"><i class="fas fa-times"></i></button>
+                </div>
+            `;
+        }
+        container.innerHTML = html;
+        
+        document.querySelectorAll('.remove-image-btn').forEach(btn => {
+            btn.onclick = (e) => {
+                e.stopPropagation();
+                const index = parseInt(btn.dataset.index);
+                currentImageFiles.splice(index, 1);
+                updateImagePreviews();
+            };
+        });
+    }
+    
     document.getElementById('uploadImageBtn')?.addEventListener('click', () => {
+        if (currentImageFiles.length >= 3) {
+            alert('Можно добавить максимум 3 фото');
+            return;
+        }
         document.getElementById('imageInput').click();
     });
     
-    document.getElementById('imageInput')?.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            if (file.size > 10 * 1024 * 1024) {
+    document.getElementById('imageInput')?.addEventListener('change', async (e) => {
+        const files = Array.from(e.target.files);
+        const remaining = 3 - currentImageFiles.length;
+        const toAdd = files.slice(0, remaining);
+        
+        for (const file of toAdd) {
+            if (file.size > 1 * 1024 * 1024) {
                 const errorDiv = document.getElementById('uploadError');
-                errorDiv.textContent = "Файл слишком большой. Максимальный размер 10MB";
+                errorDiv.textContent = `Файл ${file.name} слишком большой. Максимум 1MB`;
                 errorDiv.style.display = 'block';
                 setTimeout(() => errorDiv.style.display = 'none', 3000);
-                return;
+                continue;
             }
-            
-            currentImageFile = file;
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const preview = document.getElementById('previewImage');
-                const container = document.getElementById('imagePreviewContainer');
-                preview.src = event.target.result;
-                container.style.display = 'block';
-                const errorDiv = document.getElementById('uploadError');
-                errorDiv.style.display = 'none';
-            };
-            reader.readAsDataURL(file);
+            currentImageFiles.push(file);
         }
-    });
-    
-    document.getElementById('removeImageBtn')?.addEventListener('click', () => {
-        currentImageFile = null;
-        document.getElementById('imagePreviewContainer').style.display = 'none';
-        document.getElementById('previewImage').src = '';
+        
+        updateImagePreviews();
         document.getElementById('imageInput').value = '';
     });
     
@@ -1732,7 +1852,7 @@
         const submitBtn = document.getElementById('submitPostBtn');
         const originalText = submitBtn.textContent;
         
-        if ((!text || !text.trim()) && !currentImageFile) {
+        if ((!text || !text.trim()) && currentImageFiles.length === 0) {
             alert('Напишите что-нибудь или добавьте фото');
             return;
         }
@@ -1741,19 +1861,17 @@
             submitBtn.innerHTML = '<span class="loading-spinner"></span> Публикация...';
             submitBtn.disabled = true;
             
-            let imageUrl = null;
-            if (currentImageFile) {
-                imageUrl = await uploadImageToFreeImage(currentImageFile);
+            let imagesBase64 = [];
+            if (currentImageFiles.length > 0) {
+                imagesBase64 = await processImages(currentImageFiles);
             }
             
-            await addPost(text, imageUrl);
+            await addPost(text, imagesBase64);
             
             document.getElementById('createPostModal').classList.remove('active');
             document.getElementById('postText').value = '';
-            document.getElementById('imagePreviewContainer').style.display = 'none';
-            document.getElementById('previewImage').src = '';
-            document.getElementById('imageInput').value = '';
-            currentImageFile = null;
+            currentImageFiles = [];
+            updateImagePreviews();
             
             await loadPosts();
             if (currentPanel === 'profile') await showMyProfile();
@@ -1770,10 +1888,8 @@
     document.getElementById('cancelPostBtn')?.addEventListener('click', () => {
         document.getElementById('createPostModal').classList.remove('active');
         document.getElementById('postText').value = '';
-        document.getElementById('imagePreviewContainer').style.display = 'none';
-        document.getElementById('previewImage').src = '';
-        document.getElementById('imageInput').value = '';
-        currentImageFile = null;
+        currentImageFiles = [];
+        updateImagePreviews();
     });
     
     document.getElementById('newChatBtn')?.addEventListener('click', () => showNewChatUsers());
@@ -1843,13 +1959,13 @@
         if (snap.empty) {
             await addDoc(collection(db, "posts"), {
                 author: "OlegTube",
-                text: "Добро пожаловать в OlegTube! 🎉\n\nНовые возможности:\n✓ Загрузка фото в посты (FreeImage.host)\n✓ Просмотр фото в полный экран\n✓ Статус 'онлайн' и 'был в сети'\n✓ Индикатор 'печатает...' в чате\n✓ Общение только с друзьями",
+                text: "Добро пожаловать в OlegTube! 🎉\n\nНовые возможности:\n✓ Загрузка до 3 фото в пост\n✓ Автоматическое сжатие фото\n✓ Просмотр фото в полный экран\n✓ Статус 'онлайн' и 'был в сети'\n✓ Индикатор 'печатает...' в чате\n✓ Общение только с друзьями\n\nФото автоматически сжимаются до 800px и 500KB!",
                 timestamp: new Date(),
                 userId: "OlegTube",
                 likes: [],
                 likesCount: 0,
                 commentsCount: 0,
-                imageUrl: null,
+                imagesBase64: [],
                 authorVerified: true
             });
         }
