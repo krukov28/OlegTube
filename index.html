@@ -84,6 +84,30 @@
             color: white;
             font-weight: 600;
         }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .notifications-bell {
+            position: relative;
+            cursor: pointer;
+            color: white;
+            font-size: 20px;
+        }
+        .notifications-bell .badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #e64646;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
         .logout-btn {
             background: rgba(255,255,255,0.15);
             border: none;
@@ -141,6 +165,7 @@
             padding: 16px;
             margin-bottom: 12px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+            transition: background 0.3s;
         }
         .post-header {
             display: flex;
@@ -207,7 +232,6 @@
         .post-image img:hover {
             transform: scale(1.02);
         }
-        /* Одна картинка — больше размер */
         .post-images:has(.post-image:only-child) .post-image img {
             max-height: 350px;
             height: auto;
@@ -471,6 +495,52 @@
             font-size: 11px;
             color: #939393;
             margin-top: 2px;
+        }
+        
+        .notifications-list {
+            background: white;
+            border-radius: 4px;
+        }
+        .notification-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-bottom: 1px solid #edeef0;
+            cursor: pointer;
+        }
+        .notification-item:hover { background: #f5f6f7; }
+        .notification-item.unread {
+            background: #e8f0fe;
+        }
+        .notification-avatar {
+            width: 40px;
+            height: 40px;
+            background: #2a5885;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .notification-content {
+            flex: 1;
+        }
+        .notification-text {
+            font-size: 13px;
+            color: #2c3e50;
+            margin-bottom: 4px;
+        }
+        .notification-time {
+            font-size: 11px;
+            color: #939393;
+        }
+        .notification-icon {
+            font-size: 18px;
+            width: 30px;
+            text-align: center;
         }
         
         .new-chat-btn {
@@ -772,6 +842,26 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 2000;
+            animation: fadeOut 3s ease-in-out forwards;
+        }
+        
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; }
+        }
     </style>
 </head>
 <body>
@@ -789,13 +879,22 @@
 <div id="appScreen" class="app-container" style="display: none;">
     <div class="header">
         <div class="logo"><i class="fas fa-play-circle"></i> OlegTube</div>
-        <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Выйти</button>
+        <div class="header-right">
+            <div id="notificationsBell" class="notifications-bell">
+                <i class="fas fa-bell"></i>
+                <span id="notificationsBadge" class="badge" style="display: none;">0</span>
+            </div>
+            <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Выйти</button>
+        </div>
     </div>
 
     <div class="main-layout">
         <div class="left-menu">
             <div class="menu-item active" id="menuHome">
                 <i class="fas fa-newspaper"></i> <span>Новости</span>
+            </div>
+            <div class="menu-item" id="menuNotifications">
+                <i class="fas fa-bell"></i> <span>Уведомления</span>
             </div>
             <div class="menu-item" id="menuSearch">
                 <i class="fas fa-search"></i> <span>Поиск</span>
@@ -814,6 +913,9 @@
         <div class="content-panel">
             <div id="feedPanel">
                 <div id="postsContainer"></div>
+            </div>
+            <div id="notificationsPanel" class="hide">
+                <div id="notificationsList" class="notifications-list"></div>
             </div>
             <div id="searchPanel" class="hide">
                 <input type="text" id="searchInput" class="search-input" placeholder="Поиск...">
@@ -866,7 +968,7 @@
     import { 
         getFirestore, collection, addDoc, getDocs, getDoc,
         query, where, doc, updateDoc, 
-        arrayUnion, arrayRemove, setDoc, onSnapshot, limit, orderBy
+        arrayUnion, arrayRemove, setDoc, onSnapshot, limit, orderBy, deleteDoc
     } from "firebase/firestore";
     
     const firebaseConfig = {
@@ -887,11 +989,84 @@
     let allPosts = [];
     let unsubscribePosts = null;
     let unsubscribeChats = null;
+    let unsubscribeNotifications = null;
     let currentChatUnsubscribe = null;
     let typingListeners = new Map();
     let userStatusListeners = new Map();
     let userStatuses = new Map();
     let currentImageFiles = [];
+    let notifications = [];
+    let unreadCount = 0;
+    
+    // === ЗВУКИ ===
+    function playSound(type) {
+        try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            
+            const audioCtx = new AudioContext();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            oscillator.type = 'sine';
+            gainNode.gain.value = 0.15;
+            
+            if (type === 'post') {
+                oscillator.frequency.value = 523.25;
+                oscillator.start();
+                gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.5);
+                oscillator.stop(audioCtx.currentTime + 0.5);
+            } else if (type === 'like') {
+                oscillator.frequency.value = 880;
+                oscillator.start();
+                gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.3);
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            } else if (type === 'comment') {
+                oscillator.frequency.value = 659.25;
+                oscillator.start();
+                gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.4);
+                oscillator.stop(audioCtx.currentTime + 0.4);
+            } else if (type === 'subscribe') {
+                oscillator.frequency.value = 392;
+                oscillator.start();
+                setTimeout(() => {
+                    if (oscillator) oscillator.frequency.value = 523.25;
+                }, 100);
+                gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.6);
+                oscillator.stop(audioCtx.currentTime + 0.6);
+            } else if (type === 'login') {
+                oscillator.frequency.value = 440;
+                oscillator.start();
+                setTimeout(() => {
+                    if (oscillator) oscillator.frequency.value = 523.25;
+                }, 100);
+                gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.8);
+                oscillator.stop(audioCtx.currentTime + 0.8);
+            } else if (type === 'message') {
+                oscillator.frequency.value = 698.46;
+                oscillator.start();
+                gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.2);
+                oscillator.stop(audioCtx.currentTime + 0.2);
+            } else if (type === 'notification') {
+                oscillator.frequency.value = 784;
+                oscillator.start();
+                gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.25);
+                oscillator.stop(audioCtx.currentTime + 0.25);
+            }
+        } catch(e) { console.log('Audio error:', e); }
+    }
+    
+    function showToast(message, isNotification = false) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+        if (isNotification) playSound('notification');
+    }
     
     function escapeHtml(str) {
         if (!str) return '';
@@ -1028,6 +1203,144 @@
         return userSnap.data()?.isVerified || false;
     }
     
+    // === УВЕДОМЛЕНИЯ ===
+    async function addNotification(userTo, type, fromUser, postId = null, commentText = null) {
+        if (!currentUser || userTo === currentUser.username) return;
+        
+        const notification = {
+            toUser: userTo,
+            fromUser: fromUser,
+            type: type,
+            postId: postId,
+            commentText: commentText || null,
+            timestamp: new Date(),
+            read: false
+        };
+        
+        try {
+            await addDoc(collection(db, "notifications"), notification);
+            console.log(`Уведомление отправлено: ${type} от ${fromUser} для ${userTo}`);
+            
+            // Если получатель текущий пользователь, показываем тост
+            if (userTo === currentUser.username) {
+                let message = '';
+                if (type === 'like') message = `${fromUser} лайкнул(а) ваш пост!`;
+                else if (type === 'comment') message = `${fromUser} оставил(а) комментарий: "${commentText?.substring(0, 40)}"`;
+                else if (type === 'subscribe') message = `${fromUser} подписался(ась) на вас!`;
+                showToast(message, true);
+                playSound('notification');
+            }
+        } catch(e) {
+            console.error('Ошибка отправки уведомления:', e);
+        }
+    }
+    
+    async function loadNotifications() {
+        if (!currentUser) return;
+        
+        const q = query(
+            collection(db, "notifications"),
+            where("toUser", "==", currentUser.username),
+            orderBy("timestamp", "desc")
+        );
+        
+        unsubscribeNotifications = onSnapshot(q, (snap) => {
+            notifications = [];
+            snap.forEach(doc => {
+                notifications.push({
+                    id: doc.id,
+                    ...doc.data(),
+                    timestamp: doc.data().timestamp?.toDate ? doc.data().timestamp.toDate() : new Date(doc.data().timestamp)
+                });
+            });
+            
+            unreadCount = notifications.filter(n => !n.read).length;
+            updateNotificationBadge();
+            
+            if (currentPanel === 'notifications') {
+                renderNotifications();
+            }
+        });
+    }
+    
+    function updateNotificationBadge() {
+        const badge = document.getElementById('notificationsBadge');
+        if (unreadCount > 0) {
+            badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+            badge.style.display = 'inline-block';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+    
+    async function markNotificationAsRead(notificationId) {
+        const notificationRef = doc(db, "notifications", notificationId);
+        await updateDoc(notificationRef, { read: true });
+    }
+    
+    async function markAllNotificationsAsRead() {
+        const unread = notifications.filter(n => !n.read);
+        for (const n of unread) {
+            await markNotificationAsRead(n.id);
+        }
+    }
+    
+    function renderNotifications() {
+        const container = document.getElementById('notificationsList');
+        if (!container) return;
+        
+        if (notifications.length === 0) {
+            container.innerHTML = '<div class="loading">Нет уведомлений</div>';
+            return;
+        }
+        
+        container.innerHTML = notifications.map(notif => {
+            let icon = '';
+            let text = '';
+            
+            if (notif.type === 'like') {
+                icon = '<i class="fas fa-heart" style="color:#e64646;"></i>';
+                text = `${escapeHtml(notif.fromUser)} лайкнул(а) ваш пост`;
+            } else if (notif.type === 'comment') {
+                icon = '<i class="fas fa-comment" style="color:#2a5885;"></i>';
+                text = `${escapeHtml(notif.fromUser)} оставил(а) комментарий: "${escapeHtml(notif.commentText?.substring(0, 50))}"`;
+            } else if (notif.type === 'subscribe') {
+                icon = '<i class="fas fa-user-plus" style="color:#4bb34b;"></i>';
+                text = `${escapeHtml(notif.fromUser)} подписался(ась) на вас`;
+            }
+            
+            return `
+                <div class="notification-item ${!notif.read ? 'unread' : ''}" data-notif-id="${notif.id}" data-type="${notif.type}" data-from="${notif.fromUser}" data-post="${notif.postId || ''}">
+                    <div class="notification-avatar">${escapeHtml(notif.fromUser.charAt(0).toUpperCase())}</div>
+                    <div class="notification-icon">${icon}</div>
+                    <div class="notification-content">
+                        <div class="notification-text">${text}</div>
+                        <div class="notification-time">${formatDate(notif.timestamp)}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        container.querySelectorAll('.notification-item').forEach(el => {
+            el.onclick = async () => {
+                const notifId = el.dataset.notifId;
+                const type = el.dataset.type;
+                const fromUser = el.dataset.from;
+                const postId = el.dataset.post;
+                
+                await markNotificationAsRead(notifId);
+                
+                if (type === 'subscribe') {
+                    showProfile(fromUser);
+                    setPanel('profile');
+                } else {
+                    showProfile(fromUser);
+                    setPanel('profile');
+                }
+            };
+        });
+    }
+    
     // === СЖАТИЕ И КОНВЕРТАЦИЯ ФОТО ===
     function resizeImage(file, maxWidth = 800, maxHeight = 800, quality = 0.7) {
         return new Promise((resolve, reject) => {
@@ -1040,7 +1353,6 @@
                     let width = img.width;
                     let height = img.height;
                     
-                    // Уменьшаем если слишком большое
                     if (width > maxWidth) {
                         height = (height * maxWidth) / width;
                         width = maxWidth;
@@ -1087,12 +1399,9 @@
                 throw new Error(`Файл ${file.name} не является изображением`);
             }
             
-            // Сжимаем изображение
             let compressedBlob = await resizeImage(file, 800, 800, 0.7);
             
-            // Проверяем размер после сжатия
             if (compressedBlob.size > maxSizeKB * 1024) {
-                // Если всё ещё слишком большой, сжимаем сильнее
                 compressedBlob = await resizeImage(file, 600, 600, 0.5);
                 if (compressedBlob.size > maxSizeKB * 1024) {
                     throw new Error(`Файл ${file.name} слишком большой даже после сжатия`);
@@ -1172,6 +1481,8 @@
             imagesBase64: imagesBase64 || [],
             authorVerified: await isUserVerified(currentUser.username)
         });
+        playSound('post');
+        showToast('Пост опубликован! 🎉');
     }
     
     async function toggleLike(postId) {
@@ -1180,6 +1491,7 @@
         if (!postSnap.exists()) return;
         const data = postSnap.data();
         const hasLiked = data.likes?.includes(currentUser.username);
+        
         if (hasLiked) {
             await updateDoc(postRef, {
                 likes: arrayRemove(currentUser.username),
@@ -1190,6 +1502,11 @@
                 likes: arrayUnion(currentUser.username),
                 likesCount: (data.likesCount || 0) + 1
             });
+            // Отправляем уведомление автору поста
+            if (data.author !== currentUser.username) {
+                await addNotification(data.author, 'like', currentUser.username, postId);
+            }
+            playSound('like');
         }
     }
     
@@ -1209,7 +1526,13 @@
             await updateDoc(postRef, {
                 commentsCount: currentCount + 1
             });
+            
+            // Отправляем уведомление автору поста
+            if (postSnap.data().author !== currentUser.username) {
+                await addNotification(postSnap.data().author, 'comment', currentUser.username, postId, text);
+            }
         }
+        playSound('comment');
     }
     
     async function getComments(postId) {
@@ -1259,6 +1582,9 @@
         } else {
             await updateDoc(userRef, { subscriptions: arrayUnion(targetUsername) });
             await updateDoc(doc(db, "users", targetUsername), { followers: arrayUnion(currentUser.username) });
+            // Отправляем уведомление
+            await addNotification(targetUsername, 'subscribe', currentUser.username);
+            playSound('subscribe');
         }
         
         if (viewingProfile === targetUsername) await showProfile(targetUsername);
@@ -1530,6 +1856,7 @@
             lastMessage: text.trim(),
             lastMessageTime: new Date()
         });
+        playSound('message');
     }
     
     function openFullscreenChat(chatId, partnerName) {
@@ -1737,11 +2064,13 @@
     
     function setPanel(panel) {
         const feedPanel = document.getElementById('feedPanel');
+        const notificationsPanel = document.getElementById('notificationsPanel');
         const searchPanel = document.getElementById('searchPanel');
         const messagesPanel = document.getElementById('messagesPanel');
         const profilePanel = document.getElementById('profilePanel');
         
         feedPanel?.classList.add('hide');
+        notificationsPanel?.classList.add('hide');
         searchPanel?.classList.add('hide');
         messagesPanel?.classList.add('hide');
         profilePanel?.classList.add('hide');
@@ -1750,6 +2079,11 @@
             feedPanel?.classList.remove('hide');
             currentPanel = 'home';
             renderFeed();
+        } else if (panel === 'notifications') {
+            notificationsPanel?.classList.remove('hide');
+            currentPanel = 'notifications';
+            renderNotifications();
+            markAllNotificationsAsRead();
         } else if (panel === 'search') {
             searchPanel?.classList.remove('hide');
             currentPanel = 'search';
@@ -1766,7 +2100,7 @@
             currentPanel = 'profile';
         }
         
-        ['menuHome', 'menuSearch', 'menuMessages', 'menuProfile'].forEach(id => {
+        ['menuHome', 'menuNotifications', 'menuSearch', 'menuMessages', 'menuProfile'].forEach(id => {
             document.getElementById(id)?.classList.remove('active');
         });
         document.getElementById(`menu${panel.charAt(0).toUpperCase() + panel.slice(1)}`)?.classList.add('active');
@@ -1792,7 +2126,6 @@
         let html = '';
         for (let i = 0; i < currentImageFiles.length; i++) {
             const file = currentImageFiles[i];
-            const reader = new FileReader();
             const previewUrl = URL.createObjectURL(file);
             html += `
                 <div class="image-preview-item" data-index="${i}">
@@ -1841,7 +2174,12 @@
         document.getElementById('imageInput').value = '';
     });
     
+    document.getElementById('notificationsBell')?.addEventListener('click', () => {
+        setPanel('notifications');
+    });
+    
     document.getElementById('menuHome')?.addEventListener('click', () => setPanel('home'));
+    document.getElementById('menuNotifications')?.addEventListener('click', () => setPanel('notifications'));
     document.getElementById('menuSearch')?.addEventListener('click', () => setPanel('search'));
     document.getElementById('menuMessages')?.addEventListener('click', () => setPanel('messages'));
     document.getElementById('menuProfile')?.addEventListener('click', () => { viewingProfile = null; setPanel('profile'); });
@@ -1906,6 +2244,7 @@
         }
         if (unsubscribePosts) unsubscribePosts();
         if (unsubscribeChats) unsubscribeChats();
+        if (unsubscribeNotifications) unsubscribeNotifications();
         document.getElementById('appScreen').style.display = 'none';
         document.getElementById('authScreen').style.display = 'block';
         currentUser = null;
@@ -1914,6 +2253,7 @@
     const loginBtn = document.getElementById('loginBtn');
     const showRegisterBtn = document.getElementById('showRegisterBtn');
     const authError = document.getElementById('authError');
+    const authSuccess = document.getElementById('authSuccess');
     let isLoginMode = true;
     
     showRegisterBtn.onclick = () => {
@@ -1921,6 +2261,7 @@
         loginBtn.innerText = isLoginMode ? "Войти" : "Зарегистрироваться";
         showRegisterBtn.innerText = isLoginMode ? "Зарегистрироваться" : "Назад к входу";
         authError.innerText = "";
+        authSuccess.innerText = "";
     };
     
     async function handleAuth() {
@@ -1931,14 +2272,23 @@
             return;
         }
         try {
-            if (isLoginMode) await loginUser(username, password);
-            else await registerUser(username, password);
+            if (isLoginMode) {
+                await loginUser(username, password);
+                playSound('login');
+                showToast(`Добро пожаловать, ${username}! 🎉`);
+                authSuccess.innerText = "Вход выполнен!";
+            } else {
+                await registerUser(username, password);
+                authSuccess.innerText = "Регистрация успешна! Теперь войдите.";
+                return;
+            }
             
             currentUser = { username };
             document.getElementById('authScreen').style.display = 'none';
             document.getElementById('appScreen').style.display = 'flex';
             await loadPosts();
             startOnlineTracking();
+            await loadNotifications();
             
             const q = query(collection(db, "posts"));
             unsubscribePosts = onSnapshot(q, () => loadPosts());
@@ -1954,21 +2304,24 @@
     let commentsStates = new Map();
     
     async function initTestPost() {
-        const q = query(collection(db, "posts"), limit(1));
-        const snap = await getDocs(q);
-        if (snap.empty) {
-            await addDoc(collection(db, "posts"), {
-                author: "OlegTube",
-                text: "Добро пожаловать в OlegTube! 🎉\n\nНовые возможности:\n✓ Загрузка до 3 фото в пост\n✓ Автоматическое сжатие фото\n✓ Просмотр фото в полный экран\n✓ Статус 'онлайн' и 'был в сети'\n✓ Индикатор 'печатает...' в чате\n✓ Общение только с друзьями\n\nФото автоматически сжимаются до 800px и 500KB!",
-                timestamp: new Date(),
-                userId: "OlegTube",
-                likes: [],
-                likesCount: 0,
-                commentsCount: 0,
-                imagesBase64: [],
-                authorVerified: true
-            });
-        }
+        try {
+            const q = query(collection(db, "posts"), limit(1));
+            const snap = await getDocs(q);
+            if (snap.empty) {
+                await addDoc(collection(db, "posts"), {
+                    author: "OlegTube",
+                    text: "Добро пожаловать в OlegTube! 🎉\n\nНовые возможности:\n✓ Уведомления о лайках, комментариях и подписках\n✓ Звуковые эффекты\n✓ Загрузка до 3 фото в пост\n✓ Автоматическое сжатие фото\n✓ Статус 'онлайн' и 'был в сети'\n✓ Индикатор 'печатает...' в чате\n\nНаслаждайтесь общением!",
+                    timestamp: new Date(),
+                    userId: "OlegTube",
+                    likes: [],
+                    likesCount: 0,
+                    commentsCount: 0,
+                    imagesBase64: [],
+                    authorVerified: true
+                });
+                console.log("Тестовый пост создан");
+            }
+        } catch(e) { console.log("Test post error:", e); }
     }
     initTestPost();
 </script>
