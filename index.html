@@ -171,12 +171,6 @@
             align-items: center;
             gap: 4px;
         }
-        .verified-badge {
-            color: #2a5885;
-            font-size: 14px;
-            display: inline-flex;
-            align-items: center;
-        }
         .post-author-name:hover { text-decoration: underline; }
         .post-date {
             font-size: 12px;
@@ -189,6 +183,18 @@
             color: #2c3e50;
             margin-bottom: 12px;
             word-break: break-word;
+        }
+        .post-image {
+            margin-bottom: 12px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .post-image img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            display: block;
         }
         .post-actions {
             display: flex;
@@ -328,6 +334,11 @@
             gap: 8px;
             justify-content: center;
         }
+        .profile-status {
+            font-size:12px; 
+            color:#939393; 
+            margin-top:4px;
+        }
         .profile-stats {
             display: flex;
             justify-content: center;
@@ -445,11 +456,6 @@
             color: #939393;
             margin-top: 2px;
         }
-        .typing-indicator {
-            color: #2a5885;
-            font-size: 11px;
-            font-style: italic;
-        }
         
         .new-chat-btn {
             background: #2a5885;
@@ -471,7 +477,6 @@
         .hide { display: none; }
         .loading { text-align: center; padding: 40px; color: #939393; }
         
-        /* Полноэкранный чат */
         .chat-fullscreen {
             position: fixed;
             top: 0;
@@ -630,7 +635,7 @@
             border-radius: 8px;
             padding: 20px;
             width: 90%;
-            max-width: 450px;
+            max-width: 500px;
         }
         .modal-card h3 { margin-bottom: 16px; color: #2c3e50; }
         .modal-card textarea {
@@ -640,6 +645,41 @@
             border-radius: 4px;
             font-family: inherit;
             resize: vertical;
+            margin-bottom: 16px;
+        }
+        .image-preview {
+            margin-bottom: 16px;
+            position: relative;
+            display: inline-block;
+        }
+        .image-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+        }
+        .remove-image {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #e64646;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .image-upload-btn {
+            background: #e5ebf1;
+            color: #2a5885;
+            padding: 10px;
+            border: 1px dashed #2a5885;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
             margin-bottom: 16px;
         }
         .modal-actions { display: flex; gap: 12px; justify-content: flex-end; }
@@ -658,6 +698,41 @@
             padding: 2px 6px;
             border-radius: 10px;
             margin-left: 8px;
+        }
+        
+        .image-viewer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .image-viewer img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #2a5885;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -726,6 +801,15 @@
     <div class="modal-card">
         <h3>Новая запись</h3>
         <textarea id="postText" rows="4" placeholder="Что у вас нового?"></textarea>
+        <div id="imagePreviewContainer" class="image-preview" style="display: none;">
+            <img id="previewImage" src="">
+            <button id="removeImageBtn" class="remove-image"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="image-upload-btn" id="uploadImageBtn">
+            <i class="fas fa-image"></i> Добавить фото (до 50MB)
+        </div>
+        <input type="file" id="imageInput" accept="image/*" style="display: none;">
+        <div id="uploadError" style="color: #e64646; font-size: 12px; margin-bottom: 12px; display: none;"></div>
         <div class="modal-actions">
             <button id="cancelPostBtn">Отмена</button>
             <button id="submitPostBtn" class="primary">Опубликовать</button>
@@ -769,10 +853,10 @@
     let unsubscribePosts = null;
     let unsubscribeChats = null;
     let currentChatUnsubscribe = null;
-    let currentTypingTimeout = null;
     let typingListeners = new Map();
     let userStatusListeners = new Map();
     let userStatuses = new Map();
+    let currentImageFile = null;
     
     function escapeHtml(str) {
         if (!str) return '';
@@ -909,6 +993,42 @@
         return userSnap.data()?.isVerified || false;
     }
     
+    // === ЗАГРУЗКА ФОТО НА CATBOX ===
+    async function uploadImageToCatbox(file) {
+        if (!file) return null;
+        
+        if (file.size > 50 * 1024 * 1024) {
+            throw new Error("Файл слишком большой. Максимальный размер 50MB");
+        }
+        
+        if (!file.type.startsWith('image/')) {
+            throw new Error("Можно загружать только изображения");
+        }
+        
+        const formData = new FormData();
+        formData.append('reqtype', 'fileupload');
+        formData.append('fileToUpload', file);
+        
+        try {
+            const response = await fetch('https://catbox.moe/user/api.php', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.text();
+            
+            if (!response.ok || result.startsWith('Error')) {
+                throw new Error(result || 'Ошибка загрузки на Catbox');
+            }
+            
+            console.log('Фото загружено:', result);
+            return result;
+        } catch (error) {
+            console.error("Upload error:", error);
+            throw new Error("Ошибка загрузки фото: " + error.message);
+        }
+    }
+    
     async function registerUser(username, password) {
         if (!username || !password) throw new Error("Заполните поля");
         if (username.length < 3) throw new Error("Имя минимум 3 символа");
@@ -960,16 +1080,19 @@
         }
     }
     
-    async function addPost(text) {
-        if (!text.trim()) throw new Error("Пост не может быть пустым");
+    async function addPost(text, imageUrl) {
+        if ((!text || !text.trim()) && !imageUrl) {
+            throw new Error("Напишите текст или добавьте фото");
+        }
         await addDoc(collection(db, "posts"), {
             author: currentUser.username,
-            text: text.trim(),
+            text: text?.trim() || "",
             timestamp: new Date(),
             userId: currentUser.username,
             likes: [],
             likesCount: 0,
             commentsCount: 0,
+            imageUrl: imageUrl || null,
             authorVerified: await isUserVerified(currentUser.username)
         });
     }
@@ -1082,7 +1205,8 @@
                         <div class="post-date">${formatDate(post.timestamp)}</div>
                     </div>
                 </div>
-                <div class="post-text">${escapeHtml(post.text)}</div>
+                ${post.text ? `<div class="post-text">${escapeHtml(post.text)}</div>` : ''}
+                ${post.imageUrl ? `<div class="post-image" data-image="${post.imageUrl}"><img src="${post.imageUrl}" alt="Post image" loading="lazy"></div>` : ''}
                 <div class="post-actions">
                     <div class="post-action like-btn" data-id="${post.id}">
                         <i class="${hasLiked ? 'fas fa-heart' : 'far fa-heart'}"></i>
@@ -1158,6 +1282,17 @@
             }
         });
         
+        container.querySelectorAll('.post-image').forEach(el => {
+            const imageUrl = el.dataset.image;
+            el.onclick = () => {
+                const viewer = document.createElement('div');
+                viewer.className = 'image-viewer';
+                viewer.innerHTML = `<img src="${imageUrl}" alt="Просмотр">`;
+                viewer.onclick = () => viewer.remove();
+                document.body.appendChild(viewer);
+            };
+        });
+        
         container.querySelectorAll('.like-btn').forEach(btn => {
             btn.onclick = async () => {
                 await toggleLike(btn.dataset.id);
@@ -1226,7 +1361,7 @@
                             ${escapeHtml(username)}
                             ${userData.isVerified ? '<i class="fas fa-check-circle" style="color:#2a5885;"></i>' : ''}
                         </div>
-                        <div class="profile-status" style="font-size:12px; color:#939393; margin-top:4px;">
+                        <div class="profile-status">
                             ${formatLastSeen(status.lastSeen)}
                         </div>
                         <div style="font-size:12px; color:#939393; margin-top:8px;">Присоединился: ${new Date(userData.createdAt).toLocaleDateString()}</div>
@@ -1549,28 +1684,105 @@
         document.getElementById(`menu${panel.charAt(0).toUpperCase() + panel.slice(1)}`)?.classList.add('active');
     }
     
+    // === ОБРАБОТЧИКИ ===
+    document.getElementById('uploadImageBtn')?.addEventListener('click', () => {
+        document.getElementById('imageInput').click();
+    });
+    
+    document.getElementById('imageInput')?.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            if (file.size > 50 * 1024 * 1024) {
+                const errorDiv = document.getElementById('uploadError');
+                errorDiv.textContent = "Файл слишком большой. Максимальный размер 50MB";
+                errorDiv.style.display = 'block';
+                setTimeout(() => errorDiv.style.display = 'none', 3000);
+                return;
+            }
+            
+            currentImageFile = file;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const preview = document.getElementById('previewImage');
+                const container = document.getElementById('imagePreviewContainer');
+                preview.src = event.target.result;
+                container.style.display = 'block';
+                const errorDiv = document.getElementById('uploadError');
+                errorDiv.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    document.getElementById('removeImageBtn')?.addEventListener('click', () => {
+        currentImageFile = null;
+        document.getElementById('imagePreviewContainer').style.display = 'none';
+        document.getElementById('previewImage').src = '';
+        document.getElementById('imageInput').value = '';
+    });
+    
     document.getElementById('menuHome')?.addEventListener('click', () => setPanel('home'));
     document.getElementById('menuSearch')?.addEventListener('click', () => setPanel('search'));
     document.getElementById('menuMessages')?.addEventListener('click', () => setPanel('messages'));
     document.getElementById('menuProfile')?.addEventListener('click', () => { viewingProfile = null; setPanel('profile'); });
     document.getElementById('menuCreatePost')?.addEventListener('click', () => document.getElementById('createPostModal').classList.add('active'));
+    
     document.getElementById('submitPostBtn')?.addEventListener('click', async () => {
         const text = document.getElementById('postText')?.value;
-        if (text?.trim()) {
-            await addPost(text);
+        const submitBtn = document.getElementById('submitPostBtn');
+        const originalText = submitBtn.textContent;
+        
+        if ((!text || !text.trim()) && !currentImageFile) {
+            alert('Напишите что-нибудь или добавьте фото');
+            return;
+        }
+        
+        try {
+            submitBtn.innerHTML = '<span class="loading-spinner"></span> Публикация...';
+            submitBtn.disabled = true;
+            
+            let imageUrl = null;
+            if (currentImageFile) {
+                imageUrl = await uploadImageToCatbox(currentImageFile);
+            }
+            
+            await addPost(text, imageUrl);
+            
             document.getElementById('createPostModal').classList.remove('active');
             document.getElementById('postText').value = '';
+            document.getElementById('imagePreviewContainer').style.display = 'none';
+            document.getElementById('previewImage').src = '';
+            document.getElementById('imageInput').value = '';
+            currentImageFile = null;
+            
             await loadPosts();
             if (currentPanel === 'profile') await showMyProfile();
+            
+        } catch (error) {
+            console.error('Error publishing post:', error);
+            alert('Ошибка при публикации: ' + error.message);
+        } finally {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
         }
     });
-    document.getElementById('cancelPostBtn')?.addEventListener('click', () => document.getElementById('createPostModal').classList.remove('active'));
+    
+    document.getElementById('cancelPostBtn')?.addEventListener('click', () => {
+        document.getElementById('createPostModal').classList.remove('active');
+        document.getElementById('postText').value = '';
+        document.getElementById('imagePreviewContainer').style.display = 'none';
+        document.getElementById('previewImage').src = '';
+        document.getElementById('imageInput').value = '';
+        currentImageFile = null;
+    });
+    
     document.getElementById('newChatBtn')?.addEventListener('click', () => showNewChatUsers());
     document.getElementById('backToChatsBtn')?.addEventListener('click', () => {
         document.getElementById('chatsList').style.display = 'block';
         document.getElementById('newChatUsers').style.display = 'none';
         loadChats();
     });
+    
     document.getElementById('logoutBtn')?.addEventListener('click', async () => {
         if (currentUser) {
             const userRef = doc(db, "users", currentUser.username);
@@ -1624,18 +1836,20 @@
     document.getElementById('loginPassword')?.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleAuth(); });
     
     let commentsStates = new Map();
+    
     async function initTestPost() {
         const q = query(collection(db, "posts"), limit(1));
         const snap = await getDocs(q);
         if (snap.empty) {
             await addDoc(collection(db, "posts"), {
                 author: "OlegTube",
-                text: "Добро пожаловать в OlegTube! 🎉\n\nНовые возможности:\n✓ Статус 'онлайн' и 'был в сети'\n✓ Индикатор 'печатает...' в чате\n✓ Полноэкранные чаты на телефоне\n✓ Общение только с друзьями",
+                text: "Добро пожаловать в OlegTube! 🎉\n\nНовые возможности:\n✓ Загрузка фото в посты (Catbox.moe)\n✓ Просмотр фото в полный экран\n✓ Статус 'онлайн' и 'был в сети'\n✓ Индикатор 'печатает...' в чате\n✓ Общение только с друзьями",
                 timestamp: new Date(),
                 userId: "OlegTube",
                 likes: [],
                 likesCount: 0,
                 commentsCount: 0,
+                imageUrl: null,
                 authorVerified: true
             });
         }
