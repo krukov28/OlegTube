@@ -10,17 +10,186 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            transition: background 0.3s, color 0.3s;
+        }
+        
+        body.light-theme {
             background: #edeef0;
+            color: #2c3e50;
+        }
+        
+        body.light-theme .auth-container,
+        body.light-theme .post-card,
+        body.light-theme .profile-card,
+        body.light-theme .chat-list,
+        body.light-theme .menu-item,
+        body.light-theme .chat-item,
+        body.light-theme .search-result-item,
+        body.light-theme .modal-card,
+        body.light-theme .edit-profile-card,
+        body.light-theme .settings-panel {
+            background: white;
+            color: #2c3e50;
+        }
+        
+        body.dark-theme {
+            background: #121212;
+            color: #e0e0e0;
+        }
+        
+        body.dark-theme .auth-container,
+        body.dark-theme .post-card,
+        body.dark-theme .profile-card,
+        body.dark-theme .chat-list,
+        body.dark-theme .menu-item,
+        body.dark-theme .chat-item,
+        body.dark-theme .search-result-item,
+        body.dark-theme .modal-card,
+        body.dark-theme .edit-profile-card,
+        body.dark-theme .settings-panel {
+            background: #1e1e1e;
+            color: #e0e0e0;
+        }
+        
+        body.dark-theme .comment {
+            background: #2d2d2d;
+        }
+        
+        body.dark-theme .header {
+            background: #0d2137;
+        }
+        
+        body.dark-theme .chat-fullscreen {
+            background: #1e1e1e;
+        }
+        
+        body.dark-theme .chat-messages-full {
+            background: #121212;
+        }
+        
+        body.dark-theme .chat-message.in {
+            background: #2d2d2d;
+            color: #e0e0e0;
+        }
+        
+        body.dark-theme .chat-input-full {
+            background: #1e1e1e;
+            border-color: #333;
+        }
+        
+        /* Стили для звонков */
+        .call-btn {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
             display: flex;
-            justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .call-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        .call-btn.in-call {
+            background: #e64646;
+        }
+        
+        .call-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.3s;
+        }
+        .call-modal.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .call-card {
+            background: #1e1e1e;
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            min-width: 300px;
+        }
+        .call-avatar {
+            width: 100px;
+            height: 100px;
+            background: #2a5885;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            background-size: cover;
+            background-position: center;
+        }
+        .call-name {
+            font-size: 24px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+        }
+        .call-status {
+            color: #aaa;
+            margin-bottom: 30px;
+        }
+        .call-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        .call-action-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            transition: transform 0.2s;
+        }
+        .call-action-btn:hover {
+            transform: scale(1.1);
+        }
+        .call-action-btn.accept {
+            background: #4bb34b;
+            color: white;
+        }
+        .call-action-btn.decline {
+            background: #e64646;
+            color: white;
+        }
+        .call-action-btn.end {
+            background: #e64646;
+            color: white;
+        }
+        .call-action-btn.mic {
+            background: #2a5885;
+            color: white;
+        }
+        .call-action-btn.mic.muted {
+            background: #666;
         }
         
         .auth-container {
             max-width: 400px;
             width: 100%;
-            background: white;
             border-radius: 8px;
             padding: 40px 32px;
             box-shadow: 0 1px 4px rgba(0,0,0,0.1);
@@ -39,7 +208,6 @@
             border: 1px solid #d3d9de;
             border-radius: 4px;
             font-size: 14px;
-            background: white;
         }
         .auth-input:focus { outline: none; border-color: #2a5885; }
         .auth-btn {
@@ -63,7 +231,6 @@
         .app-container {
             width: 100%;
             min-height: 100vh;
-            background: #edeef0;
             display: flex;
             flex-direction: column;
         }
@@ -83,30 +250,25 @@
             font-size: 20px;
             color: white;
             font-weight: 600;
+            cursor: pointer;
         }
         .header-right {
             display: flex;
             align-items: center;
             gap: 16px;
         }
-        .notifications-bell {
-            position: relative;
+        .settings-btn {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
             cursor: pointer;
-            color: white;
-            font-size: 20px;
-        }
-        .notifications-bell .badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: #e64646;
-            color: white;
-            font-size: 10px;
-            font-weight: bold;
-            padding: 2px 6px;
-            border-radius: 10px;
-            min-width: 18px;
-            text-align: center;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .logout-btn {
             background: rgba(255,255,255,0.15);
@@ -117,7 +279,6 @@
             cursor: pointer;
             font-size: 13px;
         }
-        .logout-btn:hover { background: rgba(255,255,255,0.25); }
         
         .main-layout {
             display: flex;
@@ -142,30 +303,31 @@
             align-items: center;
             gap: 12px;
             padding: 10px 12px;
-            background: white;
             border-radius: 4px;
             margin-bottom: 4px;
             cursor: pointer;
             font-size: 14px;
-            color: #2c3e50;
             transition: all 0.2s;
         }
-        .menu-item i { width: 20px; color: #2a5885; }
-        .menu-item:hover { background: #e5ebf1; }
+        .menu-item i { width: 20px; }
+        .menu-item:hover { background: #e5ebf1; opacity: 0.8; }
         .menu-item.active { background: #e5ebf1; font-weight: 500; }
+        
+        body.dark-theme .menu-item.active {
+            background: #333;
+        }
         
         .content-panel {
             flex: 1;
             min-width: 0;
         }
         
+        /* Посты */
         .post-card {
-            background: white;
             border-radius: 4px;
             padding: 16px;
             margin-bottom: 12px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.08);
-            transition: background 0.3s;
         }
         .post-header {
             display: flex;
@@ -180,7 +342,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
             font-weight: bold;
             font-size: 18px;
             cursor: pointer;
@@ -191,7 +352,6 @@
         .post-author-info { flex: 1; }
         .post-author-name {
             font-weight: 600;
-            color: #2a5885;
             cursor: pointer;
             font-size: 14px;
             display: inline-flex;
@@ -200,19 +360,17 @@
         }
         .post-author-username {
             font-size: 11px;
-            color: #939393;
+            opacity: 0.7;
             margin-top: 2px;
         }
-        .post-author-name:hover { text-decoration: underline; }
         .post-date {
             font-size: 12px;
-            color: #939393;
+            opacity: 0.6;
             margin-top: 2px;
         }
         .post-text {
             font-size: 14px;
             line-height: 1.4;
-            color: #2c3e50;
             margin-bottom: 12px;
             word-break: break-word;
         }
@@ -226,7 +384,6 @@
             border-radius: 8px;
             overflow: hidden;
             cursor: pointer;
-            background: #f5f5f5;
             min-height: 120px;
         }
         .post-image img {
@@ -234,54 +391,41 @@
             height: 200px;
             object-fit: cover;
             display: block;
-            transition: transform 0.2s;
-        }
-        .post-image img:hover {
-            transform: scale(1.02);
-        }
-        .post-images:has(.post-image:only-child) .post-image img {
-            max-height: 350px;
-            height: auto;
         }
         .post-actions {
             display: flex;
             gap: 24px;
             padding-top: 8px;
-            border-top: 1px solid #edeef0;
+            border-top: 1px solid;
         }
         .post-action {
             display: flex;
             align-items: center;
             gap: 6px;
             font-size: 13px;
-            color: #6c7a8e;
             cursor: pointer;
         }
         .post-action:hover { color: #2a5885; }
-        .post-action.liked { color: #e64646; }
         
         .comments-section {
             margin-top: 12px;
             padding-top: 12px;
-            border-top: 1px solid #edeef0;
+            border-top: 1px solid;
         }
         .comment {
             display: flex;
             gap: 8px;
             margin-bottom: 12px;
             padding: 8px;
-            background: #f8f9fa;
             border-radius: 8px;
         }
         .comment-avatar {
             width: 32px;
             height: 32px;
-            background: #2a5885;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
             font-weight: bold;
             font-size: 12px;
             cursor: pointer;
@@ -289,72 +433,30 @@
             background-size: cover;
             background-position: center;
         }
-        .comment-content {
-            flex: 1;
-        }
+        .comment-content { flex: 1; }
         .comment-author {
             font-weight: 600;
             font-size: 12px;
-            color: #2a5885;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 4px;
         }
-        .comment-username {
-            font-size: 10px;
-            color: #939393;
-        }
-        .comment-text {
-            font-size: 12px;
-            color: #2c3e50;
-            margin-top: 2px;
-            word-break: break-word;
-        }
-        .comment-image {
-            margin-top: 6px;
-            max-width: 200px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        .comment-image img {
-            width: 100%;
-            max-height: 150px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-        .comment-date {
-            font-size: 10px;
-            color: #939393;
-            margin-top: 4px;
-        }
+        .comment-username { font-size: 10px; opacity: 0.6; }
+        .comment-text { font-size: 12px; margin-top: 2px; word-break: break-word; }
+        .comment-date { font-size: 10px; opacity: 0.6; margin-top: 4px; }
         .add-comment {
             display: flex;
-            flex-wrap: wrap;
             gap: 8px;
             margin-top: 12px;
-        }
-        .add-comment-input-group {
-            display: flex;
-            flex: 1;
-            gap: 8px;
         }
         .add-comment input {
             flex: 1;
             padding: 8px 12px;
-            border: 1px solid #d3d9de;
             border-radius: 20px;
             font-size: 12px;
             outline: none;
-        }
-        .comment-attach-btn {
-            background: #e5ebf1;
-            border: none;
-            border-radius: 20px;
-            padding: 6px 12px;
-            cursor: pointer;
-            color: #2a5885;
-            font-size: 12px;
+            border: 1px solid;
         }
         .add-comment button {
             padding: 6px 12px;
@@ -365,43 +467,13 @@
             cursor: pointer;
             font-size: 12px;
         }
-        .comment-image-preview {
-            margin-top: 6px;
-            position: relative;
-            display: inline-block;
-        }
-        .comment-image-preview img {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-        .remove-comment-image {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            background: #e64646;
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
         .show-comments-btn {
             font-size: 12px;
-            color: #6c7a8e;
             cursor: pointer;
         }
-        .show-comments-btn:hover {
-            color: #2a5885;
-        }
         
+        /* Профиль */
         .profile-card {
-            background: white;
             border-radius: 4px;
             overflow: hidden;
         }
@@ -409,18 +481,6 @@
             height: 120px;
             background: linear-gradient(135deg, #2a5885, #1e3e5f);
             position: relative;
-        }
-        .profile-cover-edit {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.5);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 5px 10px;
-            font-size: 11px;
-            cursor: pointer;
         }
         .profile-info {
             padding: 16px;
@@ -432,7 +492,6 @@
         .profile-avatar-large {
             width: 100px;
             height: 100px;
-            background: #2a5885;
             border-radius: 50%;
             margin: 0 auto 12px;
             display: flex;
@@ -440,7 +499,6 @@
             justify-content: center;
             font-size: 44px;
             font-weight: bold;
-            color: white;
             border: 4px solid white;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             background-size: cover;
@@ -454,19 +512,18 @@
             right: 0;
             background: #2a5885;
             border-radius: 50%;
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 14px;
             border: 2px solid white;
             cursor: pointer;
         }
         .profile-name {
             font-size: 20px;
             font-weight: 600;
-            color: #2c3e50;
             margin-bottom: 4px;
             display: inline-flex;
             align-items: center;
@@ -474,41 +531,20 @@
             justify-content: center;
             flex-wrap: wrap;
         }
-        .profile-username {
-            font-size: 14px;
-            color: #939393;
-            margin-bottom: 8px;
-        }
-        .profile-bio {
-            font-size: 13px;
-            color: #2c3e50;
-            margin: 8px 0;
-            padding: 0 16px;
-        }
-        .profile-status {
-            font-size:12px; 
-            color:#939393; 
-            margin-top:4px;
-        }
+        .profile-username { font-size: 14px; opacity: 0.6; margin-bottom: 8px; }
+        .profile-bio { font-size: 13px; margin: 8px 0; padding: 0 16px; }
         .profile-stats {
             display: flex;
             justify-content: center;
             gap: 32px;
             padding: 16px;
-            border-top: 1px solid #edeef0;
-            border-bottom: 1px solid #edeef0;
+            border-top: 1px solid;
+            border-bottom: 1px solid;
             margin: 16px 0;
         }
         .profile-stat { text-align: center; }
-        .profile-stat-number {
-            font-size: 18px;
-            font-weight: 600;
-            color: #2c3e50;
-        }
-        .profile-stat-label {
-            font-size: 12px;
-            color: #939393;
-        }
+        .profile-stat-number { font-size: 18px; font-weight: 600; }
+        .profile-stat-label { font-size: 12px; opacity: 0.6; }
         .profile-actions {
             display: flex;
             justify-content: center;
@@ -525,9 +561,7 @@
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
-            transition: opacity 0.2s;
         }
-        .profile-btn:hover { opacity: 0.9; }
         .profile-btn.secondary {
             background: #e5ebf1;
             color: #2a5885;
@@ -538,210 +572,132 @@
         }
         .profile-back-btn {
             background: none;
-            color: #2a5885;
             text-align: left;
             padding: 12px 16px;
-            margin-bottom: 0;
             display: inline-block;
             width: auto;
-        }
-        .profile-back-btn:hover {
-            background: #e5ebf1;
-            opacity: 1;
-        }
-        .profile-posts {
-            padding: 16px;
-        }
-        .profile-posts h4 {
-            font-size: 16px;
-            color: #2c3e50;
-            margin-bottom: 12px;
-        }
-        
-        .edit-profile-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            visibility: hidden;
-            opacity: 0;
-            transition: 0.2s;
-        }
-        .edit-profile-modal.active {
-            visibility: visible;
-            opacity: 1;
-        }
-        .edit-profile-card {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        .edit-profile-card h3 {
-            margin-bottom: 20px;
-            color: #2c3e50;
-        }
-        .edit-profile-card input,
-        .edit-profile-card textarea {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 16px;
-            border: 1px solid #d3d9de;
-            border-radius: 8px;
-            font-size: 14px;
-            font-family: inherit;
-        }
-        .edit-profile-card textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-        .username-warning {
-            font-size: 11px;
-            color: #e64646;
-            margin-top: -12px;
-            margin-bottom: 12px;
-        }
-        .last-change-info {
-            font-size: 11px;
-            color: #939393;
-            margin-top: -12px;
-            margin-bottom: 12px;
-        }
-        .edit-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-        }
-        .edit-actions button {
-            padding: 10px 20px;
-            border-radius: 8px;
             border: none;
             cursor: pointer;
         }
-        .edit-actions .save-btn {
-            background: #2a5885;
-            color: white;
-        }
-        .edit-actions .cancel-btn {
-            background: #e5ebf1;
-            color: #2c3e50;
-        }
+        .profile-posts { padding: 16px; }
+        .profile-posts h4 { margin-bottom: 12px; }
         
-        .chat-list {
+        /* Настройки */
+        .settings-panel {
             background: white;
             border-radius: 4px;
+            overflow: hidden;
         }
+        .settings-section {
+            padding: 20px;
+            border-bottom: 1px solid #edeef0;
+        }
+        .settings-section:last-child { border-bottom: none; }
+        .settings-section h3 {
+            margin-bottom: 16px;
+            font-size: 16px;
+        }
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+        }
+        .settings-item span { font-size: 14px; }
+        .theme-toggle, .sound-toggle {
+            width: 50px;
+            height: 26px;
+            background: #2a5885;
+            border-radius: 26px;
+            cursor: pointer;
+            position: relative;
+            transition: 0.2s;
+        }
+        .theme-toggle.active, .sound-toggle.active { background: #4bb34b; }
+        .theme-toggle::after, .sound-toggle::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: 0.2s;
+        }
+        .theme-toggle.active::after, .sound-toggle.active::after { left: 26px; }
+        .edit-profile-settings-btn {
+            background: #2a5885;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+            margin-top: 12px;
+        }
+        
+        /* Чаты */
+        .chat-list { border-radius: 4px; }
         .chat-item {
             display: flex;
             align-items: center;
             gap: 12px;
             padding: 12px 16px;
-            border-bottom: 1px solid #edeef0;
+            border-bottom: 1px solid;
             cursor: pointer;
         }
-        .chat-item:hover { background: #f5f6f7; }
+        .chat-item:hover { opacity: 0.8; }
         .chat-avatar {
             width: 48px;
             height: 48px;
-            background: #2a5885;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
             font-weight: bold;
             position: relative;
             background-size: cover;
             background-position: center;
         }
-        .online-dot {
-            position: absolute;
-            bottom: 2px;
-            right: 2px;
-            width: 12px;
-            height: 12px;
-            background: #4bb34b;
-            border-radius: 50%;
-            border: 2px solid white;
-        }
         .chat-info { flex: 1; }
-        .chat-name { 
-            font-weight: 600; 
-            color: #2c3e50; 
-            margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .chat-username {
-            font-size: 11px;
-            color: #939393;
-            font-weight: normal;
-        }
-        .chat-last-msg { font-size: 12px; color: #939393; }
-        .chat-status {
-            font-size: 11px;
-            color: #939393;
-            margin-top: 2px;
-        }
+        .chat-name { font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .chat-username { font-size: 11px; opacity: 0.6; font-weight: normal; }
+        .chat-last-msg { font-size: 12px; opacity: 0.6; }
         
-        .notifications-list {
-            background: white;
+        /* Поиск */
+        .search-input {
+            width: 100%;
+            padding: 12px;
             border-radius: 4px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            border: 1px solid;
         }
-        .notification-item {
+        .search-result-item {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 12px 16px;
-            border-bottom: 1px solid #edeef0;
             cursor: pointer;
         }
-        .notification-item:hover { background: #f5f6f7; }
-        .notification-item.unread {
-            background: #e8f0fe;
-        }
-        .notification-avatar {
-            width: 40px;
-            height: 40px;
-            background: #2a5885;
+        .search-result-avatar {
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
             font-weight: bold;
-            flex-shrink: 0;
             background-size: cover;
             background-position: center;
         }
-        .notification-content {
-            flex: 1;
-        }
-        .notification-text {
-            font-size: 13px;
-            color: #2c3e50;
-            margin-bottom: 4px;
-        }
-        .notification-time {
-            font-size: 11px;
-            color: #939393;
-        }
-        .notification-icon {
-            font-size: 18px;
-            width: 30px;
-            text-align: center;
-        }
+        .search-result-info { flex: 1; }
+        .search-result-name { font-weight: 600; }
+        .search-result-username { font-size: 12px; opacity: 0.6; }
         
         .new-chat-btn {
             background: #2a5885;
@@ -753,62 +709,17 @@
             width: 100%;
             margin-bottom: 16px;
         }
-        .search-input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #d3d9de;
-            border-radius: 4px;
-            margin-bottom: 16px;
-            font-size: 14px;
-        }
-        .search-result-item {
-            background: white;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-        }
-        .search-result-item:hover {
-            background: #e5ebf1;
-        }
-        .search-result-avatar {
-            width: 48px;
-            height: 48px;
-            background: #2a5885;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            background-size: cover;
-            background-position: center;
-        }
-        .search-result-info {
-            flex: 1;
-        }
-        .search-result-name {
-            font-weight: 600;
-            color: #2c3e50;
-        }
-        .search-result-username {
-            font-size: 12px;
-            color: #939393;
-        }
         
         .hide { display: none; }
-        .loading { text-align: center; padding: 40px; color: #939393; }
+        .loading { text-align: center; padding: 40px; opacity: 0.6; }
         
+        /* Чат на весь экран */
         .chat-fullscreen {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: white;
             z-index: 1000;
             display: flex;
             flex-direction: column;
@@ -836,16 +747,12 @@
             align-items: center;
             justify-content: center;
         }
-        .chat-fullscreen-header .chat-user-info {
-            flex: 1;
-        }
-        .chat-fullscreen-header .chat-user-name {
-            font-size: 18px;
-            font-weight: 600;
-        }
-        .chat-fullscreen-header .chat-user-username {
-            font-size: 12px;
-            opacity: 0.8;
+        .chat-fullscreen-header .chat-user-info { flex: 1; }
+        .chat-fullscreen-header .chat-user-name { font-size: 18px; font-weight: 600; }
+        .chat-fullscreen-header .chat-user-username { font-size: 12px; opacity: 0.8; }
+        .chat-header-actions {
+            display: flex;
+            gap: 12px;
         }
         .chat-messages-full {
             flex: 1;
@@ -854,28 +761,20 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            background: #edeef0;
         }
         .chat-input-full {
             display: flex;
             gap: 8px;
             padding: 12px 16px;
-            background: white;
-            border-top: 1px solid #edeef0;
-            flex-wrap: wrap;
-        }
-        .chat-input-wrapper {
-            flex: 1;
-            display: flex;
-            gap: 8px;
+            border-top: 1px solid;
         }
         .chat-input-full input {
             flex: 1;
             padding: 12px;
-            border: 1px solid #d3d9de;
             border-radius: 24px;
-            outline: none;
             font-size: 14px;
+            outline: none;
+            border: 1px solid;
         }
         .chat-input-full button {
             background: #2a5885;
@@ -884,16 +783,6 @@
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            cursor: pointer;
-            font-size: 18px;
-        }
-        .chat-attach-btn {
-            background: #e5ebf1;
-            color: #2a5885;
-            border: none;
-            border-radius: 50%;
-            width: 44px;
-            height: 44px;
             cursor: pointer;
             font-size: 18px;
         }
@@ -910,73 +799,7 @@
         }
         .chat-message.in {
             background: white;
-            color: #2c3e50;
             align-self: flex-start;
-        }
-        .chat-message-image {
-            max-width: 200px;
-            border-radius: 12px;
-            margin-top: 6px;
-            cursor: pointer;
-        }
-        .chat-message-image img {
-            width: 100%;
-            border-radius: 12px;
-        }
-        .chat-message-text {
-            word-break: break-word;
-        }
-        .chat-image-preview {
-            position: relative;
-            display: inline-block;
-            margin-right: 8px;
-        }
-        
-        @media (max-width: 700px) {
-            .left-menu { 
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                top: auto;
-                width: 100%;
-                background: white;
-                display: flex;
-                padding: 8px;
-                gap: 4px;
-                z-index: 200;
-                border-top: 1px solid #edeef0;
-                box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            }
-            .left-menu .menu-item {
-                flex: 1;
-                justify-content: center;
-                flex-direction: column;
-                padding: 8px 4px;
-                text-align: center;
-                font-size: 11px;
-                margin-bottom: 0;
-            }
-            .left-menu .menu-item i {
-                font-size: 20px;
-                margin: 0;
-            }
-            .left-menu .menu-item span {
-                font-size: 10px;
-            }
-            .main-layout { 
-                padding: 12px;
-                padding-bottom: 70px;
-            }
-            .content-panel {
-                margin-bottom: 60px;
-            }
-            .post-images {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            }
-            .post-image img {
-                height: 150px;
-            }
         }
         
         .modal-overlay {
@@ -996,7 +819,6 @@
         }
         .modal-overlay.active { visibility: visible; opacity: 1; }
         .modal-card {
-            background: white;
             border-radius: 8px;
             padding: 20px;
             width: 90%;
@@ -1004,15 +826,15 @@
             max-height: 80vh;
             overflow-y: auto;
         }
-        .modal-card h3 { margin-bottom: 16px; color: #2c3e50; }
+        .modal-card h3 { margin-bottom: 16px; }
         .modal-card textarea {
             width: 100%;
             padding: 12px;
-            border: 1px solid #d3d9de;
             border-radius: 4px;
             font-family: inherit;
             resize: vertical;
             margin-bottom: 16px;
+            border: 1px solid;
         }
         .images-preview {
             display: flex;
@@ -1026,7 +848,7 @@
             height: 100px;
             border-radius: 8px;
             overflow: hidden;
-            border: 2px solid #edeef0;
+            border: 2px solid;
         }
         .image-preview-item img {
             width: 100%;
@@ -1050,18 +872,12 @@
             font-size: 12px;
         }
         .image-upload-btn {
-            background: #e5ebf1;
-            color: #2a5885;
             padding: 10px;
             border: 1px dashed #2a5885;
             border-radius: 4px;
             cursor: pointer;
             text-align: center;
             margin-bottom: 16px;
-        }
-        .image-upload-btn.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
         }
         .modal-actions { display: flex; gap: 12px; justify-content: flex-end; }
         .modal-actions button {
@@ -1072,13 +888,77 @@
         }
         .modal-actions .primary { background: #2a5885; color: white; }
         
+        .edit-profile-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.2s;
+        }
+        .edit-profile-modal.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .edit-profile-card {
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .edit-profile-card h3 { margin-bottom: 20px; }
+        .edit-profile-card input,
+        .edit-profile-card textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            border: 1px solid;
+        }
+        .username-warning {
+            font-size: 11px;
+            color: #e64646;
+            margin-top: -12px;
+            margin-bottom: 12px;
+        }
+        .last-change-info {
+            font-size: 11px;
+            color: #939393;
+            margin-top: -12px;
+            margin-bottom: 12px;
+        }
+        .edit-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        .edit-actions button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+        }
+        .edit-actions .save-btn { background: #2a5885; color: white; }
+        .edit-actions .cancel-btn { background: #e5ebf1; }
+        
         .friend-badge {
-            background: #e5ebf1;
-            color: #2a5885;
             font-size: 10px;
             padding: 2px 6px;
             border-radius: 10px;
             margin-left: 8px;
+            background: #e5ebf1;
+            color: #2a5885;
         }
         
         .image-viewer {
@@ -1100,22 +980,6 @@
             object-fit: contain;
         }
         
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #2a5885;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 8px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
         .toast {
             position: fixed;
             bottom: 30px;
@@ -1135,9 +999,47 @@
             70% { opacity: 1; }
             100% { opacity: 0; visibility: hidden; }
         }
+        
+        @media (max-width: 700px) {
+            .left-menu { 
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                top: auto;
+                width: 100%;
+                display: flex;
+                padding: 8px;
+                gap: 4px;
+                z-index: 200;
+                border-top: 1px solid;
+                box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+                background: white;
+            }
+            body.dark-theme .left-menu { background: #1e1e1e; }
+            .left-menu .menu-item {
+                flex: 1;
+                justify-content: center;
+                flex-direction: column;
+                padding: 8px 4px;
+                text-align: center;
+                font-size: 11px;
+                margin-bottom: 0;
+            }
+            .left-menu .menu-item i { font-size: 20px; margin: 0; }
+            .left-menu .menu-item span { font-size: 10px; }
+            .main-layout { padding: 12px; padding-bottom: 70px; }
+            .content-panel { margin-bottom: 60px; }
+            .post-images { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
+            .post-image img { height: 150px; }
+            .header { padding: 8px 16px; }
+            .logo { font-size: 16px; }
+            .settings-btn { width: 32px; height: 32px; font-size: 14px; }
+            .logout-btn { padding: 4px 10px; font-size: 12px; }
+        }
     </style>
 </head>
-<body>
+<body class="light-theme">
 
 <div id="authScreen" class="auth-container">
     <h2><i class="fas fa-play-circle"></i> OlegTube</h2>
@@ -1151,45 +1053,24 @@
 
 <div id="appScreen" class="app-container" style="display: none;">
     <div class="header">
-        <div class="logo"><i class="fas fa-play-circle"></i> OlegTube</div>
+        <div class="logo" id="logoHome"><i class="fas fa-play-circle"></i> OlegTube</div>
         <div class="header-right">
-            <div id="notificationsBell" class="notifications-bell">
-                <i class="fas fa-bell"></i>
-                <span id="notificationsBadge" class="badge" style="display: none;">0</span>
-            </div>
+            <button id="settingsBtn" class="settings-btn"><i class="fas fa-cog"></i></button>
             <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Выйти</button>
         </div>
     </div>
 
     <div class="main-layout">
         <div class="left-menu">
-            <div class="menu-item active" id="menuHome">
-                <i class="fas fa-newspaper"></i> <span>Новости</span>
-            </div>
-            <div class="menu-item" id="menuNotifications">
-                <i class="fas fa-bell"></i> <span>Уведомления</span>
-            </div>
-            <div class="menu-item" id="menuSearch">
-                <i class="fas fa-search"></i> <span>Поиск</span>
-            </div>
-            <div class="menu-item" id="menuMessages">
-                <i class="fas fa-comments"></i> <span>Сообщения</span>
-            </div>
-            <div class="menu-item" id="menuProfile">
-                <i class="fas fa-user-circle"></i> <span>Мой профиль</span>
-            </div>
-            <div class="menu-item" id="menuCreatePost">
-                <i class="fas fa-plus-circle"></i> <span>Создать пост</span>
-            </div>
+            <div class="menu-item active" id="menuHome"><i class="fas fa-newspaper"></i> <span>Новости</span></div>
+            <div class="menu-item" id="menuSearch"><i class="fas fa-search"></i> <span>Поиск</span></div>
+            <div class="menu-item" id="menuMessages"><i class="fas fa-comments"></i> <span>Сообщения</span></div>
+            <div class="menu-item" id="menuProfile"><i class="fas fa-user-circle"></i> <span>Мой профиль</span></div>
+            <div class="menu-item" id="menuCreatePost"><i class="fas fa-plus-circle"></i> <span>Создать пост</span></div>
         </div>
 
         <div class="content-panel">
-            <div id="feedPanel">
-                <div id="postsContainer"></div>
-            </div>
-            <div id="notificationsPanel" class="hide">
-                <div id="notificationsList" class="notifications-list"></div>
-            </div>
+            <div id="feedPanel"><div id="postsContainer"></div></div>
             <div id="searchPanel" class="hide">
                 <input type="text" id="searchInput" class="search-input" placeholder="Поиск по имени или @username...">
                 <div id="searchResults"></div>
@@ -1203,8 +1084,13 @@
                     <div id="usersList"></div>
                 </div>
             </div>
-            <div id="profilePanel" class="hide">
-                <div id="profileContent"></div>
+            <div id="profilePanel" class="hide"><div id="profileContent"></div></div>
+            <div id="settingsPanel" class="hide">
+                <div class="settings-panel">
+                    <div class="settings-section"><h3>Внешний вид</h3><div class="settings-item"><span><i class="fas fa-moon"></i> Тёмная тема</span><div id="themeToggle" class="theme-toggle"></div></div></div>
+                    <div class="settings-section"><h3>Звуки</h3><div class="settings-item"><span><i class="fas fa-volume-up"></i> Звуковые эффекты</span><div id="soundToggle" class="sound-toggle active"></div></div></div>
+                    <div class="settings-section"><h3>Профиль</h3><button id="editProfileSettingsBtn" class="edit-profile-settings-btn"><i class="fas fa-user-edit"></i> Редактировать профиль</button></div>
+                </div>
             </div>
         </div>
     </div>
@@ -1215,15 +1101,9 @@
         <h3>Новая запись</h3>
         <textarea id="postText" rows="3" placeholder="Что у вас нового?"></textarea>
         <div id="imagesPreviewContainer" class="images-preview"></div>
-        <div class="image-upload-btn" id="uploadImageBtn">
-            <i class="fas fa-image"></i> Добавить фото (до 3 шт, до 500KB)
-        </div>
+        <div class="image-upload-btn" id="uploadImageBtn"><i class="fas fa-image"></i> Добавить фото (до 3 шт)</div>
         <input type="file" id="imageInput" accept="image/*" multiple style="display: none;">
-        <div id="uploadError" style="color: #e64646; font-size: 12px; margin-bottom: 12px; display: none;"></div>
-        <div class="modal-actions">
-            <button id="cancelPostBtn">Отмена</button>
-            <button id="submitPostBtn" class="primary">Опубликовать</button>
-        </div>
+        <div class="modal-actions"><button id="cancelPostBtn">Отмена</button><button id="submitPostBtn" class="primary">Опубликовать</button></div>
     </div>
 </div>
 
@@ -1235,10 +1115,17 @@
         <div id="usernameWarning" class="username-warning"></div>
         <div id="lastChangeInfo" class="last-change-info"></div>
         <textarea id="editBio" placeholder="О себе" rows="3"></textarea>
-        <div class="edit-actions">
-            <button class="cancel-btn" id="cancelEditBtn">Отмена</button>
-            <button class="save-btn" id="saveProfileBtn">Сохранить</button>
-        </div>
+        <div class="edit-actions"><button class="cancel-btn" id="cancelEditBtn">Отмена</button><button class="save-btn" id="saveProfileBtn">Сохранить</button></div>
+    </div>
+</div>
+
+<!-- Модальное окно звонка -->
+<div id="callModal" class="call-modal">
+    <div class="call-card">
+        <div class="call-avatar" id="callAvatar"></div>
+        <div class="call-name" id="callName"></div>
+        <div class="call-status" id="callStatus">Звонок...</div>
+        <div class="call-actions" id="callActions"></div>
     </div>
 </div>
 
@@ -1253,11 +1140,7 @@
 
 <script type="module">
     import { initializeApp } from "firebase/app";
-    import { 
-        getFirestore, collection, addDoc, getDocs, getDoc,
-        query, where, doc, updateDoc, 
-        arrayUnion, arrayRemove, setDoc, onSnapshot, limit, orderBy
-    } from "firebase/firestore";
+    import { getFirestore, collection, addDoc, getDocs, getDoc, query, where, doc, updateDoc, arrayUnion, arrayRemove, setDoc, onSnapshot, orderBy, deleteDoc } from "firebase/firestore";
     
     const firebaseConfig = {
         apiKey: "AIzaSyDuJfaJAvigdDsCkeLoHpM3QG30YANa5tU",
@@ -1277,27 +1160,25 @@
     let allPosts = [];
     let unsubscribePosts = null;
     let unsubscribeChats = null;
-    let unsubscribeNotifications = null;
-    let typingListeners = new Map();
-    let userStatusListeners = new Map();
-    let userStatuses = new Map();
     let currentImageFiles = [];
-    let notifications = [];
-    let unreadCount = 0;
-    let pendingCommentImages = new Map();
-    
-    // User profile cache
     let userProfilesCache = new Map();
+    let soundsEnabled = true;
     
-    function showToast(message) {
-        const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.textContent = message;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
-    }
+    // WebRTC переменные
+    let localStream = null;
+    let peerConnection = null;
+    let currentCall = null;
+    let callListeners = new Map();
+    
+    const configuration = {
+        iceServers: [
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:stun1.l.google.com:19302' }
+        ]
+    };
     
     function playSound(type) {
+        if (!soundsEnabled) return;
         try {
             const AudioContext = window.AudioContext || window.webkitAudioContext;
             if (!AudioContext) return;
@@ -1315,10 +1196,19 @@
             else if (type === 'subscribe') { oscillator.frequency.value = 392; duration = 0.6; }
             else if (type === 'login') { oscillator.frequency.value = 440; duration = 0.8; }
             else if (type === 'message') { oscillator.frequency.value = 698.46; duration = 0.2; }
+            else if (type === 'call') { oscillator.frequency.value = 880; duration = 0.5; setTimeout(() => { if (oscillator) oscillator.frequency.value = 440; }, 250); }
             oscillator.start();
             gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
             oscillator.stop(audioCtx.currentTime + duration);
         } catch(e) { console.log('Audio error:', e); }
+    }
+    
+    function showToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
     }
     
     function escapeHtml(str) {
@@ -1335,21 +1225,268 @@
         return `${Math.floor(diff / 1440)} дн назад`;
     }
     
-    function formatLastSeen(timestamp) {
-        if (!timestamp) return "был(а) давно";
-        const lastSeen = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-        const now = new Date();
-        const diff = Math.floor((now - lastSeen) / 60000);
-        if (diff < 1) return "онлайн";
-        if (diff < 60) return `был(а) ${diff} мин назад`;
-        if (diff < 1440) return `был(а) ${Math.floor(diff / 60)} ч назад`;
-        return `был(а) ${lastSeen.toLocaleDateString()}`;
+    // Функции звонков
+    async function startCall(partnerName, isIncoming = false, callId = null) {
+        if (currentCall) {
+            showToast('У вас уже активен звонок');
+            return;
+        }
+        
+        try {
+            localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            peerConnection = new RTCPeerConnection(configuration);
+            
+            localStream.getTracks().forEach(track => {
+                peerConnection.addTrack(track, localStream);
+            });
+            
+            let actualCallId = callId;
+            if (!actualCallId) {
+                actualCallId = `${currentUser.username}_${partnerName}_${Date.now()}`;
+                await setDoc(doc(db, "calls", actualCallId), {
+                    caller: currentUser.username,
+                    callee: partnerName,
+                    status: 'calling',
+                    startTime: new Date()
+                });
+            }
+            
+            currentCall = { callId: actualCallId, partnerName, isIncoming };
+            
+            if (!isIncoming) {
+                const offer = await peerConnection.createOffer();
+                await peerConnection.setLocalDescription(offer);
+                await updateDoc(doc(db, "calls", actualCallId), { offer: offer });
+            }
+            
+            peerConnection.onicecandidate = async (event) => {
+                if (event.candidate) {
+                    const callRef = doc(db, "calls", actualCallId);
+                    const callSnap = await getDoc(callRef);
+                    const candidates = callSnap.data()?.iceCandidates || [];
+                    candidates.push(event.candidate);
+                    await updateDoc(callRef, { iceCandidates: candidates });
+                }
+            };
+            
+            peerConnection.ontrack = (event) => {
+                const remoteAudio = new Audio();
+                remoteAudio.srcObject = event.streams[0];
+                remoteAudio.play();
+            };
+            
+            peerConnection.onconnectionstatechange = () => {
+                if (peerConnection.connectionState === 'disconnected' || peerConnection.connectionState === 'failed') {
+                    endCall();
+                }
+            };
+            
+            showCallModal(partnerName, isIncoming ? 'incoming' : 'calling');
+            
+        } catch (err) {
+            console.error('Call error:', err);
+            showToast('Не удалось начать звонок. Проверьте микрофон.');
+        }
+    }
+    
+    async function acceptCall(callId, callerName) {
+        try {
+            const callRef = doc(db, "calls", callId);
+            const callSnap = await getDoc(callRef);
+            const callData = callSnap.data();
+            
+            if (!callData || callData.status !== 'calling') {
+                showToast('Звонок уже завершён');
+                return;
+            }
+            
+            localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            peerConnection = new RTCPeerConnection(configuration);
+            
+            localStream.getTracks().forEach(track => {
+                peerConnection.addTrack(track, localStream);
+            });
+            
+            currentCall = { callId, partnerName: callerName, isIncoming: false };
+            
+            await peerConnection.setRemoteDescription(new RTCSessionDescription(callData.offer));
+            const answer = await peerConnection.createAnswer();
+            await peerConnection.setLocalDescription(answer);
+            await updateDoc(callRef, { answer: answer, status: 'active' });
+            
+            peerConnection.onicecandidate = async (event) => {
+                if (event.candidate) {
+                    const snap = await getDoc(callRef);
+                    const candidates = snap.data()?.iceCandidates || [];
+                    candidates.push(event.candidate);
+                    await updateDoc(callRef, { iceCandidates: candidates });
+                }
+            };
+            
+            if (callData.iceCandidates) {
+                for (const candidate of callData.iceCandidates) {
+                    try {
+                        await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+                    } catch(e) {}
+                }
+            }
+            
+            peerConnection.ontrack = (event) => {
+                const remoteAudio = new Audio();
+                remoteAudio.srcObject = event.streams[0];
+                remoteAudio.play();
+            };
+            
+            peerConnection.onconnectionstatechange = () => {
+                if (peerConnection.connectionState === 'disconnected' || peerConnection.connectionState === 'failed') {
+                    endCall();
+                }
+            };
+            
+            showCallModal(callerName, 'active');
+            playSound('call');
+            
+        } catch (err) {
+            console.error('Accept call error:', err);
+            endCall();
+        }
+    }
+    
+    async function endCall() {
+        if (currentCall) {
+            if (currentCall.callId) {
+                try {
+                    await deleteDoc(doc(db, "calls", currentCall.callId)).catch(() => {});
+                } catch(e) {}
+            }
+            if (peerConnection) {
+                peerConnection.close();
+                peerConnection = null;
+            }
+            if (localStream) {
+                localStream.getTracks().forEach(track => track.stop());
+                localStream = null;
+            }
+            currentCall = null;
+        }
+        closeCallModal();
+    }
+    
+    function showCallModal(partnerName, status) {
+        const modal = document.getElementById('callModal');
+        const callAvatar = document.getElementById('callAvatar');
+        const callName = document.getElementById('callName');
+        const callStatus = document.getElementById('callStatus');
+        const callActions = document.getElementById('callActions');
+        
+        getUserProfile(partnerName).then(profile => {
+            callAvatar.style.backgroundImage = profile.avatarBase64 ? `url(${profile.avatarBase64})` : '';
+            callAvatar.textContent = profile.avatarBase64 ? '' : profile.displayName.charAt(0).toUpperCase();
+            callName.textContent = profile.displayName;
+        });
+        
+        if (status === 'incoming') {
+            callStatus.textContent = 'Входящий звонок...';
+            callActions.innerHTML = `
+                <button class="call-action-btn accept" onclick="window.acceptCallHandler()"><i class="fas fa-phone"></i></button>
+                <button class="call-action-btn decline" onclick="window.declineCallHandler()"><i class="fas fa-times"></i></button>
+            `;
+            window.acceptCallHandler = () => acceptCall(currentCall.callId, partnerName);
+            window.declineCallHandler = () => endCall();
+        } else if (status === 'calling') {
+            callStatus.textContent = 'Звоним...';
+            callActions.innerHTML = `<button class="call-action-btn end" onclick="window.endCallHandler()"><i class="fas fa-phone-slash"></i></button>`;
+            window.endCallHandler = () => endCall();
+        } else if (status === 'active') {
+            let muted = false;
+            callStatus.textContent = 'В разговоре';
+            callActions.innerHTML = `
+                <button class="call-action-btn mic" id="micToggleBtn"><i class="fas fa-microphone"></i></button>
+                <button class="call-action-btn end" onclick="window.endCallHandler()"><i class="fas fa-phone-slash"></i></button>
+            `;
+            document.getElementById('micToggleBtn')?.addEventListener('click', () => {
+                if (localStream) {
+                    muted = !muted;
+                    localStream.getAudioTracks().forEach(track => track.enabled = !muted);
+                    const btn = document.getElementById('micToggleBtn');
+                    if (muted) {
+                        btn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+                        btn.classList.add('muted');
+                    } else {
+                        btn.innerHTML = '<i class="fas fa-microphone"></i>';
+                        btn.classList.remove('muted');
+                    }
+                }
+            });
+            window.endCallHandler = () => endCall();
+        }
+        
+        modal.classList.add('active');
+    }
+    
+    function closeCallModal() {
+        const modal = document.getElementById('callModal');
+        modal.classList.remove('active');
+    }
+    
+    function listenForCalls() {
+        if (!currentUser) return;
+        
+        const q = query(collection(db, "calls"), where("callee", "==", currentUser.username), where("status", "==", "calling"));
+        const unsubscribe = onSnapshot(q, (snap) => {
+            snap.forEach(doc => {
+                const callData = doc.data();
+                if (!currentCall && callData.status === 'calling') {
+                    playSound('call');
+                    startCall(callData.caller, true, doc.id);
+                }
+            });
+        });
+        callListeners.set('calls', unsubscribe);
+    }
+    
+    // Остальные функции из предыдущей версии
+    function loadSettings() {
+        const savedTheme = localStorage.getItem('olegtube_theme');
+        const savedSounds = localStorage.getItem('olegtube_sounds');
+        if (savedTheme === 'dark') {
+            document.body.classList.remove('light-theme');
+            document.body.classList.add('dark-theme');
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) themeToggle.classList.add('active');
+        } else {
+            document.body.classList.remove('dark-theme');
+            document.body.classList.add('light-theme');
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) themeToggle.classList.remove('active');
+        }
+        soundsEnabled = savedSounds !== 'false';
+        const soundToggle = document.getElementById('soundToggle');
+        if (soundToggle) {
+            if (soundsEnabled) soundToggle.classList.add('active');
+            else soundToggle.classList.remove('active');
+        }
+    }
+    
+    function saveTheme(isDark) {
+        if (isDark) {
+            localStorage.setItem('olegtube_theme', 'dark');
+            document.body.classList.remove('light-theme');
+            document.body.classList.add('dark-theme');
+        } else {
+            localStorage.setItem('olegtube_theme', 'light');
+            document.body.classList.remove('dark-theme');
+            document.body.classList.add('light-theme');
+        }
+    }
+    
+    function saveSounds(enabled) {
+        localStorage.setItem('olegtube_sounds', enabled);
+        soundsEnabled = enabled;
     }
     
     async function getUserProfile(username) {
-        if (userProfilesCache.has(username)) {
-            return userProfilesCache.get(username);
-        }
+        if (userProfilesCache.has(username)) return userProfilesCache.get(username);
         const userRef = doc(db, "users", username);
         const userSnap = await getDoc(userRef);
         if (userSnap.exists()) {
@@ -1372,49 +1509,30 @@
         const userRef = doc(db, "users", currentUser.username);
         const userSnap = await getDoc(userRef);
         const userData = userSnap.data();
-        
         const updates = {};
         if (displayName) updates.displayName = displayName;
         if (bio !== undefined) updates.bio = bio;
         if (avatarBase64 !== null) updates.avatarBase64 = avatarBase64;
-        
         if (newUsername && newUsername !== currentUser.username) {
             const lastChange = userData.lastUsernameChange?.toDate() || null;
             const canChange = !lastChange || (new Date() - lastChange) > 30 * 24 * 60 * 60 * 1000;
-            
             if (!canChange) {
                 const daysLeft = Math.ceil((30 * 24 * 60 * 60 * 1000 - (new Date() - lastChange)) / (24 * 60 * 60 * 1000));
                 throw new Error(`Username можно сменить только раз в месяц. Осталось ${daysLeft} дней`);
             }
-            
             const existingUserRef = doc(db, "users", newUsername);
             const existingSnap = await getDoc(existingUserRef);
-            if (existingSnap.exists()) {
-                throw new Error("Пользователь с таким username уже существует");
-            }
-            
+            if (existingSnap.exists()) throw new Error("Пользователь с таким username уже существует");
             updates.username = newUsername;
             updates.lastUsernameChange = new Date();
         }
-        
         await updateDoc(userRef, updates);
-        
         if (newUsername && newUsername !== currentUser.username) {
             const oldUsername = currentUser.username;
             currentUser.username = newUsername;
-            
             const postsQuery = query(collection(db, "posts"), where("author", "==", oldUsername));
             const postsSnap = await getDocs(postsQuery);
-            for (const postDoc of postsSnap.docs) {
-                await updateDoc(postDoc.ref, { author: newUsername });
-            }
-            
-            const commentsQuery = query(collection(db, "comments"), where("author", "==", oldUsername));
-            const commentsSnap = await getDocs(commentsQuery);
-            for (const commentDoc of commentsSnap.docs) {
-                await updateDoc(commentDoc.ref, { author: newUsername });
-            }
-            
+            for (const postDoc of postsSnap.docs) await updateDoc(postDoc.ref, { author: newUsername });
             const chatsQuery = query(collection(db, "chats"), where("participants", "array-contains", oldUsername));
             const chatsSnap = await getDocs(chatsQuery);
             for (const chatDoc of chatsSnap.docs) {
@@ -1422,90 +1540,241 @@
                 const newParticipants = participants.map(p => p === oldUsername ? newUsername : p);
                 await updateDoc(chatDoc.ref, { participants: newParticipants });
             }
-            
-            const notifQuery = query(collection(db, "notifications"), where("fromUser", "==", oldUsername));
-            const notifSnap = await getDocs(notifQuery);
-            for (const notifDoc of notifSnap.docs) {
-                await updateDoc(notifDoc.ref, { fromUser: newUsername });
-            }
         }
-        
         userProfilesCache.delete(currentUser.username);
         if (newUsername) userProfilesCache.delete(newUsername);
         showToast("Профиль обновлен!");
     }
     
-    async function isUserVerified(username) {
+    async function registerUser(username, password) {
+        if (!username || !password) throw new Error("Заполните поля");
+        if (username.length < 3) throw new Error("Имя минимум 3 символа");
+        if (password.length < 4) throw new Error("Пароль минимум 4 символа");
         const userRef = doc(db, "users", username);
-        const userSnap = await getDoc(userRef);
-        return userSnap.data()?.isVerified || false;
-    }
-    
-    async function addNotification(userTo, type, fromUser, postId = null, commentText = null) {
-        if (!fromUser || userTo === fromUser) return;
-        try {
-            await addDoc(collection(db, "notifications"), {
-                toUser: userTo, fromUser: fromUser, type: type,
-                postId: postId || null, commentText: commentText || null,
-                timestamp: new Date(), read: false
-            });
-        } catch(e) { console.error('Notification error:', e); }
-    }
-    
-    async function loadNotifications() {
-        if (!currentUser) return;
-        const q = query(collection(db, "notifications"), where("toUser", "==", currentUser.username), orderBy("timestamp", "desc"));
-        unsubscribeNotifications = onSnapshot(q, (snap) => {
-            notifications = [];
-            snap.forEach(doc => {
-                notifications.push({ id: doc.id, ...doc.data(), timestamp: doc.data().timestamp?.toDate() || new Date() });
-            });
-            unreadCount = notifications.filter(n => !n.read).length;
-            updateNotificationBadge();
-            if (currentPanel === 'notifications') renderNotifications();
+        const snap = await getDoc(userRef);
+        if (snap.exists()) throw new Error("Пользователь уже существует");
+        await setDoc(userRef, {
+            username: username, displayName: username, password: password,
+            bio: "", createdAt: new Date().toISOString(),
+            isVerified: username === "OlegTube" || username === "Admin",
+            followers: [], subscriptions: [], isOnline: true, lastSeen: new Date()
         });
+        return { username };
     }
     
-    function updateNotificationBadge() {
-        const badge = document.getElementById('notificationsBadge');
-        if (unreadCount > 0) {
-            badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
-            badge.style.display = 'inline-block';
+    async function loginUser(username, password) {
+        const userRef = doc(db, "users", username);
+        const snap = await getDoc(userRef);
+        if (!snap.exists()) throw new Error("Пользователь не найден");
+        if (snap.data().password !== password) throw new Error("Неверный пароль");
+        await updateDoc(userRef, { isOnline: true, lastSeen: new Date() });
+        return { username };
+    }
+    
+    async function getAllPosts() {
+        const snapshot = await getDocs(collection(db, "posts"));
+        let posts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), timestamp: doc.data().timestamp?.toDate() || new Date() }));
+        posts.sort((a, b) => b.timestamp - a.timestamp);
+        return posts;
+    }
+    
+    async function addPost(text, imagesBase64) {
+        if ((!text || !text.trim()) && (!imagesBase64 || imagesBase64.length === 0)) throw new Error("Напишите текст или добавьте фото");
+        await addDoc(collection(db, "posts"), {
+            author: currentUser.username, text: text?.trim() || "",
+            timestamp: new Date(), likes: [], likesCount: 0, commentsCount: 0,
+            imagesBase64: imagesBase64 || []
+        });
+        playSound('post');
+        showToast('Пост опубликован! 🎉');
+    }
+    
+    async function toggleLike(postId) {
+        const postRef = doc(db, "posts", postId);
+        const postSnap = await getDoc(postRef);
+        if (!postSnap.exists()) return;
+        const data = postSnap.data();
+        const hasLiked = data.likes?.includes(currentUser.username);
+        if (hasLiked) {
+            await updateDoc(postRef, { likes: arrayRemove(currentUser.username), likesCount: Math.max(0, data.likesCount - 1) });
         } else {
-            badge.style.display = 'none';
+            await updateDoc(postRef, { likes: arrayUnion(currentUser.username), likesCount: (data.likesCount || 0) + 1 });
+            playSound('like');
         }
     }
     
-    async function markAllNotificationsAsRead() {
-        for (const n of notifications.filter(n => !n.read)) {
-            await updateDoc(doc(db, "notifications", n.id), { read: true });
-        }
-    }
-    
-    function renderNotifications() {
-        const container = document.getElementById('notificationsList');
-        if (!container) return;
-        if (notifications.length === 0) {
-            container.innerHTML = '<div class="loading">Нет уведомлений</div>';
-            return;
-        }
-        container.innerHTML = notifications.map(notif => {
-            let icon = '', text = '';
-            if (notif.type === 'like') { icon = '<i class="fas fa-heart" style="color:#e64646;"></i>'; text = `${escapeHtml(notif.fromUser)} лайкнул(а) ваш пост`; }
-            else if (notif.type === 'comment') { icon = '<i class="fas fa-comment" style="color:#2a5885;"></i>'; text = `${escapeHtml(notif.fromUser)} оставил(а) комментарий`; }
-            else if (notif.type === 'subscribe') { icon = '<i class="fas fa-user-plus" style="color:#4bb34b;"></i>'; text = `${escapeHtml(notif.fromUser)} подписался(ась) на вас`; }
-            return `<div class="notification-item ${!notif.read ? 'unread' : ''}" data-user="${escapeHtml(notif.fromUser)}">
-                        <div class="notification-avatar">${escapeHtml((notif.fromUser || '?').charAt(0).toUpperCase())}</div>
-                        <div class="notification-icon">${icon}</div>
-                        <div class="notification-content">
-                            <div class="notification-text">${text}</div>
-                            <div class="notification-time">${formatDate(notif.timestamp)}</div>
-                        </div>
-                    </div>`;
-        }).join('');
-        container.querySelectorAll('.notification-item').forEach(el => {
-            el.onclick = () => { showProfile(el.dataset.user); setPanel('profile'); };
+    async function addComment(postId, text) {
+        if (!text.trim()) return;
+        await addDoc(collection(db, "posts", postId, "comments"), {
+            author: currentUser.username, text: text.trim(), timestamp: new Date()
         });
+        const postRef = doc(db, "posts", postId);
+        const postSnap = await getDoc(postRef);
+        if (postSnap.exists()) {
+            await updateDoc(postRef, { commentsCount: (postSnap.data().commentsCount || 0) + 1 });
+        }
+        playSound('comment');
+    }
+    
+    async function getComments(postId) {
+        const snapshot = await getDocs(query(collection(db, "posts", postId, "comments"), orderBy("timestamp", "asc")));
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), timestamp: doc.data().timestamp?.toDate() || new Date() }));
+    }
+    
+    async function getUserPosts(username) {
+        const snapshot = await getDocs(query(collection(db, "posts"), where("author", "==", username)));
+        let posts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), timestamp: doc.data().timestamp?.toDate() || new Date() }));
+        posts.sort((a, b) => b.timestamp - a.timestamp);
+        return posts;
+    }
+    
+    async function toggleSubscribe(targetUsername) {
+        if (targetUsername === currentUser.username) return;
+        const userRef = doc(db, "users", currentUser.username);
+        const userSnap = await getDoc(userRef);
+        const subs = userSnap.data()?.subscriptions || [];
+        const isSub = subs.includes(targetUsername);
+        if (isSub) {
+            await updateDoc(userRef, { subscriptions: arrayRemove(targetUsername) });
+            await updateDoc(doc(db, "users", targetUsername), { followers: arrayRemove(currentUser.username) });
+        } else {
+            await updateDoc(userRef, { subscriptions: arrayUnion(targetUsername) });
+            await updateDoc(doc(db, "users", targetUsername), { followers: arrayUnion(currentUser.username) });
+            playSound('subscribe');
+        }
+        if (viewingProfile === targetUsername) await showProfile(targetUsername);
+        if (currentPanel === 'profile' && (!viewingProfile || viewingProfile === currentUser.username)) await showMyProfile();
+        await renderFeed();
+    }
+    
+    async function renderComment(comment) {
+        const authorProfile = await getUserProfile(comment.author);
+        const avatarStyle = authorProfile.avatarBase64 ? `background-image: url(${authorProfile.avatarBase64});` : '';
+        return `<div class="comment"><div class="comment-avatar" data-user="${comment.author}" style="${avatarStyle}">${!authorProfile.avatarBase64 ? escapeHtml(comment.author.charAt(0).toUpperCase()) : ''}</div><div class="comment-content"><div class="comment-author" data-user="${comment.author}">${escapeHtml(authorProfile.displayName)}</div><div class="comment-username">@${escapeHtml(comment.author)}</div><div class="comment-text">${escapeHtml(comment.text)}</div><div class="comment-date">${formatDate(comment.timestamp)}</div></div></div>`;
+    }
+    
+    async function loadCommentsForPost(postId) {
+        const comments = await getComments(postId);
+        const commentsContainer = document.getElementById(`comments-${postId}`);
+        if (!commentsContainer) return;
+        if (comments.length === 0) { commentsContainer.innerHTML = '<div style="padding: 8px; opacity: 0.6; font-size: 12px;">Нет комментариев. Будьте первым!</div>'; return; }
+        const commentHtmls = await Promise.all(comments.map(c => renderComment(c)));
+        commentsContainer.innerHTML = commentHtmls.join('');
+        commentsContainer.querySelectorAll('.comment-avatar, .comment-author').forEach(el => {
+            const user = el.dataset.user;
+            if (user && user !== currentUser.username) { el.onclick = () => { showProfile(user); setPanel('profile'); }; el.style.cursor = 'pointer'; }
+        });
+    }
+    
+    async function renderPost(post) {
+        const authorProfile = await getUserProfile(post.author);
+        const hasLiked = post.likes?.includes(currentUser.username);
+        const showComments = commentsStates.get(post.id) || false;
+        const images = post.imagesBase64 || [];
+        const avatarStyle = authorProfile.avatarBase64 ? `background-image: url(${authorProfile.avatarBase64});` : '';
+        const imagesHtml = images.length > 0 ? `<div class="post-images">${images.map(img => `<div class="post-image" data-image="${img}"><img src="${img}" alt="Post image" loading="lazy"></div>`).join('')}</div>` : '';
+        return `<div class="post-card" data-post-id="${post.id}"><div class="post-header"><div class="post-avatar" data-user="${post.author}" style="${avatarStyle}">${!authorProfile.avatarBase64 ? escapeHtml(post.author.charAt(0).toUpperCase()) : ''}</div><div class="post-author-info"><div class="post-author-name" data-user="${post.author}">${escapeHtml(authorProfile.displayName)} ${authorProfile.isVerified ? '<i class="fas fa-check-circle" style="color:#2a5885; font-size: 14px;"></i>' : ''}</div><div class="post-author-username">@${escapeHtml(post.author)}</div><div class="post-date">${formatDate(post.timestamp)}</div></div></div>${post.text ? `<div class="post-text">${escapeHtml(post.text)}</div>` : ''}${imagesHtml}<div class="post-actions"><div class="post-action like-btn" data-id="${post.id}"><i class="${hasLiked ? 'fas fa-heart' : 'far fa-heart'}"></i><span>${post.likesCount || 0}</span></div><div class="post-action show-comments-btn" data-id="${post.id}"><i class="far fa-comment"></i><span>${post.commentsCount || 0} комментариев</span></div></div><div class="comments-section" style="display: ${showComments ? 'block' : 'none'}"><div id="comments-${post.id}" class="comments-list"></div><div class="add-comment"><input type="text" id="comment-input-${post.id}" placeholder="Написать комментарий..."><button class="comment-send-btn" data-post="${post.id}">Отправить</button></div></div></div>`;
+    }
+    
+    async function handleSendComment(postId) {
+        const input = document.getElementById(`comment-input-${postId}`);
+        const text = input?.value || '';
+        if (!text.trim()) return;
+        await addComment(postId, text);
+        if (input) input.value = '';
+        await loadCommentsForPost(postId);
+        await loadPosts();
+    }
+    
+    function attachPostHandlers(container) {
+        if (!container) return;
+        container.querySelectorAll('.post-avatar, .post-author-name').forEach(el => {
+            const user = el.dataset.user;
+            if (user && user !== currentUser.username) { el.onclick = (e) => { e.stopPropagation(); showProfile(user); setPanel('profile'); }; }
+        });
+        container.querySelectorAll('.post-image').forEach(el => {
+            el.onclick = () => { const viewer = document.createElement('div'); viewer.className = 'image-viewer'; viewer.innerHTML = `<img src="${el.querySelector('img').src}" alt="Просмотр">`; viewer.onclick = () => viewer.remove(); document.body.appendChild(viewer); };
+        });
+        container.querySelectorAll('.like-btn').forEach(btn => { btn.onclick = async () => { await toggleLike(btn.dataset.id); await loadPosts(); }; });
+        container.querySelectorAll('.show-comments-btn').forEach(btn => {
+            btn.onclick = async () => {
+                const postId = btn.dataset.id;
+                const currentState = commentsStates.get(postId) || false;
+                commentsStates.set(postId, !currentState);
+                const postCard = btn.closest('.post-card');
+                if (postCard) {
+                    const commentsSection = postCard.querySelector('.comments-section');
+                    if (commentsSection) {
+                        commentsSection.style.display = !currentState ? 'block' : 'none';
+                        if (!currentState) await loadCommentsForPost(postId);
+                    }
+                }
+            };
+        });
+        container.querySelectorAll('.comment-send-btn').forEach(btn => { btn.onclick = () => handleSendComment(btn.dataset.post); });
+    }
+    
+    async function renderFeed() {
+        const container = document.getElementById('postsContainer');
+        if (!container) return;
+        if (allPosts.length === 0) { container.innerHTML = '<div class="loading">Нет постов. Создайте первый!</div>'; return; }
+        const postHtmls = await Promise.all(allPosts.map(post => renderPost(post)));
+        container.innerHTML = postHtmls.join('');
+        attachPostHandlers(container);
+    }
+    
+    async function showProfile(username) {
+        viewingProfile = username;
+        const container = document.getElementById('profileContent');
+        if (!container) return;
+        container.innerHTML = '<div class="loading">Загрузка...</div>';
+        try {
+            const userRef = doc(db, "users", username);
+            const userSnap = await getDoc(userRef);
+            if (!userSnap.exists()) { container.innerHTML = '<div class="loading">Пользователь не найден</div>'; return; }
+            const userData = userSnap.data();
+            const profile = await getUserProfile(username);
+            const posts = await getUserPosts(username);
+            const isOwn = username === currentUser.username;
+            const isSubscribed = !isOwn && (userData.followers || []).includes(currentUser.username);
+            let totalLikes = 0;
+            posts.forEach(p => totalLikes += p.likesCount || 0);
+            const avatarStyle = profile.avatarBase64 ? `background-image: url(${profile.avatarBase64});` : '';
+            container.innerHTML = `<div class="profile-card">${!isOwn ? '<button class="profile-btn profile-back-btn" id="profileBackBtn"><i class="fas fa-arrow-left"></i> Назад</button>' : ''}<div class="profile-cover"></div><div class="profile-info"><div class="profile-avatar-large" style="${avatarStyle}" id="avatarContainer">${!profile.avatarBase64 ? escapeHtml(username.charAt(0).toUpperCase()) : ''}${isOwn ? '<div class="avatar-edit-icon" id="changeAvatarBtn"><i class="fas fa-camera"></i></div>' : ''}</div><div class="profile-name">${escapeHtml(profile.displayName)} ${userData.isVerified ? '<i class="fas fa-check-circle" style="color:#2a5885;"></i>' : ''}</div><div class="profile-username">@${escapeHtml(username)}</div>${profile.bio ? `<div class="profile-bio">${escapeHtml(profile.bio)}</div>` : ''}<div class="profile-status">${userData.lastSeen ? formatDate(userData.lastSeen.toDate ? userData.lastSeen.toDate() : new Date(userData.lastSeen)) : 'онлайн'}</div><div style="font-size:12px; opacity:0.6; margin-top:8px;">Присоединился: ${new Date(userData.createdAt).toLocaleDateString()}</div></div><div class="profile-stats"><div class="profile-stat"><div class="profile-stat-number">${posts.length}</div><div class="profile-stat-label">записей</div></div><div class="profile-stat"><div class="profile-stat-number">${userData.followers?.length || 0}</div><div class="profile-stat-label">подписчиков</div></div><div class="profile-stat"><div class="profile-stat-number">${userData.subscriptions?.length || 0}</div><div class="profile-stat-label">подписок</div></div><div class="profile-stat"><div class="profile-stat-number">${totalLikes}</div><div class="profile-stat-label">лайков</div></div></div>${!isOwn ? `<div class="profile-actions"><button class="profile-btn ${isSubscribed ? 'subscribed' : ''}" id="subscribeProfileBtn"><i class="fas ${isSubscribed ? 'fa-check' : 'fa-user-plus'}"></i> ${isSubscribed ? 'Вы подписаны' : 'Подписаться'}</button><button class="profile-btn secondary" id="messageProfileBtn"><i class="fas fa-envelope"></i> Сообщение</button></div>` : ''}<div class="profile-posts"><h4>Записи</h4><div id="profilePostsList"></div></div></div>`;
+            const postsContainerDiv = document.getElementById('profilePostsList');
+            if (postsContainerDiv) {
+                if (posts.length === 0) { postsContainerDiv.innerHTML = '<div class="loading">Нет записей</div>'; }
+                else { const postHtmls = await Promise.all(posts.map(post => renderPost(post))); postsContainerDiv.innerHTML = postHtmls.join(''); attachPostHandlers(postsContainerDiv); }
+            }
+            if (!isOwn) {
+                document.getElementById('profileBackBtn')?.addEventListener('click', () => { viewingProfile = null; setPanel('home'); });
+                document.getElementById('subscribeProfileBtn')?.addEventListener('click', () => toggleSubscribe(username));
+                document.getElementById('messageProfileBtn')?.addEventListener('click', async () => { const chatId = await getOrCreateChatId(username); openFullscreenChat(chatId, username); });
+            }
+            if (isOwn) { const changeAvatarBtn = document.getElementById('changeAvatarBtn'); if (changeAvatarBtn) { changeAvatarBtn.addEventListener('click', (e) => { e.stopPropagation(); changeAvatar(); }); } }
+        } catch (error) { container.innerHTML = `<div class="loading">Ошибка загрузки профиля</div>`; }
+    }
+    
+    async function changeAvatar() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 2 * 1024 * 1024) { showToast('Файл слишком большой. Максимум 2MB'); return; }
+                try {
+                    const compressedBlob = await resizeImage(file, 300, 300, 0.8);
+                    const base64 = await blobToBase64(compressedBlob);
+                    await updateDoc(doc(db, "users", currentUser.username), { avatarBase64: base64 });
+                    userProfilesCache.delete(currentUser.username);
+                    showToast("Аватар обновлен!");
+                    await showMyProfile();
+                    await loadPosts();
+                } catch(err) { showToast("Ошибка загрузки аватара"); }
+            }
+        };
+        input.click();
     }
     
     function resizeImage(file, maxWidth = 800, maxHeight = 800, quality = 0.7) {
@@ -1540,381 +1809,6 @@
         });
     }
     
-    async function processImages(files) {
-        const results = [];
-        for (let i = 0; i < Math.min(files.length, 3); i++) {
-            const file = files[i];
-            let compressedBlob = await resizeImage(file, 800, 800, 0.7);
-            const base64 = await blobToBase64(compressedBlob);
-            results.push(base64);
-        }
-        return results;
-    }
-    
-    async function registerUser(username, password) {
-        if (!username || !password) throw new Error("Заполните поля");
-        if (username.length < 3) throw new Error("Имя минимум 3 символа");
-        if (password.length < 4) throw new Error("Пароль минимум 4 символа");
-        const userRef = doc(db, "users", username);
-        const snap = await getDoc(userRef);
-        if (snap.exists()) throw new Error("Пользователь уже существует");
-        await setDoc(userRef, {
-            username: username, displayName: username, password: password,
-            bio: "", createdAt: new Date().toISOString(),
-            isVerified: username === "OlegTube" || username === "Admin",
-            followers: [], subscriptions: [], isOnline: true, lastSeen: new Date()
-        });
-        return { username };
-    }
-    
-    async function loginUser(username, password) {
-        const userRef = doc(db, "users", username);
-        const snap = await getDoc(userRef);
-        if (!snap.exists()) throw new Error("Пользователь не найден");
-        if (snap.data().password !== password) throw new Error("Неверный пароль");
-        await updateDoc(userRef, { isOnline: true, lastSeen: new Date() });
-        return { username };
-    }
-    
-    async function getAllPosts() {
-        const snapshot = await getDocs(collection(db, "posts"));
-        let posts = snapshot.docs.map(doc => ({
-            id: doc.id, ...doc.data(),
-            timestamp: doc.data().timestamp?.toDate() || new Date()
-        }));
-        posts.sort((a, b) => b.timestamp - a.timestamp);
-        return posts;
-    }
-    
-    async function addPost(text, imagesBase64) {
-        if ((!text || !text.trim()) && (!imagesBase64 || imagesBase64.length === 0)) throw new Error("Напишите текст или добавьте фото");
-        await addDoc(collection(db, "posts"), {
-            author: currentUser.username, text: text?.trim() || "",
-            timestamp: new Date(), likes: [], likesCount: 0, commentsCount: 0,
-            imagesBase64: imagesBase64 || [], authorVerified: await isUserVerified(currentUser.username)
-        });
-        playSound('post');
-        showToast('Пост опубликован! 🎉');
-    }
-    
-    async function toggleLike(postId) {
-        const postRef = doc(db, "posts", postId);
-        const postSnap = await getDoc(postRef);
-        if (!postSnap.exists()) return;
-        const data = postSnap.data();
-        const hasLiked = data.likes?.includes(currentUser.username);
-        if (hasLiked) {
-            await updateDoc(postRef, { likes: arrayRemove(currentUser.username), likesCount: Math.max(0, data.likesCount - 1) });
-        } else {
-            await updateDoc(postRef, { likes: arrayUnion(currentUser.username), likesCount: (data.likesCount || 0) + 1 });
-            if (data.author !== currentUser.username) await addNotification(data.author, 'like', currentUser.username, postId);
-            playSound('like');
-        }
-    }
-    
-    async function addComment(postId, text, imageBase64 = null) {
-        if (!text.trim() && !imageBase64) return;
-        await addDoc(collection(db, "posts", postId, "comments"), {
-            author: currentUser.username, text: text.trim() || "",
-            timestamp: new Date(), imageBase64: imageBase64 || null
-        });
-        const postRef = doc(db, "posts", postId);
-        const postSnap = await getDoc(postRef);
-        if (postSnap.exists()) {
-            await updateDoc(postRef, { commentsCount: (postSnap.data().commentsCount || 0) + 1 });
-            if (postSnap.data().author !== currentUser.username) await addNotification(postSnap.data().author, 'comment', currentUser.username, postId, text);
-        }
-        playSound('comment');
-    }
-    
-    async function getComments(postId) {
-        const snapshot = await getDocs(query(collection(db, "posts", postId, "comments"), orderBy("timestamp", "asc")));
-        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), timestamp: doc.data().timestamp?.toDate() || new Date() }));
-    }
-    
-    async function getUserPosts(username) {
-        const snapshot = await getDocs(query(collection(db, "posts"), where("author", "==", username)));
-        let posts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), timestamp: doc.data().timestamp?.toDate() || new Date() }));
-        posts.sort((a, b) => b.timestamp - a.timestamp);
-        return posts;
-    }
-    
-    async function toggleSubscribe(targetUsername) {
-        if (targetUsername === currentUser.username) return;
-        const userRef = doc(db, "users", currentUser.username);
-        const userSnap = await getDoc(userRef);
-        const subs = userSnap.data()?.subscriptions || [];
-        const isSub = subs.includes(targetUsername);
-        if (isSub) {
-            await updateDoc(userRef, { subscriptions: arrayRemove(targetUsername) });
-            await updateDoc(doc(db, "users", targetUsername), { followers: arrayRemove(currentUser.username) });
-        } else {
-            await updateDoc(userRef, { subscriptions: arrayUnion(targetUsername) });
-            await updateDoc(doc(db, "users", targetUsername), { followers: arrayUnion(currentUser.username) });
-            await addNotification(targetUsername, 'subscribe', currentUser.username);
-            playSound('subscribe');
-        }
-        if (viewingProfile === targetUsername) await showProfile(targetUsername);
-        if (currentPanel === 'profile' && (!viewingProfile || viewingProfile === currentUser.username)) await showMyProfile();
-        await renderFeed();
-    }
-    
-    async function renderComment(comment) {
-        const authorProfile = await getUserProfile(comment.author);
-        const avatarStyle = authorProfile.avatarBase64 ? `background-image: url(${authorProfile.avatarBase64});` : '';
-        return `
-            <div class="comment">
-                <div class="comment-avatar" data-user="${comment.author}" style="${avatarStyle}">${!authorProfile.avatarBase64 ? escapeHtml(comment.author.charAt(0).toUpperCase()) : ''}</div>
-                <div class="comment-content">
-                    <div class="comment-author" data-user="${comment.author}">${escapeHtml(authorProfile.displayName)}</div>
-                    <div class="comment-username">@${escapeHtml(comment.author)}</div>
-                    ${comment.text ? `<div class="comment-text">${escapeHtml(comment.text)}</div>` : ''}
-                    ${comment.imageBase64 ? `<div class="comment-image" data-image="${comment.imageBase64}"><img src="${comment.imageBase64}" alt="Comment image"></div>` : ''}
-                    <div class="comment-date">${formatDate(comment.timestamp)}</div>
-                </div>
-            </div>
-        `;
-    }
-    
-    async function loadCommentsForPost(postId) {
-        const comments = await getComments(postId);
-        const commentsContainer = document.getElementById(`comments-${postId}`);
-        if (!commentsContainer) return;
-        if (comments.length === 0) {
-            commentsContainer.innerHTML = '<div style="padding: 8px; color: #939393; font-size: 12px;">Нет комментариев. Будьте первым!</div>';
-            return;
-        }
-        const commentHtmls = await Promise.all(comments.map(c => renderComment(c)));
-        commentsContainer.innerHTML = commentHtmls.join('');
-        commentsContainer.querySelectorAll('.comment-avatar, .comment-author').forEach(el => {
-            const user = el.dataset.user;
-            if (user && user !== currentUser.username) {
-                el.onclick = () => { showProfile(user); setPanel('profile'); };
-                el.style.cursor = 'pointer';
-            }
-        });
-        commentsContainer.querySelectorAll('.comment-image').forEach(el => {
-            el.onclick = () => {
-                const viewer = document.createElement('div');
-                viewer.className = 'image-viewer';
-                viewer.innerHTML = `<img src="${el.dataset.image}" alt="Просмотр">`;
-                viewer.onclick = () => viewer.remove();
-                document.body.appendChild(viewer);
-            };
-        });
-    }
-    
-    async function renderPost(post) {
-        const authorProfile = await getUserProfile(post.author);
-        const hasLiked = post.likes?.includes(currentUser.username);
-        const showComments = commentsStates.get(post.id) || false;
-        const images = post.imagesBase64 || [];
-        const avatarStyle = authorProfile.avatarBase64 ? `background-image: url(${authorProfile.avatarBase64});` : '';
-        
-        const imagesHtml = images.length > 0 ? `<div class="post-images">${images.map(img => `<div class="post-image" data-image="${img}"><img src="${img}" alt="Post image" loading="lazy"></div>`).join('')}</div>` : '';
-        
-        return `
-            <div class="post-card" data-post-id="${post.id}">
-                <div class="post-header">
-                    <div class="post-avatar" data-user="${post.author}" style="${avatarStyle}">${!authorProfile.avatarBase64 ? escapeHtml(post.author.charAt(0).toUpperCase()) : ''}</div>
-                    <div class="post-author-info">
-                        <div class="post-author-name" data-user="${post.author}">${escapeHtml(authorProfile.displayName)} ${post.authorVerified ? '<i class="fas fa-check-circle" style="color:#2a5885; font-size: 14px;"></i>' : ''}</div>
-                        <div class="post-author-username">@${escapeHtml(post.author)}</div>
-                        <div class="post-date">${formatDate(post.timestamp)}</div>
-                    </div>
-                </div>
-                ${post.text ? `<div class="post-text">${escapeHtml(post.text)}</div>` : ''}
-                ${imagesHtml}
-                <div class="post-actions">
-                    <div class="post-action like-btn" data-id="${post.id}"><i class="${hasLiked ? 'fas fa-heart' : 'far fa-heart'}"></i><span>${post.likesCount || 0}</span></div>
-                    <div class="post-action show-comments-btn" data-id="${post.id}"><i class="far fa-comment"></i><span>${post.commentsCount || 0} комментариев</span></div>
-                </div>
-                <div class="comments-section" style="display: ${showComments ? 'block' : 'none'}">
-                    <div id="comments-${post.id}" class="comments-list"></div>
-                    <div class="add-comment">
-                        <div class="add-comment-input-group">
-                            <input type="text" id="comment-input-${post.id}" placeholder="Написать комментарий...">
-                            <button class="comment-attach-btn" data-post="${post.id}"><i class="fas fa-image"></i></button>
-                            <button class="comment-send-btn" data-post="${post.id}">Отправить</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-    
-    async function handleSendComment(postId) {
-        const input = document.getElementById(`comment-input-${postId}`);
-        const text = input?.value || '';
-        if (!text.trim()) return;
-        await addComment(postId, text);
-        if (input) input.value = '';
-        await loadCommentsForPost(postId);
-        await loadPosts();
-    }
-    
-    function attachPostHandlers(container) {
-        if (!container) return;
-        container.querySelectorAll('.post-avatar, .post-author-name').forEach(el => {
-            const user = el.dataset.user;
-            if (user && user !== currentUser.username) {
-                el.onclick = (e) => { e.stopPropagation(); showProfile(user); setPanel('profile'); };
-            }
-        });
-        container.querySelectorAll('.post-image').forEach(el => {
-            el.onclick = () => {
-                const viewer = document.createElement('div');
-                viewer.className = 'image-viewer';
-                viewer.innerHTML = `<img src="${el.querySelector('img').src}" alt="Просмотр">`;
-                viewer.onclick = () => viewer.remove();
-                document.body.appendChild(viewer);
-            };
-        });
-        container.querySelectorAll('.like-btn').forEach(btn => {
-            btn.onclick = async () => { await toggleLike(btn.dataset.id); await loadPosts(); };
-        });
-        container.querySelectorAll('.show-comments-btn').forEach(btn => {
-            btn.onclick = async () => {
-                const postId = btn.dataset.id;
-                const currentState = commentsStates.get(postId) || false;
-                commentsStates.set(postId, !currentState);
-                const postCard = btn.closest('.post-card');
-                if (postCard) {
-                    const commentsSection = postCard.querySelector('.comments-section');
-                    if (commentsSection) {
-                        commentsSection.style.display = !currentState ? 'block' : 'none';
-                        if (!currentState) await loadCommentsForPost(postId);
-                    }
-                }
-            };
-        });
-        container.querySelectorAll('.comment-send-btn').forEach(btn => {
-            btn.onclick = () => handleSendComment(btn.dataset.post);
-        });
-    }
-    
-    async function renderFeed() {
-        const container = document.getElementById('postsContainer');
-        if (!container) return;
-        if (allPosts.length === 0) {
-            container.innerHTML = '<div class="loading">Нет постов. Создайте первый!</div>';
-            return;
-        }
-        const postHtmls = await Promise.all(allPosts.map(post => renderPost(post)));
-        container.innerHTML = postHtmls.join('');
-        attachPostHandlers(container);
-    }
-    
-    async function showProfile(username) {
-        viewingProfile = username;
-        const container = document.getElementById('profileContent');
-        if (!container) return;
-        container.innerHTML = '<div class="loading">Загрузка...</div>';
-        
-        try {
-            const userRef = doc(db, "users", username);
-            const userSnap = await getDoc(userRef);
-            if (!userSnap.exists()) { container.innerHTML = '<div class="loading">Пользователь не найден</div>'; return; }
-            
-            const userData = userSnap.data();
-            const profile = await getUserProfile(username);
-            const posts = await getUserPosts(username);
-            const isOwn = username === currentUser.username;
-            const isSubscribed = !isOwn && (userData.followers || []).includes(currentUser.username);
-            
-            let totalLikes = 0;
-            posts.forEach(p => totalLikes += p.likesCount || 0);
-            
-            const avatarStyle = profile.avatarBase64 ? `background-image: url(${profile.avatarBase64});` : '';
-            
-            container.innerHTML = `
-                <div class="profile-card">
-                    ${!isOwn ? '<button class="profile-btn profile-back-btn" id="profileBackBtn"><i class="fas fa-arrow-left"></i> Назад</button>' : ''}
-                    <div class="profile-cover">
-                        ${isOwn ? '<button class="profile-cover-edit" id="editProfileBtn"><i class="fas fa-pen"></i> Редактировать профиль</button>' : ''}
-                    </div>
-                    <div class="profile-info">
-                        <div class="profile-avatar-large" style="${avatarStyle}" id="avatarContainer">
-                            ${!profile.avatarBase64 ? escapeHtml(username.charAt(0).toUpperCase()) : ''}
-                            ${isOwn ? '<div class="avatar-edit-icon" id="changeAvatarBtn"><i class="fas fa-camera"></i></div>' : ''}
-                        </div>
-                        <div class="profile-name">${escapeHtml(profile.displayName)} ${userData.isVerified ? '<i class="fas fa-check-circle" style="color:#2a5885;"></i>' : ''}</div>
-                        <div class="profile-username">@${escapeHtml(username)}</div>
-                        ${profile.bio ? `<div class="profile-bio">${escapeHtml(profile.bio)}</div>` : ''}
-                        <div class="profile-status">${formatLastSeen(userData.lastSeen)}</div>
-                        <div style="font-size:12px; color:#939393; margin-top:8px;">Присоединился: ${new Date(userData.createdAt).toLocaleDateString()}</div>
-                    </div>
-                    <div class="profile-stats">
-                        <div class="profile-stat"><div class="profile-stat-number">${posts.length}</div><div class="profile-stat-label">записей</div></div>
-                        <div class="profile-stat"><div class="profile-stat-number">${userData.followers?.length || 0}</div><div class="profile-stat-label">подписчиков</div></div>
-                        <div class="profile-stat"><div class="profile-stat-number">${userData.subscriptions?.length || 0}</div><div class="profile-stat-label">подписок</div></div>
-                        <div class="profile-stat"><div class="profile-stat-number">${totalLikes}</div><div class="profile-stat-label">лайков</div></div>
-                    </div>
-                    ${!isOwn ? `
-                        <div class="profile-actions">
-                            <button class="profile-btn ${isSubscribed ? 'subscribed' : ''}" id="subscribeProfileBtn"><i class="fas ${isSubscribed ? 'fa-check' : 'fa-user-plus'}"></i> ${isSubscribed ? 'Вы подписаны' : 'Подписаться'}</button>
-                            <button class="profile-btn secondary" id="messageProfileBtn"><i class="fas fa-envelope"></i> Сообщение</button>
-                        </div>
-                    ` : ''}
-                    <div class="profile-posts"><h4>Записи</h4><div id="profilePostsList"></div></div>
-                </div>
-            `;
-            
-            const postsContainerDiv = document.getElementById('profilePostsList');
-            if (postsContainerDiv) {
-                if (posts.length === 0) {
-                    postsContainerDiv.innerHTML = '<div class="loading">Нет записей</div>';
-                } else {
-                    const postHtmls = await Promise.all(posts.map(post => renderPost(post)));
-                    postsContainerDiv.innerHTML = postHtmls.join('');
-                    attachPostHandlers(postsContainerDiv);
-                }
-            }
-            
-            if (!isOwn) {
-                document.getElementById('profileBackBtn')?.addEventListener('click', () => { viewingProfile = null; setPanel('home'); });
-                document.getElementById('subscribeProfileBtn')?.addEventListener('click', () => toggleSubscribe(username));
-                document.getElementById('messageProfileBtn')?.addEventListener('click', async () => {
-                    const chatId = await getOrCreateChatId(username);
-                    openFullscreenChat(chatId, username);
-                });
-            }
-            
-            if (isOwn) {
-                document.getElementById('editProfileBtn')?.addEventListener('click', () => openEditProfileModal());
-                document.getElementById('changeAvatarBtn')?.addEventListener('click', () => changeAvatar());
-            }
-        } catch (error) {
-            container.innerHTML = `<div class="loading">Ошибка загрузки профиля</div>`;
-        }
-    }
-    
-    async function changeAvatar() {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'image/*';
-        input.onchange = async (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                if (file.size > 2 * 1024 * 1024) {
-                    showToast('Файл слишком большой. Максимум 2MB');
-                    return;
-                }
-                try {
-                    const compressedBlob = await resizeImage(file, 300, 300, 0.8);
-                    const base64 = await blobToBase64(compressedBlob);
-                    await updateDoc(doc(db, "users", currentUser.username), { avatarBase64: base64 });
-                    userProfilesCache.delete(currentUser.username);
-                    showToast("Аватар обновлен!");
-                    await showMyProfile();
-                } catch(err) {
-                    showToast("Ошибка загрузки аватара");
-                }
-            }
-        };
-        input.click();
-    }
-    
     function openEditProfileModal() {
         const modal = document.getElementById('editProfileModal');
         const displayNameInput = document.getElementById('editDisplayName');
@@ -1922,125 +1816,65 @@
         const bioInput = document.getElementById('editBio');
         const warningDiv = document.getElementById('usernameWarning');
         const lastChangeInfo = document.getElementById('lastChangeInfo');
-        
         getUserProfile(currentUser.username).then(async profile => {
             displayNameInput.value = profile.displayName;
             usernameInput.value = profile.username;
             bioInput.value = profile.bio || '';
-            
             const userRef = doc(db, "users", currentUser.username);
             const userSnap = await getDoc(userRef);
             const lastChange = userSnap.data()?.lastUsernameChange?.toDate();
-            
             if (lastChange) {
                 const daysLeft = Math.ceil((30 * 24 * 60 * 60 * 1000 - (new Date() - lastChange)) / (24 * 60 * 60 * 1000));
-                if (daysLeft > 0) {
-                    lastChangeInfo.textContent = `Username можно будет сменить через ${daysLeft} дней`;
-                    lastChangeInfo.style.color = '#e64646';
-                } else {
-                    lastChangeInfo.textContent = 'Username можно сменить';
-                    lastChangeInfo.style.color = '#4bb34b';
-                }
-            } else {
-                lastChangeInfo.textContent = 'Username можно сменить (раз в месяц)';
-                lastChangeInfo.style.color = '#939393';
-            }
+                if (daysLeft > 0) { lastChangeInfo.textContent = `Username можно будет сменить через ${daysLeft} дней`; lastChangeInfo.style.color = '#e64646'; }
+                else { lastChangeInfo.textContent = 'Username можно сменить'; lastChangeInfo.style.color = '#4bb34b'; }
+            } else { lastChangeInfo.textContent = 'Username можно сменить (раз в месяц)'; lastChangeInfo.style.color = '#939393'; }
         });
-        
         modal.classList.add('active');
-        
         const saveBtn = document.getElementById('saveProfileBtn');
         const cancelBtn = document.getElementById('cancelEditBtn');
-        
         const saveHandler = async () => {
             const newDisplayName = displayNameInput.value.trim() || currentUser.username;
             const newUsername = usernameInput.value.trim();
             const newBio = bioInput.value.trim();
-            
             if (newUsername && newUsername !== currentUser.username) {
-                if (!/^[a-zA-Z0-9_]+$/.test(newUsername)) {
-                    warningDiv.textContent = "Username может содержать только буквы, цифры и underscore";
-                    return;
-                }
-                if (newUsername.length < 3) {
-                    warningDiv.textContent = "Username должен быть не менее 3 символов";
-                    return;
-                }
+                if (!/^[a-zA-Z0-9_]+$/.test(newUsername)) { warningDiv.textContent = "Username может содержать только буквы, цифры и underscore"; return; }
+                if (newUsername.length < 3) { warningDiv.textContent = "Username должен быть не менее 3 символов"; return; }
             }
-            
             try {
                 await updateUserProfile(newDisplayName, newUsername, newBio);
                 modal.classList.remove('active');
+                warningDiv.textContent = '';
                 await showMyProfile();
                 await loadPosts();
                 await loadChats();
-            } catch(err) {
-                warningDiv.textContent = err.message;
-            }
+                showToast("Профиль успешно обновлен!");
+            } catch(err) { warningDiv.textContent = err.message; }
         };
-        
-        const cancelHandler = () => {
-            modal.classList.remove('active');
-            warningDiv.textContent = '';
-            saveBtn.removeEventListener('click', saveHandler);
-            cancelBtn.removeEventListener('click', cancelHandler);
-        };
-        
-        saveBtn.addEventListener('click', saveHandler);
-        cancelBtn.addEventListener('click', cancelHandler);
+        const cancelHandler = () => { modal.classList.remove('active'); warningDiv.textContent = ''; };
+        saveBtn.onclick = saveHandler;
+        cancelBtn.onclick = cancelHandler;
     }
     
-    async function showMyProfile() {
-        viewingProfile = null;
-        await showProfile(currentUser.username);
-    }
-    
-    async function loadPosts() {
-        allPosts = await getAllPosts();
-        if (currentPanel === 'home') await renderFeed();
-    }
+    async function showMyProfile() { viewingProfile = null; await showProfile(currentUser.username); }
+    async function loadPosts() { allPosts = await getAllPosts(); if (currentPanel === 'home') await renderFeed(); }
     
     async function getOrCreateChatId(otherUsername) {
         const chatId = [currentUser.username, otherUsername].sort().join('_');
         const chatRef = doc(db, "chats", chatId);
         const snap = await getDoc(chatRef);
-        if (!snap.exists()) {
-            await setDoc(chatRef, { participants: [currentUser.username, otherUsername], lastMessage: "", lastMessageTime: new Date() });
-        }
+        if (!snap.exists()) { await setDoc(chatRef, { participants: [currentUser.username, otherUsername], lastMessage: "", lastMessageTime: new Date() }); }
         return chatId;
     }
     
-    async function sendMessage(chatId, text, imageBase64 = null) {
-        if (!text.trim() && !imageBase64) return;
-        await addDoc(collection(db, "chats", chatId, "messages"), {
-            text: text.trim() || "", senderId: currentUser.username,
-            timestamp: new Date(), imageBase64: imageBase64 || null
-        });
-        await updateDoc(doc(db, "chats", chatId), { lastMessage: text.trim() || "📷 Фото", lastMessageTime: new Date() });
+    async function sendMessage(chatId, text) {
+        if (!text.trim()) return;
+        await addDoc(collection(db, "chats", chatId, "messages"), { text: text.trim(), senderId: currentUser.username, timestamp: new Date() });
+        await updateDoc(doc(db, "chats", chatId), { lastMessage: text.trim(), lastMessageTime: new Date() });
         playSound('message');
     }
     
     function openFullscreenChat(chatId, partnerName) {
-        const chatHTML = `
-            <div id="fullscreenChat" class="chat-fullscreen">
-                <div class="chat-fullscreen-header">
-                    <button class="back-btn" id="closeFullscreenChat"><i class="fas fa-arrow-left"></i></button>
-                    <div class="chat-user-info">
-                        <div class="chat-user-name" id="chatPartnerName"></div>
-                        <div class="chat-user-username" id="chatPartnerUsername"></div>
-                        <div class="chat-user-status" id="chatUserStatus">загрузка...</div>
-                    </div>
-                </div>
-                <div class="chat-messages-full" id="chatMessagesFull"></div>
-                <div class="chat-input-full">
-                    <div class="chat-input-wrapper">
-                        <input type="text" id="chatMessageFull" placeholder="Сообщение...">
-                        <button class="chat-attach-btn" id="chatAttachBtn"><i class="fas fa-image"></i></button>
-                        <button id="sendChatFull"><i class="fas fa-paper-plane"></i></button>
-                    </div>
-                </div>
-            </div>
-        `;
+        const chatHTML = `<div id="fullscreenChat" class="chat-fullscreen"><div class="chat-fullscreen-header"><button class="back-btn" id="closeFullscreenChat"><i class="fas fa-arrow-left"></i></button><div class="chat-user-info"><div class="chat-user-name" id="chatPartnerName"></div><div class="chat-user-username" id="chatPartnerUsername"></div></div><div class="chat-header-actions"><button class="call-btn" id="callInChatBtn"><i class="fas fa-phone"></i></button></div></div><div class="chat-messages-full" id="chatMessagesFull"></div><div class="chat-input-full"><input type="text" id="chatMessageFull" placeholder="Сообщение..."><button id="sendChatFull"><i class="fas fa-paper-plane"></i></button></div></div>`;
         document.body.insertAdjacentHTML('beforeend', chatHTML);
         
         getUserProfile(partnerName).then(profile => {
@@ -2051,8 +1885,9 @@
         const messagesDiv = document.getElementById('chatMessagesFull');
         const input = document.getElementById('chatMessageFull');
         const sendBtn = document.getElementById('sendChatFull');
-        const attachBtn = document.getElementById('chatAttachBtn');
-        const statusDiv = document.getElementById('chatUserStatus');
+        const callBtn = document.getElementById('callInChatBtn');
+        
+        callBtn.onclick = () => startCall(partnerName);
         
         const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
         const unsubscribe = onSnapshot(q, async (snap) => {
@@ -2061,62 +1896,23 @@
                 const isMe = m.senderId === currentUser.username;
                 const senderProfile = await getUserProfile(m.senderId);
                 const time = m.timestamp?.toDate().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) || '';
-                const hasImage = m.imageBase64;
-                return `<div class="chat-message ${isMe ? 'out' : 'in'}">
-                            <div class="chat-message-text"><strong>${escapeHtml(senderProfile.displayName)}</strong>: ${escapeHtml(m.text || '')}</div>
-                            ${hasImage ? `<div class="chat-message-image" data-image="${m.imageBase64}"><img src="${m.imageBase64}" alt="Chat image"></div>` : ''}
-                            <div style="font-size:10px; opacity:0.7; margin-top:4px;">${time}</div>
-                        </div>`;
+                return `<div class="chat-message ${isMe ? 'out' : 'in'}"><div><strong>${escapeHtml(senderProfile.displayName)}</strong>: ${escapeHtml(m.text)}</div><div style="font-size:10px; opacity:0.7; margin-top:4px;">${time}</div></div>`;
             }));
             messagesDiv.innerHTML = messageHtmls.join('');
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
-            messagesDiv.querySelectorAll('.chat-message-image').forEach(el => {
-                el.onclick = () => {
-                    const viewer = document.createElement('div');
-                    viewer.className = 'image-viewer';
-                    viewer.innerHTML = `<img src="${el.dataset.image}" alt="Просмотр">`;
-                    viewer.onclick = () => viewer.remove();
-                    document.body.appendChild(viewer);
-                };
-            });
         });
         
-        const sendMessageHandler = async () => {
-            const text = input.value;
-            if (!text.trim()) return;
-            await sendMessage(chatId, text);
-            input.value = '';
-        };
-        
+        const sendMessageHandler = async () => { const text = input.value; if (!text.trim()) return; await sendMessage(chatId, text); input.value = ''; };
         sendBtn.onclick = sendMessageHandler;
         input.onkeypress = (e) => { if (e.key === 'Enter') sendMessageHandler(); };
-        attachBtn.onclick = () => {
-            const fileInput = document.createElement('input');
-            fileInput.type = 'file';
-            fileInput.accept = 'image/*';
-            fileInput.onchange = async (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    try {
-                        const processed = await processImages([file]);
-                        await sendMessage(chatId, '', processed[0]);
-                    } catch(err) { showToast('Ошибка загрузки фото'); }
-                }
-            };
-            fileInput.click();
-        };
         
-        document.getElementById('closeFullscreenChat').onclick = () => {
-            unsubscribe();
-            document.getElementById('fullscreenChat').remove();
-        };
+        document.getElementById('closeFullscreenChat').onclick = () => { unsubscribe(); document.getElementById('fullscreenChat').remove(); };
     }
     
     async function loadChats() {
         const container = document.getElementById('chatsList');
         if (!container) return;
         if (unsubscribeChats) unsubscribeChats();
-        
         const q = query(collection(db, "chats"), where("participants", "array-contains", currentUser.username));
         unsubscribeChats = onSnapshot(q, async (snap) => {
             const chats = [];
@@ -2129,25 +1925,9 @@
                 chats.push(chat);
             }
             chats.sort((a,b) => (b.lastMessageTime?.toDate() || 0) - (a.lastMessageTime?.toDate() || 0));
-            
-            if (chats.length === 0) {
-                container.innerHTML = '<div class="loading">Нет диалогов</div>';
-                return;
-            }
-            
-            container.innerHTML = chats.map(chat => `
-                <div class="chat-item" data-chat="${chat.id}" data-user="${chat.otherUser}">
-                    <div class="chat-avatar" style="background-image: url(${chat.profile.avatarBase64 || ''}); background-size: cover;">${!chat.profile.avatarBase64 ? escapeHtml(chat.otherUser?.charAt(0).toUpperCase() || '?') : ''}</div>
-                    <div class="chat-info">
-                        <div class="chat-name">${escapeHtml(chat.profile.displayName)} <span class="chat-username">@${escapeHtml(chat.otherUser)}</span></div>
-                        <div class="chat-last-msg">${escapeHtml(chat.lastMessage?.substring(0, 50) || 'Новый диалог')}</div>
-                    </div>
-                </div>
-            `).join('');
-            
-            document.querySelectorAll('.chat-item').forEach(el => {
-                el.onclick = () => openFullscreenChat(el.dataset.chat, el.dataset.user);
-            });
+            if (chats.length === 0) { container.innerHTML = '<div class="loading">Нет диалогов</div>'; return; }
+            container.innerHTML = chats.map(chat => `<div class="chat-item" data-chat="${chat.id}" data-user="${chat.otherUser}"><div class="chat-avatar" style="background-image: url(${chat.profile.avatarBase64 || ''}); background-size: cover;">${!chat.profile.avatarBase64 ? escapeHtml(chat.otherUser?.charAt(0).toUpperCase() || '?') : ''}</div><div class="chat-info"><div class="chat-name">${escapeHtml(chat.profile.displayName)} <span class="chat-username">@${escapeHtml(chat.otherUser)}</span></div><div class="chat-last-msg">${escapeHtml(chat.lastMessage?.substring(0, 50) || 'Новый диалог')}</div></div></div>`).join('');
+            document.querySelectorAll('.chat-item').forEach(el => { el.onclick = () => openFullscreenChat(el.dataset.chat, el.dataset.user); });
         });
     }
     
@@ -2157,22 +1937,12 @@
         const snapshot = await getDocs(usersRef);
         const results = [];
         const term = searchTerm.toLowerCase();
-        
         for (const docSnap of snapshot.docs) {
             const data = docSnap.data();
             const username = docSnap.id;
             const displayName = data.displayName || username;
-            
-            if (term.startsWith('@')) {
-                const searchUsername = term.substring(1);
-                if (username.toLowerCase().includes(searchUsername)) {
-                    results.push({ username, displayName, avatarBase64: data.avatarBase64 });
-                }
-            } else {
-                if (displayName.toLowerCase().includes(term) || username.toLowerCase().includes(term)) {
-                    results.push({ username, displayName, avatarBase64: data.avatarBase64 });
-                }
-            }
+            if (term.startsWith('@')) { const searchUsername = term.substring(1); if (username.toLowerCase().includes(searchUsername)) results.push({ username, displayName, avatarBase64: data.avatarBase64 }); }
+            else { if (displayName.toLowerCase().includes(term) || username.toLowerCase().includes(term)) results.push({ username, displayName, avatarBase64: data.avatarBase64 }); }
         }
         return results.slice(0, 20);
     }
@@ -2181,94 +1951,65 @@
         const searchInput = document.getElementById('searchInput');
         const resultsDiv = document.getElementById('searchResults');
         let debounceTimeout;
-        
         searchInput.addEventListener('input', () => {
             clearTimeout(debounceTimeout);
             debounceTimeout = setTimeout(async () => {
                 const term = searchInput.value;
-                if (!term.trim()) {
-                    resultsDiv.innerHTML = '';
-                    return;
-                }
+                if (!term.trim()) { resultsDiv.innerHTML = ''; return; }
                 resultsDiv.innerHTML = '<div class="loading">Поиск...</div>';
                 const results = await searchUsers(term);
-                if (results.length === 0) {
-                    resultsDiv.innerHTML = '<div class="loading">Ничего не найдено</div>';
-                } else {
-                    resultsDiv.innerHTML = results.map(r => `
-                        <div class="search-result-item" data-user="${r.username}">
-                            <div class="search-result-avatar" style="background-image: url(${r.avatarBase64 || ''}); background-size: cover;">${!r.avatarBase64 ? escapeHtml(r.username.charAt(0).toUpperCase()) : ''}</div>
-                            <div class="search-result-info">
-                                <div class="search-result-name">${escapeHtml(r.displayName)}</div>
-                                <div class="search-result-username">@${escapeHtml(r.username)}</div>
-                            </div>
-                        </div>
-                    `).join('');
-                    resultsDiv.querySelectorAll('.search-result-item').forEach(el => {
-                        el.onclick = () => { showProfile(el.dataset.user); setPanel('profile'); };
-                    });
-                }
+                if (results.length === 0) { resultsDiv.innerHTML = '<div class="loading">Ничего не найдено</div>'; }
+                else { resultsDiv.innerHTML = results.map(r => `<div class="search-result-item" data-user="${r.username}"><div class="search-result-avatar" style="background-image: url(${r.avatarBase64 || ''}); background-size: cover;">${!r.avatarBase64 ? escapeHtml(r.username.charAt(0).toUpperCase()) : ''}</div><div class="search-result-info"><div class="search-result-name">${escapeHtml(r.displayName)}</div><div class="search-result-username">@${escapeHtml(r.username)}</div></div></div>`).join('');
+                    resultsDiv.querySelectorAll('.search-result-item').forEach(el => { el.onclick = () => { showProfile(el.dataset.user); setPanel('profile'); }; }); }
             }, 300);
         });
     }
     
     function setPanel(panel) {
-        const panels = ['feedPanel', 'notificationsPanel', 'searchPanel', 'messagesPanel', 'profilePanel'];
+        const panels = ['feedPanel', 'searchPanel', 'messagesPanel', 'profilePanel', 'settingsPanel'];
         panels.forEach(p => document.getElementById(p)?.classList.add('hide'));
         if (panel === 'home') document.getElementById('feedPanel')?.classList.remove('hide');
-        else if (panel === 'notifications') document.getElementById('notificationsPanel')?.classList.remove('hide');
         else if (panel === 'search') document.getElementById('searchPanel')?.classList.remove('hide');
         else if (panel === 'messages') document.getElementById('messagesPanel')?.classList.remove('hide');
         else if (panel === 'profile') document.getElementById('profilePanel')?.classList.remove('hide');
-        
+        else if (panel === 'settings') document.getElementById('settingsPanel')?.classList.remove('hide');
         currentPanel = panel;
         if (panel === 'home') renderFeed();
-        if (panel === 'notifications') { renderNotifications(); markAllNotificationsAsRead(); }
         if (panel === 'messages') { document.getElementById('chatsList').style.display = 'block'; document.getElementById('newChatUsers').style.display = 'none'; loadChats(); }
         if (panel === 'profile') { if (viewingProfile && viewingProfile !== currentUser.username) showProfile(viewingProfile); else showMyProfile(); }
-        
-        ['menuHome', 'menuNotifications', 'menuSearch', 'menuMessages', 'menuProfile'].forEach(id => {
-            document.getElementById(id)?.classList.remove('active');
-        });
-        document.getElementById(`menu${panel.charAt(0).toUpperCase() + panel.slice(1)}`)?.classList.add('active');
+        const menuMap = { home: 'menuHome', search: 'menuSearch', messages: 'menuMessages', profile: 'menuProfile' };
+        ['menuHome', 'menuSearch', 'menuMessages', 'menuProfile'].forEach(id => { document.getElementById(id)?.classList.remove('active'); });
+        if (menuMap[panel]) document.getElementById(menuMap[panel])?.classList.add('active');
     }
     
     function updateImagePreviews() {
         const container = document.getElementById('imagesPreviewContainer');
         if (currentImageFiles.length === 0) { container.innerHTML = ''; return; }
-        container.innerHTML = currentImageFiles.map((file, i) => `
-            <div class="image-preview-item" data-index="${i}">
-                <img src="${URL.createObjectURL(file)}" alt="Preview">
-                <button class="remove-image-btn" data-index="${i}"><i class="fas fa-times"></i></button>
-            </div>
-        `).join('');
-        document.querySelectorAll('.remove-image-btn').forEach(btn => {
-            btn.onclick = () => { currentImageFiles.splice(parseInt(btn.dataset.index), 1); updateImagePreviews(); };
-        });
+        container.innerHTML = currentImageFiles.map((file, i) => `<div class="image-preview-item" data-index="${i}"><img src="${URL.createObjectURL(file)}" alt="Preview"><button class="remove-image-btn" data-index="${i}"><i class="fas fa-times"></i></button></div>`).join('');
+        document.querySelectorAll('.remove-image-btn').forEach(btn => { btn.onclick = () => { currentImageFiles.splice(parseInt(btn.dataset.index), 1); updateImagePreviews(); }; });
     }
     
+    // Обработчики событий
     document.getElementById('uploadImageBtn')?.addEventListener('click', () => document.getElementById('imageInput').click());
-    document.getElementById('imageInput')?.addEventListener('change', (e) => {
-        const files = Array.from(e.target.files);
-        currentImageFiles.push(...files.slice(0, 3 - currentImageFiles.length));
-        updateImagePreviews();
-        document.getElementById('imageInput').value = '';
-    });
-    
-    document.getElementById('notificationsBell')?.addEventListener('click', () => setPanel('notifications'));
+    document.getElementById('imageInput')?.addEventListener('change', (e) => { const files = Array.from(e.target.files); currentImageFiles.push(...files.slice(0, 3 - currentImageFiles.length)); updateImagePreviews(); document.getElementById('imageInput').value = ''; });
+    document.getElementById('logoHome')?.addEventListener('click', () => setPanel('home'));
     document.getElementById('menuHome')?.addEventListener('click', () => setPanel('home'));
-    document.getElementById('menuNotifications')?.addEventListener('click', () => setPanel('notifications'));
     document.getElementById('menuSearch')?.addEventListener('click', () => setPanel('search'));
     document.getElementById('menuMessages')?.addEventListener('click', () => setPanel('messages'));
     document.getElementById('menuProfile')?.addEventListener('click', () => { viewingProfile = null; setPanel('profile'); });
     document.getElementById('menuCreatePost')?.addEventListener('click', () => document.getElementById('createPostModal').classList.add('active'));
+    document.getElementById('settingsBtn')?.addEventListener('click', () => setPanel('settings'));
+    
+    document.getElementById('themeToggle')?.addEventListener('click', () => { const isDark = document.body.classList.contains('dark-theme'); if (isDark) { saveTheme(false); document.getElementById('themeToggle').classList.remove('active'); } else { saveTheme(true); document.getElementById('themeToggle').classList.add('active'); } });
+    document.getElementById('soundToggle')?.addEventListener('click', () => { soundsEnabled = !soundsEnabled; saveSounds(soundsEnabled); const soundToggle = document.getElementById('soundToggle'); if (soundsEnabled) { soundToggle.classList.add('active'); playSound('login'); } else { soundToggle.classList.remove('active'); } });
+    document.getElementById('editProfileSettingsBtn')?.addEventListener('click', () => { openEditProfileModal(); });
     
     document.getElementById('submitPostBtn')?.addEventListener('click', async () => {
         const text = document.getElementById('postText')?.value;
         if ((!text || !text.trim()) && currentImageFiles.length === 0) { alert('Напишите что-нибудь или добавьте фото'); return; }
         try {
             let imagesBase64 = [];
-            if (currentImageFiles.length > 0) imagesBase64 = await processImages(currentImageFiles);
+            if (currentImageFiles.length > 0) { for (const file of currentImageFiles) { const compressed = await resizeImage(file, 800, 800, 0.7); const base64 = await blobToBase64(compressed); imagesBase64.push(base64); } }
             await addPost(text, imagesBase64);
             document.getElementById('createPostModal').classList.remove('active');
             document.getElementById('postText').value = '';
@@ -2291,7 +2032,6 @@
         const newChatUsers = document.getElementById('newChatUsers');
         chatsList.style.display = 'none';
         newChatUsers.style.display = 'block';
-        
         const userSnap = await getDoc(doc(db, "users", currentUser.username));
         const userData = userSnap.data();
         const followers = userData.followers || [];
@@ -2299,55 +2039,26 @@
         const friendsSet = new Set();
         followers.forEach(f => { if (subscriptions.includes(f)) friendsSet.add(f); });
         const friendsList = Array.from(friendsSet);
-        
         const container = document.getElementById('usersList');
-        if (friendsList.length === 0) {
-            container.innerHTML = '<div class="loading">У вас пока нет друзей</div>';
-            return;
-        }
-        
-        const friendProfiles = await Promise.all(friendsList.map(async u => {
-            const profile = await getUserProfile(u);
-            return { username: u, ...profile };
-        }));
-        
+        if (friendsList.length === 0) { container.innerHTML = '<div class="loading">У вас пока нет друзей</div>'; return; }
+        const friendProfiles = await Promise.all(friendsList.map(async u => { const profile = await getUserProfile(u); return { username: u, ...profile }; }));
         const render = (list) => {
-            container.innerHTML = list.map(u => `
-                <div class="chat-item" data-user="${u.username}">
-                    <div class="chat-avatar" style="background-image: url(${u.avatarBase64 || ''}); background-size: cover;">${!u.avatarBase64 ? escapeHtml(u.username.charAt(0).toUpperCase()) : ''}</div>
-                    <div><strong>${escapeHtml(u.displayName)}</strong><br><span style="font-size:11px; color:#939393;">@${escapeHtml(u.username)}</span><span class="friend-badge">друг</span></div>
-                </div>
-            `).join('');
-            document.querySelectorAll('#usersList .chat-item').forEach(el => {
-                el.onclick = async () => {
-                    const target = el.dataset.user;
-                    const chatId = await getOrCreateChatId(target);
-                    openFullscreenChat(chatId, target);
-                    chatsList.style.display = 'block';
-                    newChatUsers.style.display = 'none';
-                    loadChats();
-                };
-            });
+            container.innerHTML = list.map(u => `<div class="chat-item" data-user="${u.username}"><div class="chat-avatar" style="background-image: url(${u.avatarBase64 || ''}); background-size: cover;">${!u.avatarBase64 ? escapeHtml(u.username.charAt(0).toUpperCase()) : ''}</div><div><strong>${escapeHtml(u.displayName)}</strong><br><span style="font-size:11px; opacity:0.6;">@${escapeHtml(u.username)}</span><span class="friend-badge">друг</span></div></div>`).join('');
+            document.querySelectorAll('#usersList .chat-item').forEach(el => { el.onclick = async () => { const target = el.dataset.user; const chatId = await getOrCreateChatId(target); openFullscreenChat(chatId, target); chatsList.style.display = 'block'; newChatUsers.style.display = 'none'; loadChats(); }; });
         };
-        
         render(friendProfiles);
-        document.getElementById('searchUserInput').oninput = (e) => {
-            const term = e.target.value.toLowerCase();
-            render(friendProfiles.filter(u => u.displayName.toLowerCase().includes(term) || u.username.toLowerCase().includes(term)));
-        };
+        document.getElementById('searchUserInput').oninput = (e) => { const term = e.target.value.toLowerCase(); render(friendProfiles.filter(u => u.displayName.toLowerCase().includes(term) || u.username.toLowerCase().includes(term))); };
     });
     
-    document.getElementById('backToChatsBtn')?.addEventListener('click', () => {
-        document.getElementById('chatsList').style.display = 'block';
-        document.getElementById('newChatUsers').style.display = 'none';
-        loadChats();
-    });
+    document.getElementById('backToChatsBtn')?.addEventListener('click', () => { document.getElementById('chatsList').style.display = 'block'; document.getElementById('newChatUsers').style.display = 'none'; loadChats(); });
     
     document.getElementById('logoutBtn')?.addEventListener('click', async () => {
         if (currentUser) await updateDoc(doc(db, "users", currentUser.username), { isOnline: false, lastSeen: new Date() }).catch(() => {});
         if (unsubscribePosts) unsubscribePosts();
         if (unsubscribeChats) unsubscribeChats();
-        if (unsubscribeNotifications) unsubscribeNotifications();
+        callListeners.forEach(unsub => unsub());
+        if (peerConnection) peerConnection.close();
+        if (localStream) localStream.getTracks().forEach(track => track.stop());
         document.getElementById('appScreen').style.display = 'none';
         document.getElementById('authScreen').style.display = 'block';
         currentUser = null;
@@ -2384,9 +2095,10 @@
             currentUser = { username };
             document.getElementById('authScreen').style.display = 'none';
             document.getElementById('appScreen').style.display = 'flex';
+            loadSettings();
             await loadPosts();
             setupSearch();
-            await loadNotifications();
+            listenForCalls();
             const q = query(collection(db, "posts"));
             unsubscribePosts = onSnapshot(q, () => loadPosts());
             setPanel('home');
@@ -2399,13 +2111,13 @@
     let commentsStates = new Map();
     
     async function initTestPost() {
-        const q = query(collection(db, "posts"), limit(1));
+        const q = query(collection(db, "posts"));
         const snap = await getDocs(q);
         if (snap.empty) {
             await addDoc(collection(db, "posts"), {
-                author: "OlegTube", text: "Добро пожаловать в OlegTube! 🎉\n\nНовые возможности:\n✓ Редактор профиля (имя, аватарка, описание)\n✓ Поиск по имени и @username\n✓ Username можно менять раз в месяц\n✓ Отправка фото в комментариях и личных сообщениях\n✓ Уведомления о лайках, комментариях и подписках\n✓ Звуковые эффекты\n\nНаслаждайтесь общением!",
+                author: "OlegTube", text: "Добро пожаловать в OlegTube! 🎉\n\nВозможности:\n✓ Голосовые звонки в чатах!\n✓ Настройки (тёмная/светлая тема, звуки)\n✓ Редактор профиля\n✓ Поиск по имени и @username\n✓ Отправка фото в постах\n✓ Лайки и комментарии\n\nНаслаждайтесь общением!",
                 timestamp: new Date(), likes: [], likesCount: 0, commentsCount: 0,
-                imagesBase64: [], authorVerified: true
+                imagesBase64: []
             });
         }
     }
