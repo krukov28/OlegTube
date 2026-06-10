@@ -11,6 +11,10 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             transition: background 0.3s, color 0.3s;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         body.light-theme {
@@ -77,116 +81,7 @@
             border-color: #333;
         }
         
-        /* Стили для звонков */
-        .call-btn {
-            background: rgba(255,255,255,0.15);
-            border: none;
-            color: white;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-        }
-        .call-btn:hover {
-            background: rgba(255,255,255,0.3);
-        }
-        .call-btn.in-call {
-            background: #e64646;
-        }
-        
-        .call-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.95);
-            z-index: 3000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            visibility: hidden;
-            opacity: 0;
-            transition: 0.3s;
-        }
-        .call-modal.active {
-            visibility: visible;
-            opacity: 1;
-        }
-        .call-card {
-            background: #1e1e1e;
-            border-radius: 24px;
-            padding: 40px;
-            text-align: center;
-            min-width: 300px;
-        }
-        .call-avatar {
-            width: 100px;
-            height: 100px;
-            background: #2a5885;
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            font-weight: bold;
-            color: white;
-            background-size: cover;
-            background-position: center;
-        }
-        .call-name {
-            font-size: 24px;
-            font-weight: 600;
-            color: white;
-            margin-bottom: 8px;
-        }
-        .call-status {
-            color: #aaa;
-            margin-bottom: 30px;
-        }
-        .call-actions {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-        }
-        .call-action-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            font-size: 24px;
-            transition: transform 0.2s;
-        }
-        .call-action-btn:hover {
-            transform: scale(1.1);
-        }
-        .call-action-btn.accept {
-            background: #4bb34b;
-            color: white;
-        }
-        .call-action-btn.decline {
-            background: #e64646;
-            color: white;
-        }
-        .call-action-btn.end {
-            background: #e64646;
-            color: white;
-        }
-        .call-action-btn.mic {
-            background: #2a5885;
-            color: white;
-        }
-        .call-action-btn.mic.muted {
-            background: #666;
-        }
-        
+        /* Центрирование auth-контейнера */
         .auth-container {
             max-width: 400px;
             width: 100%;
@@ -322,7 +217,6 @@
             min-width: 0;
         }
         
-        /* Посты */
         .post-card {
             border-radius: 4px;
             padding: 16px;
@@ -472,7 +366,6 @@
             cursor: pointer;
         }
         
-        /* Профиль */
         .profile-card {
             border-radius: 4px;
             overflow: hidden;
@@ -582,7 +475,6 @@
         .profile-posts { padding: 16px; }
         .profile-posts h4 { margin-bottom: 12px; }
         
-        /* Настройки */
         .settings-panel {
             background: white;
             border-radius: 4px;
@@ -638,7 +530,6 @@
             margin-top: 12px;
         }
         
-        /* Чаты */
         .chat-list { border-radius: 4px; }
         .chat-item {
             display: flex;
@@ -666,7 +557,6 @@
         .chat-username { font-size: 11px; opacity: 0.6; font-weight: normal; }
         .chat-last-msg { font-size: 12px; opacity: 0.6; }
         
-        /* Поиск */
         .search-input {
             width: 100%;
             padding: 12px;
@@ -713,7 +603,6 @@
         .hide { display: none; }
         .loading { text-align: center; padding: 40px; opacity: 0.6; }
         
-        /* Чат на весь экран */
         .chat-fullscreen {
             position: fixed;
             top: 0;
@@ -723,6 +612,7 @@
             z-index: 1000;
             display: flex;
             flex-direction: column;
+            background: white;
         }
         .chat-fullscreen-header {
             background: #2a5885;
@@ -766,7 +656,7 @@
             display: flex;
             gap: 8px;
             padding: 12px 16px;
-            border-top: 1px solid;
+            border-top: 1px solid #ccc;
         }
         .chat-input-full input {
             flex: 1;
@@ -774,7 +664,7 @@
             border-radius: 24px;
             font-size: 14px;
             outline: none;
-            border: 1px solid;
+            border: 1px solid #ccc;
         }
         .chat-input-full button {
             background: #2a5885;
@@ -798,7 +688,7 @@
             align-self: flex-end;
         }
         .chat-message.in {
-            background: white;
+            background: #e9e9eb;
             align-self: flex-start;
         }
         
@@ -1000,6 +890,104 @@
             100% { opacity: 0; visibility: hidden; }
         }
         
+        .call-btn {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .call-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        .call-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.3s;
+        }
+        .call-modal.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .call-card {
+            background: #1e1e1e;
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            min-width: 300px;
+        }
+        .call-avatar {
+            width: 100px;
+            height: 100px;
+            background: #2a5885;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            background-size: cover;
+            background-position: center;
+        }
+        .call-name {
+            font-size: 24px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+        }
+        .call-status {
+            color: #aaa;
+            margin-bottom: 30px;
+        }
+        .call-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        .call-action-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            transition: transform 0.2s;
+        }
+        .call-action-btn:hover {
+            transform: scale(1.1);
+        }
+        .call-action-btn.accept {
+            background: #4bb34b;
+            color: white;
+        }
+        .call-action-btn.decline {
+            background: #e64646;
+            color: white;
+        }
+        .call-action-btn.end {
+            background: #e64646;
+            color: white;
+        }
+        
         @media (max-width: 700px) {
             .left-menu { 
                 position: fixed;
@@ -1119,7 +1107,6 @@
     </div>
 </div>
 
-<!-- Модальное окно звонка -->
 <div id="callModal" class="call-modal">
     <div class="call-card">
         <div class="call-avatar" id="callAvatar"></div>
@@ -1163,19 +1150,14 @@
     let currentImageFiles = [];
     let userProfilesCache = new Map();
     let soundsEnabled = true;
+    let commentsStates = new Map();
     
-    // WebRTC переменные
     let localStream = null;
     let peerConnection = null;
     let currentCall = null;
     let callListeners = new Map();
     
-    const configuration = {
-        iceServers: [
-            { urls: 'stun:stun.l.google.com:19302' },
-            { urls: 'stun:stun1.l.google.com:19302' }
-        ]
-    };
+    const configuration = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
     
     function playSound(type) {
         if (!soundsEnabled) return;
@@ -1190,17 +1172,13 @@
             oscillator.type = 'sine';
             gainNode.gain.value = 0.15;
             let duration = 0.3;
-            if (type === 'post') { oscillator.frequency.value = 523.25; duration = 0.5; }
-            else if (type === 'like') { oscillator.frequency.value = 880; duration = 0.3; }
-            else if (type === 'comment') { oscillator.frequency.value = 659.25; duration = 0.4; }
-            else if (type === 'subscribe') { oscillator.frequency.value = 392; duration = 0.6; }
-            else if (type === 'login') { oscillator.frequency.value = 440; duration = 0.8; }
-            else if (type === 'message') { oscillator.frequency.value = 698.46; duration = 0.2; }
-            else if (type === 'call') { oscillator.frequency.value = 880; duration = 0.5; setTimeout(() => { if (oscillator) oscillator.frequency.value = 440; }, 250); }
+            if (type === 'message') oscillator.frequency.value = 698.46;
+            else if (type === 'call') oscillator.frequency.value = 880;
+            else oscillator.frequency.value = 523.25;
             oscillator.start();
             gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
             oscillator.stop(audioCtx.currentTime + duration);
-        } catch(e) { console.log('Audio error:', e); }
+        } catch(e) {}
     }
     
     function showToast(message) {
@@ -1211,659 +1189,73 @@
         setTimeout(() => toast.remove(), 3000);
     }
     
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
+    async function endCall() {
+        if (currentCall && currentCall.callId) await deleteDoc(doc(db, "calls", currentCall.callId)).catch(()=>{});
+        if (peerConnection) peerConnection.close();
+        if (localStream) localStream.getTracks().forEach(t => t.stop());
+        peerConnection = null; localStream = null; currentCall = null;
+        document.getElementById('callModal').classList.remove('active');
     }
     
-    function formatDate(date) {
-        if (!date) return "только что";
-        const diff = Math.floor((new Date() - date) / 60000);
-        if (diff < 1) return "только что";
-        if (diff < 60) return `${diff} мин назад`;
-        if (diff < 1440) return `${Math.floor(diff / 60)} ч назад`;
-        return `${Math.floor(diff / 1440)} дн назад`;
-    }
-    
-    // Функции звонков
-    async function startCall(partnerName, isIncoming = false, callId = null) {
-        if (currentCall) {
-            showToast('У вас уже активен звонок');
-            return;
-        }
-        
+    async function startCall(calleeUsername) {
+        if (!calleeUsername || calleeUsername === currentUser.username) return;
+        if (currentCall) { showToast('Уже в звонке'); return; }
         try {
             localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
             peerConnection = new RTCPeerConnection(configuration);
-            
-            localStream.getTracks().forEach(track => {
-                peerConnection.addTrack(track, localStream);
-            });
-            
-            let actualCallId = callId;
-            if (!actualCallId) {
-                actualCallId = `${currentUser.username}_${partnerName}_${Date.now()}`;
-                await setDoc(doc(db, "calls", actualCallId), {
-                    caller: currentUser.username,
-                    callee: partnerName,
-                    status: 'calling',
-                    startTime: new Date()
-                });
-            }
-            
-            currentCall = { callId: actualCallId, partnerName, isIncoming };
-            
-            if (!isIncoming) {
-                const offer = await peerConnection.createOffer();
-                await peerConnection.setLocalDescription(offer);
-                await updateDoc(doc(db, "calls", actualCallId), { offer: offer });
-            }
-            
-            peerConnection.onicecandidate = async (event) => {
-                if (event.candidate) {
-                    const callRef = doc(db, "calls", actualCallId);
-                    const callSnap = await getDoc(callRef);
-                    const candidates = callSnap.data()?.iceCandidates || [];
-                    candidates.push(event.candidate);
-                    await updateDoc(callRef, { iceCandidates: candidates });
-                }
-            };
-            
-            peerConnection.ontrack = (event) => {
-                const remoteAudio = new Audio();
-                remoteAudio.srcObject = event.streams[0];
-                remoteAudio.play();
-            };
-            
-            peerConnection.onconnectionstatechange = () => {
-                if (peerConnection.connectionState === 'disconnected' || peerConnection.connectionState === 'failed') {
-                    endCall();
-                }
-            };
-            
-            showCallModal(partnerName, isIncoming ? 'incoming' : 'calling');
-            
-        } catch (err) {
-            console.error('Call error:', err);
-            showToast('Не удалось начать звонок. Проверьте микрофон.');
-        }
+            localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
+            const callId = `${currentUser.username}_${calleeUsername}_${Date.now()}`;
+            await setDoc(doc(db, "calls", callId), { caller: currentUser.username, callee: calleeUsername, status: 'calling', startTime: new Date() });
+            currentCall = { callId, partnerName: calleeUsername };
+            const offer = await peerConnection.createOffer();
+            await peerConnection.setLocalDescription(offer);
+            await updateDoc(doc(db, "calls", callId), { offer: offer });
+            showToast(`Звонок пользователю ${calleeUsername}...`);
+            setTimeout(() => { if (currentCall && currentCall.callId === callId) endCall(); }, 60000);
+        } catch(e) { showToast('Ошибка звонка'); endCall(); }
     }
     
     async function acceptCall(callId, callerName) {
+        const callRef = doc(db, "calls", callId);
+        const snap = await getDoc(callRef);
+        if (!snap.exists() || snap.data().status !== 'calling') return;
         try {
-            const callRef = doc(db, "calls", callId);
-            const callSnap = await getDoc(callRef);
-            const callData = callSnap.data();
-            
-            if (!callData || callData.status !== 'calling') {
-                showToast('Звонок уже завершён');
-                return;
-            }
-            
             localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
             peerConnection = new RTCPeerConnection(configuration);
-            
-            localStream.getTracks().forEach(track => {
-                peerConnection.addTrack(track, localStream);
-            });
-            
-            currentCall = { callId, partnerName: callerName, isIncoming: false };
-            
-            await peerConnection.setRemoteDescription(new RTCSessionDescription(callData.offer));
+            localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
+            await peerConnection.setRemoteDescription(new RTCSessionDescription(snap.data().offer));
             const answer = await peerConnection.createAnswer();
             await peerConnection.setLocalDescription(answer);
             await updateDoc(callRef, { answer: answer, status: 'active' });
-            
-            peerConnection.onicecandidate = async (event) => {
-                if (event.candidate) {
-                    const snap = await getDoc(callRef);
-                    const candidates = snap.data()?.iceCandidates || [];
-                    candidates.push(event.candidate);
-                    await updateDoc(callRef, { iceCandidates: candidates });
-                }
-            };
-            
-            if (callData.iceCandidates) {
-                for (const candidate of callData.iceCandidates) {
-                    try {
-                        await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
-                    } catch(e) {}
-                }
-            }
-            
-            peerConnection.ontrack = (event) => {
-                const remoteAudio = new Audio();
-                remoteAudio.srcObject = event.streams[0];
-                remoteAudio.play();
-            };
-            
-            peerConnection.onconnectionstatechange = () => {
-                if (peerConnection.connectionState === 'disconnected' || peerConnection.connectionState === 'failed') {
-                    endCall();
-                }
-            };
-            
-            showCallModal(callerName, 'active');
+            currentCall = { callId, partnerName: callerName };
             playSound('call');
-            
-        } catch (err) {
-            console.error('Accept call error:', err);
-            endCall();
-        }
-    }
-    
-    async function endCall() {
-        if (currentCall) {
-            if (currentCall.callId) {
-                try {
-                    await deleteDoc(doc(db, "calls", currentCall.callId)).catch(() => {});
-                } catch(e) {}
-            }
-            if (peerConnection) {
-                peerConnection.close();
-                peerConnection = null;
-            }
-            if (localStream) {
-                localStream.getTracks().forEach(track => track.stop());
-                localStream = null;
-            }
-            currentCall = null;
-        }
-        closeCallModal();
-    }
-    
-    function showCallModal(partnerName, status) {
-        const modal = document.getElementById('callModal');
-        const callAvatar = document.getElementById('callAvatar');
-        const callName = document.getElementById('callName');
-        const callStatus = document.getElementById('callStatus');
-        const callActions = document.getElementById('callActions');
-        
-        getUserProfile(partnerName).then(profile => {
-            callAvatar.style.backgroundImage = profile.avatarBase64 ? `url(${profile.avatarBase64})` : '';
-            callAvatar.textContent = profile.avatarBase64 ? '' : profile.displayName.charAt(0).toUpperCase();
-            callName.textContent = profile.displayName;
-        });
-        
-        if (status === 'incoming') {
-            callStatus.textContent = 'Входящий звонок...';
-            callActions.innerHTML = `
-                <button class="call-action-btn accept" onclick="window.acceptCallHandler()"><i class="fas fa-phone"></i></button>
-                <button class="call-action-btn decline" onclick="window.declineCallHandler()"><i class="fas fa-times"></i></button>
-            `;
-            window.acceptCallHandler = () => acceptCall(currentCall.callId, partnerName);
-            window.declineCallHandler = () => endCall();
-        } else if (status === 'calling') {
-            callStatus.textContent = 'Звоним...';
-            callActions.innerHTML = `<button class="call-action-btn end" onclick="window.endCallHandler()"><i class="fas fa-phone-slash"></i></button>`;
-            window.endCallHandler = () => endCall();
-        } else if (status === 'active') {
-            let muted = false;
-            callStatus.textContent = 'В разговоре';
-            callActions.innerHTML = `
-                <button class="call-action-btn mic" id="micToggleBtn"><i class="fas fa-microphone"></i></button>
-                <button class="call-action-btn end" onclick="window.endCallHandler()"><i class="fas fa-phone-slash"></i></button>
-            `;
-            document.getElementById('micToggleBtn')?.addEventListener('click', () => {
-                if (localStream) {
-                    muted = !muted;
-                    localStream.getAudioTracks().forEach(track => track.enabled = !muted);
-                    const btn = document.getElementById('micToggleBtn');
-                    if (muted) {
-                        btn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
-                        btn.classList.add('muted');
-                    } else {
-                        btn.innerHTML = '<i class="fas fa-microphone"></i>';
-                        btn.classList.remove('muted');
-                    }
-                }
-            });
-            window.endCallHandler = () => endCall();
-        }
-        
-        modal.classList.add('active');
-    }
-    
-    function closeCallModal() {
-        const modal = document.getElementById('callModal');
-        modal.classList.remove('active');
+            showToast('Разговор начат');
+        } catch(e) { showToast('Ошибка ответа'); endCall(); }
     }
     
     function listenForCalls() {
         if (!currentUser) return;
-        
         const q = query(collection(db, "calls"), where("callee", "==", currentUser.username), where("status", "==", "calling"));
         const unsubscribe = onSnapshot(q, (snap) => {
             snap.forEach(doc => {
-                const callData = doc.data();
-                if (!currentCall && callData.status === 'calling') {
-                    playSound('call');
-                    startCall(callData.caller, true, doc.id);
-                }
+                const data = doc.data();
+                if (!currentCall && confirm(`Входящий звонок от ${data.caller}?`)) acceptCall(doc.id, data.caller);
+                else endCall();
             });
         });
         callListeners.set('calls', unsubscribe);
     }
     
-    // Остальные функции из предыдущей версии
-    function loadSettings() {
-        const savedTheme = localStorage.getItem('olegtube_theme');
-        const savedSounds = localStorage.getItem('olegtube_sounds');
-        if (savedTheme === 'dark') {
-            document.body.classList.remove('light-theme');
-            document.body.classList.add('dark-theme');
-            const themeToggle = document.getElementById('themeToggle');
-            if (themeToggle) themeToggle.classList.add('active');
-        } else {
-            document.body.classList.remove('dark-theme');
-            document.body.classList.add('light-theme');
-            const themeToggle = document.getElementById('themeToggle');
-            if (themeToggle) themeToggle.classList.remove('active');
-        }
-        soundsEnabled = savedSounds !== 'false';
-        const soundToggle = document.getElementById('soundToggle');
-        if (soundToggle) {
-            if (soundsEnabled) soundToggle.classList.add('active');
-            else soundToggle.classList.remove('active');
-        }
-    }
-    
-    function saveTheme(isDark) {
-        if (isDark) {
-            localStorage.setItem('olegtube_theme', 'dark');
-            document.body.classList.remove('light-theme');
-            document.body.classList.add('dark-theme');
-        } else {
-            localStorage.setItem('olegtube_theme', 'light');
-            document.body.classList.remove('dark-theme');
-            document.body.classList.add('light-theme');
-        }
-    }
-    
-    function saveSounds(enabled) {
-        localStorage.setItem('olegtube_sounds', enabled);
-        soundsEnabled = enabled;
-    }
-    
     async function getUserProfile(username) {
         if (userProfilesCache.has(username)) return userProfilesCache.get(username);
-        const userRef = doc(db, "users", username);
-        const userSnap = await getDoc(userRef);
+        const userSnap = await getDoc(doc(db, "users", username));
         if (userSnap.exists()) {
             const data = userSnap.data();
-            const profile = {
-                displayName: data.displayName || username,
-                username: username,
-                bio: data.bio || "",
-                avatarBase64: data.avatarBase64 || null,
-                lastUsernameChange: data.lastUsernameChange ? data.lastUsernameChange.toDate() : null,
-                isVerified: data.isVerified || false
-            };
+            const profile = { displayName: data.displayName || username, username, bio: data.bio || "", avatarBase64: data.avatarBase64 || null, isVerified: data.isVerified || false };
             userProfilesCache.set(username, profile);
             return profile;
         }
-        return { displayName: username, username: username, bio: "", avatarBase64: null };
-    }
-    
-    async function updateUserProfile(displayName, newUsername, bio, avatarBase64 = null) {
-        const userRef = doc(db, "users", currentUser.username);
-        const userSnap = await getDoc(userRef);
-        const userData = userSnap.data();
-        const updates = {};
-        if (displayName) updates.displayName = displayName;
-        if (bio !== undefined) updates.bio = bio;
-        if (avatarBase64 !== null) updates.avatarBase64 = avatarBase64;
-        if (newUsername && newUsername !== currentUser.username) {
-            const lastChange = userData.lastUsernameChange?.toDate() || null;
-            const canChange = !lastChange || (new Date() - lastChange) > 30 * 24 * 60 * 60 * 1000;
-            if (!canChange) {
-                const daysLeft = Math.ceil((30 * 24 * 60 * 60 * 1000 - (new Date() - lastChange)) / (24 * 60 * 60 * 1000));
-                throw new Error(`Username можно сменить только раз в месяц. Осталось ${daysLeft} дней`);
-            }
-            const existingUserRef = doc(db, "users", newUsername);
-            const existingSnap = await getDoc(existingUserRef);
-            if (existingSnap.exists()) throw new Error("Пользователь с таким username уже существует");
-            updates.username = newUsername;
-            updates.lastUsernameChange = new Date();
-        }
-        await updateDoc(userRef, updates);
-        if (newUsername && newUsername !== currentUser.username) {
-            const oldUsername = currentUser.username;
-            currentUser.username = newUsername;
-            const postsQuery = query(collection(db, "posts"), where("author", "==", oldUsername));
-            const postsSnap = await getDocs(postsQuery);
-            for (const postDoc of postsSnap.docs) await updateDoc(postDoc.ref, { author: newUsername });
-            const chatsQuery = query(collection(db, "chats"), where("participants", "array-contains", oldUsername));
-            const chatsSnap = await getDocs(chatsQuery);
-            for (const chatDoc of chatsSnap.docs) {
-                const participants = chatDoc.data().participants;
-                const newParticipants = participants.map(p => p === oldUsername ? newUsername : p);
-                await updateDoc(chatDoc.ref, { participants: newParticipants });
-            }
-        }
-        userProfilesCache.delete(currentUser.username);
-        if (newUsername) userProfilesCache.delete(newUsername);
-        showToast("Профиль обновлен!");
-    }
-    
-    async function registerUser(username, password) {
-        if (!username || !password) throw new Error("Заполните поля");
-        if (username.length < 3) throw new Error("Имя минимум 3 символа");
-        if (password.length < 4) throw new Error("Пароль минимум 4 символа");
-        const userRef = doc(db, "users", username);
-        const snap = await getDoc(userRef);
-        if (snap.exists()) throw new Error("Пользователь уже существует");
-        await setDoc(userRef, {
-            username: username, displayName: username, password: password,
-            bio: "", createdAt: new Date().toISOString(),
-            isVerified: username === "OlegTube" || username === "Admin",
-            followers: [], subscriptions: [], isOnline: true, lastSeen: new Date()
-        });
-        return { username };
-    }
-    
-    async function loginUser(username, password) {
-        const userRef = doc(db, "users", username);
-        const snap = await getDoc(userRef);
-        if (!snap.exists()) throw new Error("Пользователь не найден");
-        if (snap.data().password !== password) throw new Error("Неверный пароль");
-        await updateDoc(userRef, { isOnline: true, lastSeen: new Date() });
-        return { username };
-    }
-    
-    async function getAllPosts() {
-        const snapshot = await getDocs(collection(db, "posts"));
-        let posts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), timestamp: doc.data().timestamp?.toDate() || new Date() }));
-        posts.sort((a, b) => b.timestamp - a.timestamp);
-        return posts;
-    }
-    
-    async function addPost(text, imagesBase64) {
-        if ((!text || !text.trim()) && (!imagesBase64 || imagesBase64.length === 0)) throw new Error("Напишите текст или добавьте фото");
-        await addDoc(collection(db, "posts"), {
-            author: currentUser.username, text: text?.trim() || "",
-            timestamp: new Date(), likes: [], likesCount: 0, commentsCount: 0,
-            imagesBase64: imagesBase64 || []
-        });
-        playSound('post');
-        showToast('Пост опубликован! 🎉');
-    }
-    
-    async function toggleLike(postId) {
-        const postRef = doc(db, "posts", postId);
-        const postSnap = await getDoc(postRef);
-        if (!postSnap.exists()) return;
-        const data = postSnap.data();
-        const hasLiked = data.likes?.includes(currentUser.username);
-        if (hasLiked) {
-            await updateDoc(postRef, { likes: arrayRemove(currentUser.username), likesCount: Math.max(0, data.likesCount - 1) });
-        } else {
-            await updateDoc(postRef, { likes: arrayUnion(currentUser.username), likesCount: (data.likesCount || 0) + 1 });
-            playSound('like');
-        }
-    }
-    
-    async function addComment(postId, text) {
-        if (!text.trim()) return;
-        await addDoc(collection(db, "posts", postId, "comments"), {
-            author: currentUser.username, text: text.trim(), timestamp: new Date()
-        });
-        const postRef = doc(db, "posts", postId);
-        const postSnap = await getDoc(postRef);
-        if (postSnap.exists()) {
-            await updateDoc(postRef, { commentsCount: (postSnap.data().commentsCount || 0) + 1 });
-        }
-        playSound('comment');
-    }
-    
-    async function getComments(postId) {
-        const snapshot = await getDocs(query(collection(db, "posts", postId, "comments"), orderBy("timestamp", "asc")));
-        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), timestamp: doc.data().timestamp?.toDate() || new Date() }));
-    }
-    
-    async function getUserPosts(username) {
-        const snapshot = await getDocs(query(collection(db, "posts"), where("author", "==", username)));
-        let posts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), timestamp: doc.data().timestamp?.toDate() || new Date() }));
-        posts.sort((a, b) => b.timestamp - a.timestamp);
-        return posts;
-    }
-    
-    async function toggleSubscribe(targetUsername) {
-        if (targetUsername === currentUser.username) return;
-        const userRef = doc(db, "users", currentUser.username);
-        const userSnap = await getDoc(userRef);
-        const subs = userSnap.data()?.subscriptions || [];
-        const isSub = subs.includes(targetUsername);
-        if (isSub) {
-            await updateDoc(userRef, { subscriptions: arrayRemove(targetUsername) });
-            await updateDoc(doc(db, "users", targetUsername), { followers: arrayRemove(currentUser.username) });
-        } else {
-            await updateDoc(userRef, { subscriptions: arrayUnion(targetUsername) });
-            await updateDoc(doc(db, "users", targetUsername), { followers: arrayUnion(currentUser.username) });
-            playSound('subscribe');
-        }
-        if (viewingProfile === targetUsername) await showProfile(targetUsername);
-        if (currentPanel === 'profile' && (!viewingProfile || viewingProfile === currentUser.username)) await showMyProfile();
-        await renderFeed();
-    }
-    
-    async function renderComment(comment) {
-        const authorProfile = await getUserProfile(comment.author);
-        const avatarStyle = authorProfile.avatarBase64 ? `background-image: url(${authorProfile.avatarBase64});` : '';
-        return `<div class="comment"><div class="comment-avatar" data-user="${comment.author}" style="${avatarStyle}">${!authorProfile.avatarBase64 ? escapeHtml(comment.author.charAt(0).toUpperCase()) : ''}</div><div class="comment-content"><div class="comment-author" data-user="${comment.author}">${escapeHtml(authorProfile.displayName)}</div><div class="comment-username">@${escapeHtml(comment.author)}</div><div class="comment-text">${escapeHtml(comment.text)}</div><div class="comment-date">${formatDate(comment.timestamp)}</div></div></div>`;
-    }
-    
-    async function loadCommentsForPost(postId) {
-        const comments = await getComments(postId);
-        const commentsContainer = document.getElementById(`comments-${postId}`);
-        if (!commentsContainer) return;
-        if (comments.length === 0) { commentsContainer.innerHTML = '<div style="padding: 8px; opacity: 0.6; font-size: 12px;">Нет комментариев. Будьте первым!</div>'; return; }
-        const commentHtmls = await Promise.all(comments.map(c => renderComment(c)));
-        commentsContainer.innerHTML = commentHtmls.join('');
-        commentsContainer.querySelectorAll('.comment-avatar, .comment-author').forEach(el => {
-            const user = el.dataset.user;
-            if (user && user !== currentUser.username) { el.onclick = () => { showProfile(user); setPanel('profile'); }; el.style.cursor = 'pointer'; }
-        });
-    }
-    
-    async function renderPost(post) {
-        const authorProfile = await getUserProfile(post.author);
-        const hasLiked = post.likes?.includes(currentUser.username);
-        const showComments = commentsStates.get(post.id) || false;
-        const images = post.imagesBase64 || [];
-        const avatarStyle = authorProfile.avatarBase64 ? `background-image: url(${authorProfile.avatarBase64});` : '';
-        const imagesHtml = images.length > 0 ? `<div class="post-images">${images.map(img => `<div class="post-image" data-image="${img}"><img src="${img}" alt="Post image" loading="lazy"></div>`).join('')}</div>` : '';
-        return `<div class="post-card" data-post-id="${post.id}"><div class="post-header"><div class="post-avatar" data-user="${post.author}" style="${avatarStyle}">${!authorProfile.avatarBase64 ? escapeHtml(post.author.charAt(0).toUpperCase()) : ''}</div><div class="post-author-info"><div class="post-author-name" data-user="${post.author}">${escapeHtml(authorProfile.displayName)} ${authorProfile.isVerified ? '<i class="fas fa-check-circle" style="color:#2a5885; font-size: 14px;"></i>' : ''}</div><div class="post-author-username">@${escapeHtml(post.author)}</div><div class="post-date">${formatDate(post.timestamp)}</div></div></div>${post.text ? `<div class="post-text">${escapeHtml(post.text)}</div>` : ''}${imagesHtml}<div class="post-actions"><div class="post-action like-btn" data-id="${post.id}"><i class="${hasLiked ? 'fas fa-heart' : 'far fa-heart'}"></i><span>${post.likesCount || 0}</span></div><div class="post-action show-comments-btn" data-id="${post.id}"><i class="far fa-comment"></i><span>${post.commentsCount || 0} комментариев</span></div></div><div class="comments-section" style="display: ${showComments ? 'block' : 'none'}"><div id="comments-${post.id}" class="comments-list"></div><div class="add-comment"><input type="text" id="comment-input-${post.id}" placeholder="Написать комментарий..."><button class="comment-send-btn" data-post="${post.id}">Отправить</button></div></div></div>`;
-    }
-    
-    async function handleSendComment(postId) {
-        const input = document.getElementById(`comment-input-${postId}`);
-        const text = input?.value || '';
-        if (!text.trim()) return;
-        await addComment(postId, text);
-        if (input) input.value = '';
-        await loadCommentsForPost(postId);
-        await loadPosts();
-    }
-    
-    function attachPostHandlers(container) {
-        if (!container) return;
-        container.querySelectorAll('.post-avatar, .post-author-name').forEach(el => {
-            const user = el.dataset.user;
-            if (user && user !== currentUser.username) { el.onclick = (e) => { e.stopPropagation(); showProfile(user); setPanel('profile'); }; }
-        });
-        container.querySelectorAll('.post-image').forEach(el => {
-            el.onclick = () => { const viewer = document.createElement('div'); viewer.className = 'image-viewer'; viewer.innerHTML = `<img src="${el.querySelector('img').src}" alt="Просмотр">`; viewer.onclick = () => viewer.remove(); document.body.appendChild(viewer); };
-        });
-        container.querySelectorAll('.like-btn').forEach(btn => { btn.onclick = async () => { await toggleLike(btn.dataset.id); await loadPosts(); }; });
-        container.querySelectorAll('.show-comments-btn').forEach(btn => {
-            btn.onclick = async () => {
-                const postId = btn.dataset.id;
-                const currentState = commentsStates.get(postId) || false;
-                commentsStates.set(postId, !currentState);
-                const postCard = btn.closest('.post-card');
-                if (postCard) {
-                    const commentsSection = postCard.querySelector('.comments-section');
-                    if (commentsSection) {
-                        commentsSection.style.display = !currentState ? 'block' : 'none';
-                        if (!currentState) await loadCommentsForPost(postId);
-                    }
-                }
-            };
-        });
-        container.querySelectorAll('.comment-send-btn').forEach(btn => { btn.onclick = () => handleSendComment(btn.dataset.post); });
-    }
-    
-    async function renderFeed() {
-        const container = document.getElementById('postsContainer');
-        if (!container) return;
-        if (allPosts.length === 0) { container.innerHTML = '<div class="loading">Нет постов. Создайте первый!</div>'; return; }
-        const postHtmls = await Promise.all(allPosts.map(post => renderPost(post)));
-        container.innerHTML = postHtmls.join('');
-        attachPostHandlers(container);
-    }
-    
-    async function showProfile(username) {
-        viewingProfile = username;
-        const container = document.getElementById('profileContent');
-        if (!container) return;
-        container.innerHTML = '<div class="loading">Загрузка...</div>';
-        try {
-            const userRef = doc(db, "users", username);
-            const userSnap = await getDoc(userRef);
-            if (!userSnap.exists()) { container.innerHTML = '<div class="loading">Пользователь не найден</div>'; return; }
-            const userData = userSnap.data();
-            const profile = await getUserProfile(username);
-            const posts = await getUserPosts(username);
-            const isOwn = username === currentUser.username;
-            const isSubscribed = !isOwn && (userData.followers || []).includes(currentUser.username);
-            let totalLikes = 0;
-            posts.forEach(p => totalLikes += p.likesCount || 0);
-            const avatarStyle = profile.avatarBase64 ? `background-image: url(${profile.avatarBase64});` : '';
-            container.innerHTML = `<div class="profile-card">${!isOwn ? '<button class="profile-btn profile-back-btn" id="profileBackBtn"><i class="fas fa-arrow-left"></i> Назад</button>' : ''}<div class="profile-cover"></div><div class="profile-info"><div class="profile-avatar-large" style="${avatarStyle}" id="avatarContainer">${!profile.avatarBase64 ? escapeHtml(username.charAt(0).toUpperCase()) : ''}${isOwn ? '<div class="avatar-edit-icon" id="changeAvatarBtn"><i class="fas fa-camera"></i></div>' : ''}</div><div class="profile-name">${escapeHtml(profile.displayName)} ${userData.isVerified ? '<i class="fas fa-check-circle" style="color:#2a5885;"></i>' : ''}</div><div class="profile-username">@${escapeHtml(username)}</div>${profile.bio ? `<div class="profile-bio">${escapeHtml(profile.bio)}</div>` : ''}<div class="profile-status">${userData.lastSeen ? formatDate(userData.lastSeen.toDate ? userData.lastSeen.toDate() : new Date(userData.lastSeen)) : 'онлайн'}</div><div style="font-size:12px; opacity:0.6; margin-top:8px;">Присоединился: ${new Date(userData.createdAt).toLocaleDateString()}</div></div><div class="profile-stats"><div class="profile-stat"><div class="profile-stat-number">${posts.length}</div><div class="profile-stat-label">записей</div></div><div class="profile-stat"><div class="profile-stat-number">${userData.followers?.length || 0}</div><div class="profile-stat-label">подписчиков</div></div><div class="profile-stat"><div class="profile-stat-number">${userData.subscriptions?.length || 0}</div><div class="profile-stat-label">подписок</div></div><div class="profile-stat"><div class="profile-stat-number">${totalLikes}</div><div class="profile-stat-label">лайков</div></div></div>${!isOwn ? `<div class="profile-actions"><button class="profile-btn ${isSubscribed ? 'subscribed' : ''}" id="subscribeProfileBtn"><i class="fas ${isSubscribed ? 'fa-check' : 'fa-user-plus'}"></i> ${isSubscribed ? 'Вы подписаны' : 'Подписаться'}</button><button class="profile-btn secondary" id="messageProfileBtn"><i class="fas fa-envelope"></i> Сообщение</button></div>` : ''}<div class="profile-posts"><h4>Записи</h4><div id="profilePostsList"></div></div></div>`;
-            const postsContainerDiv = document.getElementById('profilePostsList');
-            if (postsContainerDiv) {
-                if (posts.length === 0) { postsContainerDiv.innerHTML = '<div class="loading">Нет записей</div>'; }
-                else { const postHtmls = await Promise.all(posts.map(post => renderPost(post))); postsContainerDiv.innerHTML = postHtmls.join(''); attachPostHandlers(postsContainerDiv); }
-            }
-            if (!isOwn) {
-                document.getElementById('profileBackBtn')?.addEventListener('click', () => { viewingProfile = null; setPanel('home'); });
-                document.getElementById('subscribeProfileBtn')?.addEventListener('click', () => toggleSubscribe(username));
-                document.getElementById('messageProfileBtn')?.addEventListener('click', async () => { const chatId = await getOrCreateChatId(username); openFullscreenChat(chatId, username); });
-            }
-            if (isOwn) { const changeAvatarBtn = document.getElementById('changeAvatarBtn'); if (changeAvatarBtn) { changeAvatarBtn.addEventListener('click', (e) => { e.stopPropagation(); changeAvatar(); }); } }
-        } catch (error) { container.innerHTML = `<div class="loading">Ошибка загрузки профиля</div>`; }
-    }
-    
-    async function changeAvatar() {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'image/*';
-        input.onchange = async (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                if (file.size > 2 * 1024 * 1024) { showToast('Файл слишком большой. Максимум 2MB'); return; }
-                try {
-                    const compressedBlob = await resizeImage(file, 300, 300, 0.8);
-                    const base64 = await blobToBase64(compressedBlob);
-                    await updateDoc(doc(db, "users", currentUser.username), { avatarBase64: base64 });
-                    userProfilesCache.delete(currentUser.username);
-                    showToast("Аватар обновлен!");
-                    await showMyProfile();
-                    await loadPosts();
-                } catch(err) { showToast("Ошибка загрузки аватара"); }
-            }
-        };
-        input.click();
-    }
-    
-    function resizeImage(file, maxWidth = 800, maxHeight = 800, quality = 0.7) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = (e) => {
-                const img = new Image();
-                img.src = e.target.result;
-                img.onload = () => {
-                    let width = img.width, height = img.height;
-                    if (width > maxWidth) { height = (height * maxWidth) / width; width = maxWidth; }
-                    if (height > maxHeight) { width = (width * maxHeight) / height; height = maxHeight; }
-                    const canvas = document.createElement('canvas');
-                    canvas.width = width; canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-                    canvas.toBlob((blob) => resolve(blob), file.type, quality);
-                };
-                img.onerror = reject;
-            };
-            reader.onerror = reject;
-        });
-    }
-    
-    function blobToBase64(blob) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(blob);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = reject;
-        });
-    }
-    
-    function openEditProfileModal() {
-        const modal = document.getElementById('editProfileModal');
-        const displayNameInput = document.getElementById('editDisplayName');
-        const usernameInput = document.getElementById('editUsername');
-        const bioInput = document.getElementById('editBio');
-        const warningDiv = document.getElementById('usernameWarning');
-        const lastChangeInfo = document.getElementById('lastChangeInfo');
-        getUserProfile(currentUser.username).then(async profile => {
-            displayNameInput.value = profile.displayName;
-            usernameInput.value = profile.username;
-            bioInput.value = profile.bio || '';
-            const userRef = doc(db, "users", currentUser.username);
-            const userSnap = await getDoc(userRef);
-            const lastChange = userSnap.data()?.lastUsernameChange?.toDate();
-            if (lastChange) {
-                const daysLeft = Math.ceil((30 * 24 * 60 * 60 * 1000 - (new Date() - lastChange)) / (24 * 60 * 60 * 1000));
-                if (daysLeft > 0) { lastChangeInfo.textContent = `Username можно будет сменить через ${daysLeft} дней`; lastChangeInfo.style.color = '#e64646'; }
-                else { lastChangeInfo.textContent = 'Username можно сменить'; lastChangeInfo.style.color = '#4bb34b'; }
-            } else { lastChangeInfo.textContent = 'Username можно сменить (раз в месяц)'; lastChangeInfo.style.color = '#939393'; }
-        });
-        modal.classList.add('active');
-        const saveBtn = document.getElementById('saveProfileBtn');
-        const cancelBtn = document.getElementById('cancelEditBtn');
-        const saveHandler = async () => {
-            const newDisplayName = displayNameInput.value.trim() || currentUser.username;
-            const newUsername = usernameInput.value.trim();
-            const newBio = bioInput.value.trim();
-            if (newUsername && newUsername !== currentUser.username) {
-                if (!/^[a-zA-Z0-9_]+$/.test(newUsername)) { warningDiv.textContent = "Username может содержать только буквы, цифры и underscore"; return; }
-                if (newUsername.length < 3) { warningDiv.textContent = "Username должен быть не менее 3 символов"; return; }
-            }
-            try {
-                await updateUserProfile(newDisplayName, newUsername, newBio);
-                modal.classList.remove('active');
-                warningDiv.textContent = '';
-                await showMyProfile();
-                await loadPosts();
-                await loadChats();
-                showToast("Профиль успешно обновлен!");
-            } catch(err) { warningDiv.textContent = err.message; }
-        };
-        const cancelHandler = () => { modal.classList.remove('active'); warningDiv.textContent = ''; };
-        saveBtn.onclick = saveHandler;
-        cancelBtn.onclick = cancelHandler;
-    }
-    
-    async function showMyProfile() { viewingProfile = null; await showProfile(currentUser.username); }
-    async function loadPosts() { allPosts = await getAllPosts(); if (currentPanel === 'home') await renderFeed(); }
-    
-    async function getOrCreateChatId(otherUsername) {
-        const chatId = [currentUser.username, otherUsername].sort().join('_');
-        const chatRef = doc(db, "chats", chatId);
-        const snap = await getDoc(chatRef);
-        if (!snap.exists()) { await setDoc(chatRef, { participants: [currentUser.username, otherUsername], lastMessage: "", lastMessageTime: new Date() }); }
-        return chatId;
+        return { displayName: username, username, bio: "", avatarBase64: null };
     }
     
     async function sendMessage(chatId, text) {
@@ -1873,254 +1265,193 @@
         playSound('message');
     }
     
+    async function getOrCreateChatId(otherUsername) {
+        const chatId = [currentUser.username, otherUsername].sort().join('_');
+        const chatRef = doc(db, "chats", chatId);
+        if (!(await getDoc(chatRef)).exists()) await setDoc(chatRef, { participants: [currentUser.username, otherUsername], lastMessage: "", lastMessageTime: new Date() });
+        return chatId;
+    }
+    
     function openFullscreenChat(chatId, partnerName) {
         const chatHTML = `<div id="fullscreenChat" class="chat-fullscreen"><div class="chat-fullscreen-header"><button class="back-btn" id="closeFullscreenChat"><i class="fas fa-arrow-left"></i></button><div class="chat-user-info"><div class="chat-user-name" id="chatPartnerName"></div><div class="chat-user-username" id="chatPartnerUsername"></div></div><div class="chat-header-actions"><button class="call-btn" id="callInChatBtn"><i class="fas fa-phone"></i></button></div></div><div class="chat-messages-full" id="chatMessagesFull"></div><div class="chat-input-full"><input type="text" id="chatMessageFull" placeholder="Сообщение..."><button id="sendChatFull"><i class="fas fa-paper-plane"></i></button></div></div>`;
         document.body.insertAdjacentHTML('beforeend', chatHTML);
-        
-        getUserProfile(partnerName).then(profile => {
-            document.getElementById('chatPartnerName').textContent = profile.displayName;
-            document.getElementById('chatPartnerUsername').textContent = `@${partnerName}`;
-        });
-        
-        const messagesDiv = document.getElementById('chatMessagesFull');
-        const input = document.getElementById('chatMessageFull');
-        const sendBtn = document.getElementById('sendChatFull');
-        const callBtn = document.getElementById('callInChatBtn');
-        
-        callBtn.onclick = () => startCall(partnerName);
-        
+        getUserProfile(partnerName).then(p => { document.getElementById('chatPartnerName').innerText = p.displayName; document.getElementById('chatPartnerUsername').innerText = `@${partnerName}`; });
+        const messagesDiv = document.getElementById('chatMessagesFull'), input = document.getElementById('chatMessageFull');
         const q = query(collection(db, "chats", chatId, "messages"), orderBy("timestamp", "asc"));
         const unsubscribe = onSnapshot(q, async (snap) => {
-            const messages = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            const messageHtmls = await Promise.all(messages.map(async m => {
+            const messages = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            let html = '';
+            for (const m of messages) {
                 const isMe = m.senderId === currentUser.username;
-                const senderProfile = await getUserProfile(m.senderId);
-                const time = m.timestamp?.toDate().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) || '';
-                return `<div class="chat-message ${isMe ? 'out' : 'in'}"><div><strong>${escapeHtml(senderProfile.displayName)}</strong>: ${escapeHtml(m.text)}</div><div style="font-size:10px; opacity:0.7; margin-top:4px;">${time}</div></div>`;
-            }));
-            messagesDiv.innerHTML = messageHtmls.join('');
+                const profile = await getUserProfile(m.senderId);
+                html += `<div class="chat-message ${isMe ? 'out' : 'in'}"><div><strong>${escapeHtml(profile.displayName)}</strong>: ${escapeHtml(m.text)}</div></div>`;
+            }
+            messagesDiv.innerHTML = html;
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         });
-        
-        const sendMessageHandler = async () => { const text = input.value; if (!text.trim()) return; await sendMessage(chatId, text); input.value = ''; };
-        sendBtn.onclick = sendMessageHandler;
-        input.onkeypress = (e) => { if (e.key === 'Enter') sendMessageHandler(); };
-        
+        const send = async () => { await sendMessage(chatId, input.value); input.value = ''; };
+        document.getElementById('sendChatFull').onclick = send;
+        input.onkeypress = (e) => { if (e.key === 'Enter') send(); };
+        document.getElementById('callInChatBtn').onclick = () => startCall(partnerName);
         document.getElementById('closeFullscreenChat').onclick = () => { unsubscribe(); document.getElementById('fullscreenChat').remove(); };
     }
     
     async function loadChats() {
+        if (!currentUser) return;
         const container = document.getElementById('chatsList');
-        if (!container) return;
         if (unsubscribeChats) unsubscribeChats();
         const q = query(collection(db, "chats"), where("participants", "array-contains", currentUser.username));
         unsubscribeChats = onSnapshot(q, async (snap) => {
-            const chats = [];
+            let chats = [];
             for (const docSnap of snap.docs) {
                 const chat = { id: docSnap.id, ...docSnap.data() };
                 const other = chat.participants.find(p => p !== currentUser.username);
-                chat.otherUser = other;
-                const profile = await getUserProfile(other);
-                chat.profile = profile;
-                chats.push(chat);
+                if (other) { chat.otherUser = other; chat.profile = await getUserProfile(other); chats.push(chat); }
             }
             chats.sort((a,b) => (b.lastMessageTime?.toDate() || 0) - (a.lastMessageTime?.toDate() || 0));
-            if (chats.length === 0) { container.innerHTML = '<div class="loading">Нет диалогов</div>'; return; }
-            container.innerHTML = chats.map(chat => `<div class="chat-item" data-chat="${chat.id}" data-user="${chat.otherUser}"><div class="chat-avatar" style="background-image: url(${chat.profile.avatarBase64 || ''}); background-size: cover;">${!chat.profile.avatarBase64 ? escapeHtml(chat.otherUser?.charAt(0).toUpperCase() || '?') : ''}</div><div class="chat-info"><div class="chat-name">${escapeHtml(chat.profile.displayName)} <span class="chat-username">@${escapeHtml(chat.otherUser)}</span></div><div class="chat-last-msg">${escapeHtml(chat.lastMessage?.substring(0, 50) || 'Новый диалог')}</div></div></div>`).join('');
-            document.querySelectorAll('.chat-item').forEach(el => { el.onclick = () => openFullscreenChat(el.dataset.chat, el.dataset.user); });
+            container.innerHTML = chats.length ? chats.map(chat => `<div class="chat-item" data-chat="${chat.id}" data-user="${chat.otherUser}"><div class="chat-avatar" style="background-image: url(${chat.profile.avatarBase64 || ''});">${!chat.profile.avatarBase64 ? (chat.otherUser?.charAt(0).toUpperCase() || '?') : ''}</div><div class="chat-info"><div class="chat-name">${escapeHtml(chat.profile.displayName)} <span class="chat-username">@${escapeHtml(chat.otherUser)}</span></div><div class="chat-last-msg">${escapeHtml(chat.lastMessage?.substring(0,50) || 'Новый диалог')}</div></div></div>`).join('') : '<div class="loading">Нет диалогов</div>';
+            document.querySelectorAll('.chat-item').forEach(el => el.onclick = () => openFullscreenChat(el.dataset.chat, el.dataset.user));
         });
     }
     
-    async function searchUsers(searchTerm) {
-        if (!searchTerm.trim()) return [];
-        const usersRef = collection(db, "users");
-        const snapshot = await getDocs(usersRef);
-        const results = [];
-        const term = searchTerm.toLowerCase();
-        for (const docSnap of snapshot.docs) {
-            const data = docSnap.data();
-            const username = docSnap.id;
-            const displayName = data.displayName || username;
-            if (term.startsWith('@')) { const searchUsername = term.substring(1); if (username.toLowerCase().includes(searchUsername)) results.push({ username, displayName, avatarBase64: data.avatarBase64 }); }
-            else { if (displayName.toLowerCase().includes(term) || username.toLowerCase().includes(term)) results.push({ username, displayName, avatarBase64: data.avatarBase64 }); }
+    async function registerUser(username, password) {
+        if (username.length < 3) throw new Error("Минимум 3 символа");
+        if (password.length < 4) throw new Error("Пароль минимум 4 символа");
+        const userRef = doc(db, "users", username);
+        if ((await getDoc(userRef)).exists()) throw new Error("Уже существует");
+        await setDoc(userRef, { username, displayName: username, password, bio: "", createdAt: new Date().toISOString(), isVerified: username === "OlegTube", followers: [], subscriptions: [], isOnline: true, lastSeen: new Date() });
+        return { username };
+    }
+    
+    async function loginUser(username, password) {
+        const userRef = doc(db, "users", username);
+        const snap = await getDoc(userRef);
+        if (!snap.exists()) throw new Error("Не найден");
+        if (snap.data().password !== password) throw new Error("Неверный пароль");
+        await updateDoc(userRef, { isOnline: true, lastSeen: new Date() });
+        return { username };
+    }
+    
+    async function loadPosts() {
+        const snap = await getDocs(collection(db, "posts"));
+        allPosts = snap.docs.map(d => ({ id: d.id, ...d.data(), timestamp: d.data().timestamp?.toDate() || new Date() })).sort((a,b) => b.timestamp - a.timestamp);
+        if (currentPanel === 'home') await renderFeed();
+    }
+    
+    async function renderFeed() {
+        const container = document.getElementById('postsContainer');
+        if (!container) return;
+        if (!allPosts.length) { container.innerHTML = '<div class="loading">Нет постов</div>'; return; }
+        let html = '';
+        for (const post of allPosts) {
+            const author = await getUserProfile(post.author);
+            const hasLiked = post.likes?.includes(currentUser.username);
+            const images = post.imagesBase64 || [];
+            html += `<div class="post-card" data-post-id="${post.id}"><div class="post-header"><div class="post-avatar" data-user="${post.author}" style="${author.avatarBase64 ? `background-image:url(${author.avatarBase64})` : ''}">${!author.avatarBase64 ? author.displayName.charAt(0).toUpperCase() : ''}</div><div class="post-author-info"><div class="post-author-name" data-user="${post.author}">${escapeHtml(author.displayName)}</div><div class="post-author-username">@${escapeHtml(post.author)}</div><div class="post-date">${formatDate(post.timestamp)}</div></div></div>${post.text ? `<div class="post-text">${escapeHtml(post.text)}</div>` : ''}<div class="post-images">${images.map(img => `<div class="post-image"><img src="${img}" loading="lazy"></div>`).join('')}</div><div class="post-actions"><div class="post-action like-btn" data-id="${post.id}"><i class="${hasLiked ? 'fas fa-heart' : 'far fa-heart'}"></i><span>${post.likesCount || 0}</span></div><div class="post-action show-comments-btn" data-id="${post.id}"><i class="far fa-comment"></i><span>${post.commentsCount || 0}</span></div></div><div class="comments-section" id="comments-${post.id}" style="display:none"></div><div class="add-comment" style="display:none"><input id="comment-input-${post.id}" placeholder="Комментарий..."><button class="comment-send-btn" data-post="${post.id}">Отпр</button></div></div>`;
         }
-        return results.slice(0, 20);
+        container.innerHTML = html;
+        attachPostEvents();
     }
     
-    function setupSearch() {
-        const searchInput = document.getElementById('searchInput');
-        const resultsDiv = document.getElementById('searchResults');
-        let debounceTimeout;
-        searchInput.addEventListener('input', () => {
-            clearTimeout(debounceTimeout);
-            debounceTimeout = setTimeout(async () => {
-                const term = searchInput.value;
-                if (!term.trim()) { resultsDiv.innerHTML = ''; return; }
-                resultsDiv.innerHTML = '<div class="loading">Поиск...</div>';
-                const results = await searchUsers(term);
-                if (results.length === 0) { resultsDiv.innerHTML = '<div class="loading">Ничего не найдено</div>'; }
-                else { resultsDiv.innerHTML = results.map(r => `<div class="search-result-item" data-user="${r.username}"><div class="search-result-avatar" style="background-image: url(${r.avatarBase64 || ''}); background-size: cover;">${!r.avatarBase64 ? escapeHtml(r.username.charAt(0).toUpperCase()) : ''}</div><div class="search-result-info"><div class="search-result-name">${escapeHtml(r.displayName)}</div><div class="search-result-username">@${escapeHtml(r.username)}</div></div></div>`).join('');
-                    resultsDiv.querySelectorAll('.search-result-item').forEach(el => { el.onclick = () => { showProfile(el.dataset.user); setPanel('profile'); }; }); }
-            }, 300);
-        });
+    function attachPostEvents() {
+        document.querySelectorAll('.like-btn').forEach(btn => btn.onclick = async () => { await toggleLike(btn.dataset.id); await loadPosts(); });
+        document.querySelectorAll('.show-comments-btn').forEach(btn => btn.onclick = async () => { const pid = btn.dataset.id; const sec = document.getElementById(`comments-${pid}`); const addSec = sec.nextElementSibling; if (sec.style.display === 'none') { await loadCommentsForPost(pid); sec.style.display = 'block'; addSec.style.display = 'flex'; } else { sec.style.display = 'none'; addSec.style.display = 'none'; } });
+        document.querySelectorAll('.comment-send-btn').forEach(btn => btn.onclick = async () => { const pid = btn.dataset.post; const inp = document.getElementById(`comment-input-${pid}`); if (inp.value.trim()) { await addComment(pid, inp.value); inp.value = ''; await loadCommentsForPost(pid); } });
+        document.querySelectorAll('.post-image').forEach(img => img.onclick = () => { const viewer = document.createElement('div'); viewer.className = 'image-viewer'; viewer.innerHTML = `<img src="${img.querySelector('img').src}">`; viewer.onclick = () => viewer.remove(); document.body.appendChild(viewer); });
+        document.querySelectorAll('[data-user]').forEach(el => el.onclick = () => { const user = el.dataset.user; if (user !== currentUser.username) { showProfile(user); setPanel('profile'); } });
+    }
+    
+    async function toggleLike(postId) {
+        const postRef = doc(db, "posts", postId);
+        const post = await getDoc(postRef);
+        const has = post.data().likes?.includes(currentUser.username);
+        if (has) await updateDoc(postRef, { likes: arrayRemove(currentUser.username), likesCount: Math.max(0, post.data().likesCount - 1) });
+        else await updateDoc(postRef, { likes: arrayUnion(currentUser.username), likesCount: (post.data().likesCount || 0) + 1 });
+    }
+    
+    async function addComment(postId, text) {
+        await addDoc(collection(db, "posts", postId, "comments"), { author: currentUser.username, text, timestamp: new Date() });
+        const postRef = doc(db, "posts", postId);
+        const post = await getDoc(postRef);
+        await updateDoc(postRef, { commentsCount: (post.data().commentsCount || 0) + 1 });
+    }
+    
+    async function loadCommentsForPost(postId) {
+        const snap = await getDocs(query(collection(db, "posts", postId, "comments"), orderBy("timestamp", "asc")));
+        const container = document.getElementById(`comments-${postId}`);
+        if (!container) return;
+        let html = '';
+        for (const doc of snap.docs) {
+            const c = doc.data();
+            const author = await getUserProfile(c.author);
+            html += `<div class="comment"><div class="comment-avatar" style="${author.avatarBase64 ? `background-image:url(${author.avatarBase64})` : ''}">${!author.avatarBase64 ? author.displayName.charAt(0) : ''}</div><div><strong>${escapeHtml(author.displayName)}</strong><div>${escapeHtml(c.text)}</div><small>${formatDate(c.timestamp?.toDate())}</small></div></div>`;
+        }
+        container.innerHTML = html || '<div>Нет комментариев</div>';
+    }
+    
+    async function showProfile(username) {
+        viewingProfile = username;
+        const container = document.getElementById('profileContent');
+        const userData = (await getDoc(doc(db, "users", username))).data();
+        const profile = await getUserProfile(username);
+        const posts = (await getDocs(query(collection(db, "posts"), where("author", "==", username)))).docs.map(d => ({ id: d.id, ...d.data() }));
+        const isOwn = username === currentUser.username;
+        const isSub = (userData?.followers || []).includes(currentUser.username);
+        let postsHtml = '';
+        for (const p of posts) postsHtml += `<div class="post-card"><div class="post-text">${escapeHtml(p.text)}</div><div class="post-date">${formatDate(p.timestamp?.toDate())}</div></div>`;
+        container.innerHTML = `<div class="profile-card"><div class="profile-cover"></div><div class="profile-info"><div class="profile-avatar-large" style="${profile.avatarBase64 ? `background-image:url(${profile.avatarBase64})` : ''}">${!profile.avatarBase64 ? profile.displayName.charAt(0).toUpperCase() : ''}</div><div class="profile-name">${escapeHtml(profile.displayName)}</div><div class="profile-username">@${escapeHtml(username)}</div><div class="profile-bio">${escapeHtml(profile.bio || '')}</div><div class="profile-stats"><div>${posts.length} записей</div><div>${userData?.followers?.length || 0} подписчиков</div><div>${userData?.subscriptions?.length || 0} подписок</div></div>${!isOwn ? `<button id="subBtn" class="profile-btn ${isSub ? 'subscribed' : ''}">${isSub ? 'Отписаться' : 'Подписаться'}</button><button id="msgBtn" class="profile-btn secondary">Сообщение</button>` : ''}</div><div class="profile-posts"><h4>Записи</h4>${postsHtml || '<div>Нет записей</div>'}</div></div>`;
+        if (!isOwn) {
+            document.getElementById('subBtn')?.addEventListener('click', async () => { await toggleSubscribe(username); showProfile(username); });
+            document.getElementById('msgBtn')?.addEventListener('click', async () => { const cid = await getOrCreateChatId(username); openFullscreenChat(cid, username); });
+        }
+    }
+    
+    async function toggleSubscribe(target) {
+        const userRef = doc(db, "users", currentUser.username);
+        const targetRef = doc(db, "users", target);
+        const user = (await getDoc(userRef)).data();
+        const isSub = user.subscriptions?.includes(target);
+        if (isSub) { await updateDoc(userRef, { subscriptions: arrayRemove(target) }); await updateDoc(targetRef, { followers: arrayRemove(currentUser.username) }); }
+        else { await updateDoc(userRef, { subscriptions: arrayUnion(target) }); await updateDoc(targetRef, { followers: arrayUnion(currentUser.username) }); }
     }
     
     function setPanel(panel) {
-        const panels = ['feedPanel', 'searchPanel', 'messagesPanel', 'profilePanel', 'settingsPanel'];
-        panels.forEach(p => document.getElementById(p)?.classList.add('hide'));
-        if (panel === 'home') document.getElementById('feedPanel')?.classList.remove('hide');
-        else if (panel === 'search') document.getElementById('searchPanel')?.classList.remove('hide');
-        else if (panel === 'messages') document.getElementById('messagesPanel')?.classList.remove('hide');
-        else if (panel === 'profile') document.getElementById('profilePanel')?.classList.remove('hide');
-        else if (panel === 'settings') document.getElementById('settingsPanel')?.classList.remove('hide');
+        ['feedPanel','searchPanel','messagesPanel','profilePanel','settingsPanel'].forEach(id => document.getElementById(id)?.classList.add('hide'));
+        document.getElementById(panel === 'home' ? 'feedPanel' : panel === 'search' ? 'searchPanel' : panel === 'messages' ? 'messagesPanel' : panel === 'profile' ? 'profilePanel' : 'settingsPanel')?.classList.remove('hide');
         currentPanel = panel;
-        if (panel === 'home') renderFeed();
-        if (panel === 'messages') { document.getElementById('chatsList').style.display = 'block'; document.getElementById('newChatUsers').style.display = 'none'; loadChats(); }
-        if (panel === 'profile') { if (viewingProfile && viewingProfile !== currentUser.username) showProfile(viewingProfile); else showMyProfile(); }
-        const menuMap = { home: 'menuHome', search: 'menuSearch', messages: 'menuMessages', profile: 'menuProfile' };
-        ['menuHome', 'menuSearch', 'menuMessages', 'menuProfile'].forEach(id => { document.getElementById(id)?.classList.remove('active'); });
-        if (menuMap[panel]) document.getElementById(menuMap[panel])?.classList.add('active');
+        if (panel === 'home') loadPosts();
+        if (panel === 'messages') loadChats();
+        if (panel === 'profile') viewingProfile ? showProfile(viewingProfile) : showProfile(currentUser.username);
+        ['menuHome','menuSearch','menuMessages','menuProfile'].forEach(id => document.getElementById(id)?.classList.remove('active'));
+        document.getElementById(`menu${panel.charAt(0).toUpperCase() + panel.slice(1)}`)?.classList.add('active');
     }
     
-    function updateImagePreviews() {
-        const container = document.getElementById('imagesPreviewContainer');
-        if (currentImageFiles.length === 0) { container.innerHTML = ''; return; }
-        container.innerHTML = currentImageFiles.map((file, i) => `<div class="image-preview-item" data-index="${i}"><img src="${URL.createObjectURL(file)}" alt="Preview"><button class="remove-image-btn" data-index="${i}"><i class="fas fa-times"></i></button></div>`).join('');
-        document.querySelectorAll('.remove-image-btn').forEach(btn => { btn.onclick = () => { currentImageFiles.splice(parseInt(btn.dataset.index), 1); updateImagePreviews(); }; });
-    }
+    function formatDate(date) { if (!date) return ''; const d = new Date(date); return `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`; }
+    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' })[m]); }
     
-    // Обработчики событий
-    document.getElementById('uploadImageBtn')?.addEventListener('click', () => document.getElementById('imageInput').click());
-    document.getElementById('imageInput')?.addEventListener('change', (e) => { const files = Array.from(e.target.files); currentImageFiles.push(...files.slice(0, 3 - currentImageFiles.length)); updateImagePreviews(); document.getElementById('imageInput').value = ''; });
-    document.getElementById('logoHome')?.addEventListener('click', () => setPanel('home'));
-    document.getElementById('menuHome')?.addEventListener('click', () => setPanel('home'));
-    document.getElementById('menuSearch')?.addEventListener('click', () => setPanel('search'));
-    document.getElementById('menuMessages')?.addEventListener('click', () => setPanel('messages'));
-    document.getElementById('menuProfile')?.addEventListener('click', () => { viewingProfile = null; setPanel('profile'); });
-    document.getElementById('menuCreatePost')?.addEventListener('click', () => document.getElementById('createPostModal').classList.add('active'));
-    document.getElementById('settingsBtn')?.addEventListener('click', () => setPanel('settings'));
-    
-    document.getElementById('themeToggle')?.addEventListener('click', () => { const isDark = document.body.classList.contains('dark-theme'); if (isDark) { saveTheme(false); document.getElementById('themeToggle').classList.remove('active'); } else { saveTheme(true); document.getElementById('themeToggle').classList.add('active'); } });
-    document.getElementById('soundToggle')?.addEventListener('click', () => { soundsEnabled = !soundsEnabled; saveSounds(soundsEnabled); const soundToggle = document.getElementById('soundToggle'); if (soundsEnabled) { soundToggle.classList.add('active'); playSound('login'); } else { soundToggle.classList.remove('active'); } });
-    document.getElementById('editProfileSettingsBtn')?.addEventListener('click', () => { openEditProfileModal(); });
-    
-    document.getElementById('submitPostBtn')?.addEventListener('click', async () => {
-        const text = document.getElementById('postText')?.value;
-        if ((!text || !text.trim()) && currentImageFiles.length === 0) { alert('Напишите что-нибудь или добавьте фото'); return; }
-        try {
-            let imagesBase64 = [];
-            if (currentImageFiles.length > 0) { for (const file of currentImageFiles) { const compressed = await resizeImage(file, 800, 800, 0.7); const base64 = await blobToBase64(compressed); imagesBase64.push(base64); } }
-            await addPost(text, imagesBase64);
-            document.getElementById('createPostModal').classList.remove('active');
-            document.getElementById('postText').value = '';
-            currentImageFiles = [];
-            updateImagePreviews();
-            await loadPosts();
-            if (currentPanel === 'profile') await showMyProfile();
-        } catch(error) { alert('Ошибка: ' + error.message); }
-    });
-    
-    document.getElementById('cancelPostBtn')?.addEventListener('click', () => {
-        document.getElementById('createPostModal').classList.remove('active');
-        document.getElementById('postText').value = '';
-        currentImageFiles = [];
-        updateImagePreviews();
-    });
-    
-    document.getElementById('newChatBtn')?.addEventListener('click', async () => {
-        const chatsList = document.getElementById('chatsList');
-        const newChatUsers = document.getElementById('newChatUsers');
-        chatsList.style.display = 'none';
-        newChatUsers.style.display = 'block';
-        const userSnap = await getDoc(doc(db, "users", currentUser.username));
-        const userData = userSnap.data();
-        const followers = userData.followers || [];
-        const subscriptions = userData.subscriptions || [];
-        const friendsSet = new Set();
-        followers.forEach(f => { if (subscriptions.includes(f)) friendsSet.add(f); });
-        const friendsList = Array.from(friendsSet);
-        const container = document.getElementById('usersList');
-        if (friendsList.length === 0) { container.innerHTML = '<div class="loading">У вас пока нет друзей</div>'; return; }
-        const friendProfiles = await Promise.all(friendsList.map(async u => { const profile = await getUserProfile(u); return { username: u, ...profile }; }));
-        const render = (list) => {
-            container.innerHTML = list.map(u => `<div class="chat-item" data-user="${u.username}"><div class="chat-avatar" style="background-image: url(${u.avatarBase64 || ''}); background-size: cover;">${!u.avatarBase64 ? escapeHtml(u.username.charAt(0).toUpperCase()) : ''}</div><div><strong>${escapeHtml(u.displayName)}</strong><br><span style="font-size:11px; opacity:0.6;">@${escapeHtml(u.username)}</span><span class="friend-badge">друг</span></div></div>`).join('');
-            document.querySelectorAll('#usersList .chat-item').forEach(el => { el.onclick = async () => { const target = el.dataset.user; const chatId = await getOrCreateChatId(target); openFullscreenChat(chatId, target); chatsList.style.display = 'block'; newChatUsers.style.display = 'none'; loadChats(); }; });
-        };
-        render(friendProfiles);
-        document.getElementById('searchUserInput').oninput = (e) => { const term = e.target.value.toLowerCase(); render(friendProfiles.filter(u => u.displayName.toLowerCase().includes(term) || u.username.toLowerCase().includes(term))); };
-    });
-    
-    document.getElementById('backToChatsBtn')?.addEventListener('click', () => { document.getElementById('chatsList').style.display = 'block'; document.getElementById('newChatUsers').style.display = 'none'; loadChats(); });
-    
-    document.getElementById('logoutBtn')?.addEventListener('click', async () => {
-        if (currentUser) await updateDoc(doc(db, "users", currentUser.username), { isOnline: false, lastSeen: new Date() }).catch(() => {});
-        if (unsubscribePosts) unsubscribePosts();
-        if (unsubscribeChats) unsubscribeChats();
-        callListeners.forEach(unsub => unsub());
-        if (peerConnection) peerConnection.close();
-        if (localStream) localStream.getTracks().forEach(track => track.stop());
-        document.getElementById('appScreen').style.display = 'none';
-        document.getElementById('authScreen').style.display = 'block';
-        currentUser = null;
-    });
-    
-    const loginBtn = document.getElementById('loginBtn');
-    const showRegisterBtn = document.getElementById('showRegisterBtn');
-    const authError = document.getElementById('authError');
-    const authSuccess = document.getElementById('authSuccess');
-    let isLoginMode = true;
-    
-    showRegisterBtn.onclick = () => {
-        isLoginMode = !isLoginMode;
-        loginBtn.innerText = isLoginMode ? "Войти" : "Зарегистрироваться";
-        showRegisterBtn.innerText = isLoginMode ? "Зарегистрироваться" : "Назад к входу";
-        authError.innerText = "";
-        authSuccess.innerText = "";
+    document.getElementById('loginBtn').onclick = async () => {
+        const un = document.getElementById('loginName').value, pw = document.getElementById('loginPassword').value;
+        try { const user = await loginUser(un, pw); currentUser = user; document.getElementById('authScreen').style.display = 'none'; document.getElementById('appScreen').style.display = 'flex'; loadSettings(); await loadPosts(); listenForCalls(); setPanel('home'); } catch(e) { document.getElementById('authError').innerText = e.message; }
     };
+    document.getElementById('showRegisterBtn').onclick = () => { const btn = document.getElementById('loginBtn'); const isReg = btn.innerText === 'Зарегистрироваться'; if (isReg) { btn.innerText = 'Войти'; document.getElementById('showRegisterBtn').innerText = 'Зарегистрироваться'; } else { btn.innerText = 'Зарегистрироваться'; document.getElementById('showRegisterBtn').innerText = 'Назад к входу'; } };
+    document.getElementById('logoutBtn').onclick = async () => { if (currentUser) await updateDoc(doc(db, "users", currentUser.username), { isOnline: false, lastSeen: new Date() }).catch(()=>{}); if (unsubscribePosts) unsubscribePosts(); if (unsubscribeChats) unsubscribeChats(); callListeners.forEach(u=>u()); endCall(); document.getElementById('appScreen').style.display = 'none'; document.getElementById('authScreen').style.display = 'flex'; currentUser = null; };
+    document.getElementById('menuHome').onclick = () => setPanel('home');
+    document.getElementById('menuSearch').onclick = () => setPanel('search');
+    document.getElementById('menuMessages').onclick = () => setPanel('messages');
+    document.getElementById('menuProfile').onclick = () => { viewingProfile = null; setPanel('profile'); };
+    document.getElementById('menuCreatePost').onclick = () => document.getElementById('createPostModal').classList.add('active');
+    document.getElementById('settingsBtn').onclick = () => setPanel('settings');
+    document.getElementById('themeToggle').onclick = () => { const isDark = document.body.classList.contains('dark-theme'); document.body.classList.toggle('light-theme'); document.body.classList.toggle('dark-theme'); localStorage.setItem('olegtube_theme', isDark ? 'light' : 'dark'); document.getElementById('themeToggle').classList.toggle('active'); };
+    document.getElementById('soundToggle').onclick = () => { soundsEnabled = !soundsEnabled; localStorage.setItem('olegtube_sounds', soundsEnabled); document.getElementById('soundToggle').classList.toggle('active'); };
+    document.getElementById('editProfileSettingsBtn').onclick = () => { alert('Редактирование профиля доступно в веб-версии (базовое)'); };
+    document.getElementById('newChatBtn').onclick = async () => { alert('Напишите username друга в поиске, чтобы начать диалог'); };
     
-    async function handleAuth() {
-        const username = document.getElementById('loginName')?.value.trim();
-        const password = document.getElementById('loginPassword')?.value.trim();
-        if (!username || !password) { authError.innerText = "Заполните все поля"; return; }
-        try {
-            if (isLoginMode) {
-                await loginUser(username, password);
-                playSound('login');
-                showToast(`Добро пожаловать, ${username}! 🎉`);
-            } else {
-                await registerUser(username, password);
-                authSuccess.innerText = "Регистрация успешна! Теперь войдите.";
-                return;
-            }
-            currentUser = { username };
-            document.getElementById('authScreen').style.display = 'none';
-            document.getElementById('appScreen').style.display = 'flex';
-            loadSettings();
-            await loadPosts();
-            setupSearch();
-            listenForCalls();
-            const q = query(collection(db, "posts"));
-            unsubscribePosts = onSnapshot(q, () => loadPosts());
-            setPanel('home');
-        } catch(err) { authError.innerText = err.message; }
-    }
+    function loadSettings() { const theme = localStorage.getItem('olegtube_theme'); if (theme === 'dark') { document.body.classList.add('dark-theme'); document.body.classList.remove('light-theme'); document.getElementById('themeToggle')?.classList.add('active'); } else { document.body.classList.add('light-theme'); document.body.classList.remove('dark-theme'); document.getElementById('themeToggle')?.classList.remove('active'); } soundsEnabled = localStorage.getItem('olegtube_sounds') !== 'false'; const st = document.getElementById('soundToggle'); if (st) soundsEnabled ? st.classList.add('active') : st.classList.remove('active'); }
     
-    loginBtn.onclick = handleAuth;
-    document.getElementById('loginPassword')?.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleAuth(); });
+    window.searchUsers = async (term) => { if (!term.trim()) return []; const snap = await getDocs(collection(db, "users")); const res = []; const t = term.toLowerCase(); for (const d of snap.docs) { const un = d.id, dn = d.data().displayName || un; if (dn.toLowerCase().includes(t) || un.toLowerCase().includes(t)) res.push({ username: un, displayName: dn, avatarBase64: d.data().avatarBase64 }); } return res; };
+    document.getElementById('searchInput')?.addEventListener('input', async (e) => { const val = e.target.value; if (!val.trim()) { document.getElementById('searchResults').innerHTML = ''; return; } const res = await window.searchUsers(val); const div = document.getElementById('searchResults'); div.innerHTML = res.map(u => `<div class="search-result-item" data-user="${u.username}"><div class="search-result-avatar" style="background-image:url(${u.avatarBase64 || ''})">${!u.avatarBase64 ? u.username.charAt(0).toUpperCase() : ''}</div><div><strong>${escapeHtml(u.displayName)}</strong><br><small>@${escapeHtml(u.username)}</small></div></div>`).join(''); document.querySelectorAll('.search-result-item').forEach(el => el.onclick = () => { showProfile(el.dataset.user); setPanel('profile'); }); });
     
-    let commentsStates = new Map();
-    
-    async function initTestPost() {
-        const q = query(collection(db, "posts"));
-        const snap = await getDocs(q);
-        if (snap.empty) {
-            await addDoc(collection(db, "posts"), {
-                author: "OlegTube", text: "Добро пожаловать в OlegTube! 🎉\n\nВозможности:\n✓ Голосовые звонки в чатах!\n✓ Настройки (тёмная/светлая тема, звуки)\n✓ Редактор профиля\n✓ Поиск по имени и @username\n✓ Отправка фото в постах\n✓ Лайки и комментарии\n\nНаслаждайтесь общением!",
-                timestamp: new Date(), likes: [], likesCount: 0, commentsCount: 0,
-                imagesBase64: []
-            });
-        }
-    }
+    async function initTestPost() { if ((await getDocs(collection(db, "posts"))).empty) await addDoc(collection(db, "posts"), { author: "OlegTube", text: "Добро пожаловать! Звонки и чаты работают!", timestamp: new Date(), likes: [], likesCount: 0, commentsCount: 0, imagesBase64: [] }); }
     initTestPost();
 </script>
 </body>
