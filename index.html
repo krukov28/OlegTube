@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=1.0, user-scalable=no">
     <title>OlegTube — Социальная сеть</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -27,22 +27,22 @@
             color: #e0e0e0;
         }
         
-        /* Центрирование экрана авторизации */
         #authScreen {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 10;
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
         }
         
         .auth-container {
-            max-width: 400px;
             width: 100%;
             border-radius: 8px;
             padding: 40px 32px;
             box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-            margin: 20px;
             background: white;
         }
         
@@ -64,7 +64,7 @@
             margin-bottom: 16px;
             border: 1px solid #d3d9de;
             border-radius: 4px;
-            font-size: 14px;
+            font-size: 16px;
             background: white;
             color: #2c3e50;
         }
@@ -79,27 +79,27 @@
         
         .auth-btn {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             background: #2a5885;
             color: white;
             border: none;
             border-radius: 4px;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 500;
             cursor: pointer;
             margin-bottom: 12px;
+            -webkit-appearance: none;
         }
         
         .auth-btn:hover { background: #1e3e5f; }
+        .auth-btn:active { transform: scale(0.98); }
         
         .switch-btn { background: none; color: #2a5885; border: 1px solid #2a5885; }
         .switch-btn:hover { background: #e5ebf1; }
         
-        .error-msg { color: #e64646; text-align: center; margin-bottom: 12px; font-size: 13px; }
-        .success-msg { color: #4bb34b; text-align: center; margin-bottom: 12px; font-size: 13px; }
+        .error-msg { color: #e64646; text-align: center; margin-bottom: 12px; font-size: 14px; }
+        .success-msg { color: #4bb34b; text-align: center; margin-bottom: 12px; font-size: 14px; }
         
-        /* Остальные стили */
-        body.light-theme .auth-container,
         body.light-theme .post-card,
         body.light-theme .profile-card,
         body.light-theme .chat-list,
@@ -113,7 +113,6 @@
             color: #2c3e50;
         }
         
-        body.dark-theme .auth-container,
         body.dark-theme .post-card,
         body.dark-theme .profile-card,
         body.dark-theme .chat-list,
@@ -153,7 +152,6 @@
             border-color: #333;
         }
         
-        /* Звонки */
         .call-btn {
             background: rgba(255,255,255,0.15);
             border: none;
@@ -240,8 +238,8 @@
             font-size: 24px;
             transition: transform 0.2s;
         }
-        .call-action-btn:hover {
-            transform: scale(1.1);
+        .call-action-btn:active {
+            transform: scale(0.9);
         }
         .call-action-btn.accept {
             background: #4bb34b;
@@ -343,9 +341,11 @@
             cursor: pointer;
             font-size: 14px;
             transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
         }
         .menu-item i { width: 20px; }
         .menu-item:hover { background: #e5ebf1; opacity: 0.8; }
+        .menu-item:active { transform: scale(0.97); }
         .menu-item.active { background: #e5ebf1; font-weight: 500; }
         
         body.dark-theme .menu-item.active {
@@ -357,7 +357,6 @@
             min-width: 0;
         }
         
-        /* Посты */
         .post-card {
             border-radius: 4px;
             padding: 16px;
@@ -439,7 +438,11 @@
             gap: 6px;
             font-size: 13px;
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            padding: 4px 8px;
+            border-radius: 4px;
         }
+        .post-action:active { background: rgba(0,0,0,0.05); }
         .post-action:hover { color: #2a5885; }
         
         .comments-section {
@@ -489,7 +492,7 @@
             flex: 1;
             padding: 8px 12px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 14px;
             outline: none;
             border: 1px solid;
         }
@@ -500,14 +503,18 @@
             border: none;
             border-radius: 20px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 14px;
+            white-space: nowrap;
         }
         .show-comments-btn {
             font-size: 12px;
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            padding: 4px 8px;
+            border-radius: 4px;
         }
+        .show-comments-btn:active { background: rgba(0,0,0,0.05); }
         
-        /* Профиль */
         .profile-card {
             border-radius: 4px;
             overflow: hidden;
@@ -588,7 +595,7 @@
             flex-wrap: wrap;
         }
         .profile-btn {
-            padding: 8px 24px;
+            padding: 10px 24px;
             background: #2a5885;
             color: white;
             border: none;
@@ -596,7 +603,9 @@
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
         }
+        .profile-btn:active { transform: scale(0.97); }
         .profile-btn.secondary {
             background: #e5ebf1;
             color: #2a5885;
@@ -613,11 +622,11 @@
             width: auto;
             border: none;
             cursor: pointer;
+            font-size: 16px;
         }
         .profile-posts { padding: 16px; }
         .profile-posts h4 { margin-bottom: 12px; }
         
-        /* Настройки */
         .settings-panel {
             background: white;
             border-radius: 4px;
@@ -638,7 +647,7 @@
             align-items: center;
             padding: 12px 0;
         }
-        .settings-item span { font-size: 14px; }
+        .settings-item span { font-size: 16px; }
         .theme-toggle, .sound-toggle {
             width: 50px;
             height: 26px;
@@ -647,6 +656,7 @@
             cursor: pointer;
             position: relative;
             transition: 0.2s;
+            -webkit-tap-highlight-color: transparent;
         }
         .theme-toggle.active, .sound-toggle.active { background: #4bb34b; }
         .theme-toggle::after, .sound-toggle::after {
@@ -665,15 +675,16 @@
             background: #2a5885;
             color: white;
             border: none;
-            padding: 10px 16px;
+            padding: 12px 16px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 16px;
             width: 100%;
             margin-top: 12px;
+            -webkit-tap-highlight-color: transparent;
         }
+        .edit-profile-settings-btn:active { transform: scale(0.98); }
         
-        /* Чаты */
         .chat-list { border-radius: 4px; }
         .chat-item {
             display: flex;
@@ -682,7 +693,9 @@
             padding: 12px 16px;
             border-bottom: 1px solid;
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
         }
+        .chat-item:active { background: rgba(0,0,0,0.05); }
         .chat-item:hover { opacity: 0.8; }
         .chat-avatar {
             width: 48px;
@@ -695,19 +708,19 @@
             position: relative;
             background-size: cover;
             background-position: center;
+            flex-shrink: 0;
         }
         .chat-info { flex: 1; }
         .chat-name { font-weight: 600; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
         .chat-username { font-size: 11px; opacity: 0.6; font-weight: normal; }
         .chat-last-msg { font-size: 12px; opacity: 0.6; }
         
-        /* Поиск */
         .search-input {
             width: 100%;
             padding: 12px;
             border-radius: 4px;
             margin-bottom: 16px;
-            font-size: 14px;
+            font-size: 16px;
             border: 1px solid;
         }
         .search-result-item {
@@ -718,7 +731,9 @@
             align-items: center;
             gap: 12px;
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
         }
+        .search-result-item:active { background: rgba(0,0,0,0.05); }
         .search-result-avatar {
             width: 48px;
             height: 48px;
@@ -729,6 +744,7 @@
             font-weight: bold;
             background-size: cover;
             background-position: center;
+            flex-shrink: 0;
         }
         .search-result-info { flex: 1; }
         .search-result-name { font-weight: 600; }
@@ -743,12 +759,14 @@
             cursor: pointer;
             width: 100%;
             margin-bottom: 16px;
+            font-size: 16px;
+            -webkit-tap-highlight-color: transparent;
         }
+        .new-chat-btn:active { transform: scale(0.98); }
         
         .hide { display: none; }
         .loading { text-align: center; padding: 40px; opacity: 0.6; }
         
-        /* Чат встроенный в контент */
         .chat-container {
             display: flex;
             flex-direction: column;
@@ -775,6 +793,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            -webkit-tap-highlight-color: transparent;
         }
         .chat-header .chat-user-info { flex: 1; }
         .chat-header .chat-user-name { font-size: 18px; font-weight: 600; }
@@ -790,6 +809,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            -webkit-overflow-scrolling: touch;
         }
         .chat-input-area {
             display: flex;
@@ -801,7 +821,7 @@
             flex: 1;
             padding: 12px;
             border-radius: 24px;
-            font-size: 14px;
+            font-size: 16px;
             outline: none;
             border: 1px solid;
         }
@@ -814,12 +834,13 @@
             border-radius: 50%;
             cursor: pointer;
             font-size: 18px;
+            flex-shrink: 0;
         }
         .chat-message {
             max-width: 75%;
             padding: 8px 12px;
             border-radius: 16px;
-            font-size: 13px;
+            font-size: 14px;
         }
         .chat-message.out {
             background: #2a5885;
@@ -855,7 +876,7 @@
             max-height: 80vh;
             overflow-y: auto;
         }
-        .modal-card h3 { margin-bottom: 16px; }
+        .modal-card h3 { margin-bottom: 16px; font-size: 18px; }
         .modal-card textarea {
             width: 100%;
             padding: 12px;
@@ -864,6 +885,7 @@
             resize: vertical;
             margin-bottom: 16px;
             border: 1px solid;
+            font-size: 16px;
         }
         .images-preview {
             display: flex;
@@ -892,28 +914,30 @@
             color: white;
             border: none;
             border-radius: 50%;
-            width: 22px;
-            height: 22px;
+            width: 28px;
+            height: 28px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 16px;
         }
         .image-upload-btn {
-            padding: 10px;
+            padding: 12px;
             border: 1px dashed #2a5885;
             border-radius: 4px;
             cursor: pointer;
             text-align: center;
             margin-bottom: 16px;
+            font-size: 16px;
         }
         .modal-actions { display: flex; gap: 12px; justify-content: flex-end; }
         .modal-actions button {
-            padding: 8px 20px;
+            padding: 10px 20px;
             border-radius: 4px;
             border: none;
             cursor: pointer;
+            font-size: 16px;
         }
         .modal-actions .primary { background: #2a5885; color: white; }
         
@@ -944,25 +968,25 @@
             max-height: 80vh;
             overflow-y: auto;
         }
-        .edit-profile-card h3 { margin-bottom: 20px; }
+        .edit-profile-card h3 { margin-bottom: 20px; font-size: 18px; }
         .edit-profile-card input,
         .edit-profile-card textarea {
             width: 100%;
             padding: 12px;
             margin-bottom: 16px;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 16px;
             font-family: inherit;
             border: 1px solid;
         }
         .username-warning {
-            font-size: 11px;
+            font-size: 12px;
             color: #e64646;
             margin-top: -12px;
             margin-bottom: 12px;
         }
         .last-change-info {
-            font-size: 11px;
+            font-size: 12px;
             color: #939393;
             margin-top: -12px;
             margin-bottom: 12px;
@@ -973,10 +997,11 @@
             justify-content: flex-end;
         }
         .edit-actions button {
-            padding: 10px 20px;
+            padding: 12px 20px;
             border-radius: 8px;
             border: none;
             cursor: pointer;
+            font-size: 16px;
         }
         .edit-actions .save-btn { background: #2a5885; color: white; }
         .edit-actions .cancel-btn { background: #e5ebf1; }
@@ -1011,16 +1036,17 @@
         
         .toast {
             position: fixed;
-            bottom: 30px;
+            bottom: 80px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0,0,0,0.8);
             color: white;
-            padding: 10px 20px;
+            padding: 12px 20px;
             border-radius: 8px;
             font-size: 14px;
             z-index: 2000;
             animation: fadeOut 3s ease-in-out forwards;
+            white-space: nowrap;
         }
         
         @keyframes fadeOut {
@@ -1030,6 +1056,24 @@
         }
         
         @media (max-width: 700px) {
+            body {
+                display: block;
+            }
+            
+            #authScreen {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                padding: 10px;
+                width: 100%;
+                max-width: 100%;
+            }
+            
+            .auth-container {
+                padding: 30px 20px;
+            }
+            
             .left-menu { 
                 position: fixed;
                 bottom: 0;
@@ -1044,6 +1088,7 @@
                 border-top: 1px solid;
                 box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
                 background: white;
+                padding-bottom: max(8px, env(safe-area-inset-bottom));
             }
             body.dark-theme .left-menu { background: #1e1e1e; }
             .left-menu .menu-item {
@@ -1055,29 +1100,128 @@
                 font-size: 11px;
                 margin-bottom: 0;
             }
-            .left-menu .menu-item i { font-size: 20px; margin: 0; }
+            .left-menu .menu-item i { font-size: 24px; margin: 0; }
             .left-menu .menu-item span { font-size: 10px; }
-            .main-layout { padding: 12px; padding-bottom: 70px; }
-            .content-panel { margin-bottom: 60px; }
+            .main-layout { 
+                padding: 8px; 
+                padding-bottom: 80px;
+                padding-bottom: calc(80px + env(safe-area-inset-bottom));
+            }
+            .content-panel { margin-bottom: 20px; }
             .post-images { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
             .post-image img { height: 150px; }
             .header { padding: 8px 16px; }
-            .logo { font-size: 16px; }
-            .settings-btn { width: 32px; height: 32px; font-size: 14px; }
-            .logout-btn { padding: 4px 10px; font-size: 12px; }
+            .logo { font-size: 18px; }
+            .settings-btn { width: 36px; height: 36px; font-size: 18px; }
+            .logout-btn { padding: 6px 12px; font-size: 14px; }
+            
+            .chat-container {
+                height: calc(100vh - 160px);
+            }
+            .chat-messages {
+                padding: 12px;
+            }
+            .chat-header {
+                padding: 12px;
+            }
+            .chat-input-area {
+                padding: 8px 12px;
+            }
+            .chat-input-area input {
+                font-size: 16px;
+            }
+            
+            .post-card {
+                padding: 12px;
+            }
+            .post-actions {
+                gap: 16px;
+            }
+            .post-action {
+                font-size: 14px;
+                padding: 8px 12px;
+            }
+            .show-comments-btn {
+                font-size: 14px;
+                padding: 8px 12px;
+            }
+            .add-comment input {
+                font-size: 16px;
+            }
+            .add-comment button {
+                font-size: 16px;
+                padding: 8px 16px;
+            }
+            
+            .call-card {
+                min-width: 280px;
+                padding: 30px;
+            }
+            .call-action-btn {
+                width: 70px;
+                height: 70px;
+                font-size: 28px;
+            }
+            .call-avatar {
+                width: 80px;
+                height: 80px;
+                font-size: 36px;
+            }
+            
+            .search-input {
+                font-size: 16px;
+            }
+            .search-result-item {
+                padding: 14px;
+            }
+            .search-result-name {
+                font-size: 16px;
+            }
+            .search-result-username {
+                font-size: 14px;
+            }
+            
+            .new-chat-btn {
+                font-size: 16px;
+                padding: 14px;
+            }
+            
+            .profile-btn {
+                padding: 12px 24px;
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .auth-container {
+                padding: 20px 16px;
+            }
+            .auth-container h2 {
+                font-size: 24px;
+            }
+            .auth-input {
+                font-size: 16px;
+                padding: 10px 14px;
+            }
+            .auth-btn {
+                font-size: 16px;
+                padding: 10px;
+            }
         }
     </style>
 </head>
 <body class="light-theme">
 
-<div id="authScreen" class="auth-container">
-    <h2><i class="fas fa-play-circle"></i> OlegTube</h2>
-    <div id="authError" class="error-msg"></div>
-    <div id="authSuccess" class="success-msg"></div>
-    <input type="text" id="loginName" class="auth-input" placeholder="Имя пользователя (username)">
-    <input type="password" id="loginPassword" class="auth-input" placeholder="Пароль">
-    <button id="loginBtn" class="auth-btn">Войти</button>
-    <button id="showRegisterBtn" class="auth-btn switch-btn">Зарегистрироваться</button>
+<div id="authScreen">
+    <div class="auth-container">
+        <h2><i class="fas fa-play-circle"></i> OlegTube</h2>
+        <div id="authError" class="error-msg"></div>
+        <div id="authSuccess" class="success-msg"></div>
+        <input type="text" id="loginName" class="auth-input" placeholder="Имя пользователя (username)" autocomplete="username">
+        <input type="password" id="loginPassword" class="auth-input" placeholder="Пароль" autocomplete="current-password">
+        <button id="loginBtn" class="auth-btn">Войти</button>
+        <button id="showRegisterBtn" class="auth-btn switch-btn">Зарегистрироваться</button>
+    </div>
 </div>
 
 <div id="appScreen" class="app-container" style="display: none;">
@@ -1094,8 +1238,8 @@
             <div class="menu-item active" id="menuHome"><i class="fas fa-newspaper"></i> <span>Новости</span></div>
             <div class="menu-item" id="menuSearch"><i class="fas fa-search"></i> <span>Поиск</span></div>
             <div class="menu-item" id="menuMessages"><i class="fas fa-comments"></i> <span>Сообщения</span></div>
-            <div class="menu-item" id="menuProfile"><i class="fas fa-user-circle"></i> <span>Мой профиль</span></div>
-            <div class="menu-item" id="menuCreatePost"><i class="fas fa-plus-circle"></i> <span>Создать пост</span></div>
+            <div class="menu-item" id="menuProfile"><i class="fas fa-user-circle"></i> <span>Профиль</span></div>
+            <div class="menu-item" id="menuCreatePost"><i class="fas fa-plus-circle"></i> <span>Создать</span></div>
         </div>
 
         <div class="content-panel">
@@ -1105,18 +1249,15 @@
                 <div id="searchResults"></div>
             </div>
             <div id="messagesPanel" class="hide">
-                <!-- Список чатов -->
                 <div id="chatsListView">
                     <button id="newChatBtn" class="new-chat-btn"><i class="fas fa-plus"></i> Новый диалог</button>
                     <div id="chatsList" class="chat-list"></div>
                 </div>
-                <!-- Выбор пользователя для нового чата -->
                 <div id="newChatUsers" style="display: none;">
                     <button id="backToChatsBtn" class="new-chat-btn" style="background:#6c7a8e;"><i class="fas fa-arrow-left"></i> Назад</button>
                     <input type="text" id="searchUserInput" class="search-input" placeholder="Поиск среди друзей...">
                     <div id="usersList"></div>
                 </div>
-                <!-- Встроенный чат -->
                 <div id="chatView" style="display: none;"></div>
             </div>
             <div id="profilePanel" class="hide"><div id="profileContent"></div></div>
@@ -1154,7 +1295,6 @@
     </div>
 </div>
 
-<!-- Модальное окно звонка -->
 <div id="callModal" class="call-modal">
     <div class="call-card">
         <div class="call-avatar" id="callAvatar"></div>
@@ -1175,7 +1315,7 @@
 
 <script type="module">
     import { initializeApp } from "firebase/app";
-    import { getFirestore, collection, addDoc, getDocs, getDoc, query, where, doc, updateDoc, arrayUnion, arrayRemove, setDoc, onSnapshot, orderBy, deleteDoc } from "firebase/firestore";
+    import { getFirestore, collection, addDoc, getDocs, getDoc, query, where, doc, updateDoc, arrayUnion, arrayRemove, setDoc, onSnapshot, orderBy, deleteDoc, serverTimestamp } from "firebase/firestore";
     
     const firebaseConfig = {
         apiKey: "AIzaSyDuJfaJAvigdDsCkeLoHpM3QG30YANa5tU",
@@ -1262,7 +1402,6 @@
         return `${Math.floor(diff / 1440)} дн назад`;
     }
     
-    // Функции звонков
     async function startCall(partnerName, isIncoming = false, callId = null) {
         if (currentCall) {
             showToast('У вас уже активен звонок');
@@ -1270,10 +1409,15 @@
         }
         
         try {
+            console.log('Starting call, requesting media...');
             localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+            console.log('Media obtained');
+            
             peerConnection = new RTCPeerConnection(configuration);
+            console.log('PeerConnection created');
             
             localStream.getTracks().forEach(track => {
+                console.log('Adding track:', track.kind);
                 peerConnection.addTrack(track, localStream);
             });
             
@@ -1284,23 +1428,36 @@
                     caller: currentUser.username,
                     callee: partnerName,
                     status: 'calling',
-                    startTime: new Date()
+                    startTime: new Date(),
+                    iceCandidates: [],
+                    offer: null,
+                    answer: null
                 });
+                console.log('Call document created:', actualCallId);
             }
             
             currentCall = { callId: actualCallId, partnerName, isIncoming };
             
             peerConnection.onicecandidate = async (event) => {
                 if (event.candidate) {
+                    console.log('ICE candidate generated');
                     const callRef = doc(db, "calls", actualCallId);
                     const callSnap = await getDoc(callRef);
-                    const candidates = callSnap.data()?.iceCandidates || [];
-                    candidates.push(event.candidate);
-                    await updateDoc(callRef, { iceCandidates: candidates });
+                    const callData = callSnap.data();
+                    if (callData) {
+                        const candidates = callData.iceCandidates || [];
+                        candidates.push({
+                            candidate: event.candidate.candidate,
+                            sdpMid: event.candidate.sdpMid,
+                            sdpMLineIndex: event.candidate.sdpMLineIndex
+                        });
+                        await updateDoc(callRef, { iceCandidates: candidates });
+                    }
                 }
             };
             
             peerConnection.ontrack = (event) => {
+                console.log('Remote track received');
                 if (remoteAudio) {
                     remoteAudio.srcObject = null;
                     remoteAudio.remove();
@@ -1308,10 +1465,14 @@
                 remoteAudio = new Audio();
                 remoteAudio.srcObject = event.streams[0];
                 remoteAudio.autoplay = true;
-                remoteAudio.play().catch(e => console.log('Play error:', e));
+                const playPromise = remoteAudio.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(e => console.log('Play error:', e));
+                }
             };
             
             peerConnection.onconnectionstatechange = () => {
+                console.log('Connection state:', peerConnection.connectionState);
                 if (peerConnection.connectionState === 'disconnected' || 
                     peerConnection.connectionState === 'failed' ||
                     peerConnection.connectionState === 'closed') {
@@ -1320,6 +1481,7 @@
             };
             
             peerConnection.oniceconnectionstatechange = () => {
+                console.log('ICE connection state:', peerConnection.iceConnectionState);
                 if (peerConnection.iceConnectionState === 'disconnected' ||
                     peerConnection.iceConnectionState === 'failed') {
                     endCall();
@@ -1327,9 +1489,17 @@
             };
             
             if (!isIncoming) {
+                console.log('Creating offer...');
                 const offer = await peerConnection.createOffer();
                 await peerConnection.setLocalDescription(offer);
-                await updateDoc(doc(db, "calls", actualCallId), { offer: offer });
+                console.log('Local description set');
+                await updateDoc(doc(db, "calls", actualCallId), { 
+                    offer: {
+                        type: offer.type,
+                        sdp: offer.sdp
+                    }
+                });
+                console.log('Offer saved to Firestore');
             }
             
             showCallModal(partnerName, isIncoming ? 'incoming' : 'calling');
@@ -1343,6 +1513,7 @@
     
     async function acceptCall(callId, callerName) {
         try {
+            console.log('Accepting call:', callId);
             const callRef = doc(db, "calls", callId);
             const callSnap = await getDoc(callRef);
             const callData = callSnap.data();
@@ -1361,17 +1532,36 @@
             
             currentCall = { callId, partnerName: callerName, isIncoming: false };
             
-            await peerConnection.setRemoteDescription(new RTCSessionDescription(callData.offer));
+            if (callData.offer) {
+                await peerConnection.setRemoteDescription(new RTCSessionDescription(callData.offer));
+                console.log('Remote description set');
+            }
+            
             const answer = await peerConnection.createAnswer();
             await peerConnection.setLocalDescription(answer);
-            await updateDoc(callRef, { answer: answer, status: 'active' });
+            console.log('Local description set (answer)');
+            
+            await updateDoc(callRef, { 
+                answer: {
+                    type: answer.type,
+                    sdp: answer.sdp
+                }, 
+                status: 'active' 
+            });
             
             peerConnection.onicecandidate = async (event) => {
                 if (event.candidate) {
                     const snap = await getDoc(callRef);
-                    const candidates = snap.data()?.iceCandidates || [];
-                    candidates.push(event.candidate);
-                    await updateDoc(callRef, { iceCandidates: candidates });
+                    const data = snap.data();
+                    if (data) {
+                        const candidates = data.iceCandidates || [];
+                        candidates.push({
+                            candidate: event.candidate.candidate,
+                            sdpMid: event.candidate.sdpMid,
+                            sdpMLineIndex: event.candidate.sdpMLineIndex
+                        });
+                        await updateDoc(callRef, { iceCandidates: candidates });
+                    }
                 }
             };
             
@@ -1386,6 +1576,7 @@
             }
             
             peerConnection.ontrack = (event) => {
+                console.log('Remote track received (accepted call)');
                 if (remoteAudio) {
                     remoteAudio.srcObject = null;
                     remoteAudio.remove();
@@ -1393,7 +1584,10 @@
                 remoteAudio = new Audio();
                 remoteAudio.srcObject = event.streams[0];
                 remoteAudio.autoplay = true;
-                remoteAudio.play().catch(e => console.log('Play error:', e));
+                const playPromise = remoteAudio.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(e => console.log('Play error:', e));
+                }
             };
             
             peerConnection.onconnectionstatechange = () => {
@@ -1418,6 +1612,7 @@
             
         } catch (err) {
             console.error('Accept call error:', err);
+            showToast('Ошибка при принятии звонка');
             endCall();
         }
     }
@@ -1426,18 +1621,24 @@
         const callRef = doc(db, "calls", callId);
         const unsubscribe = onSnapshot(callRef, async (snap) => {
             const data = snap.data();
-            if (data && data.iceCandidates && peerConnection) {
+            if (!data || !peerConnection) return;
+            
+            if (data.iceCandidates) {
                 for (const candidate of data.iceCandidates) {
                     try {
-                        await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+                        if (peerConnection.remoteDescription) {
+                            await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+                        }
                     } catch(e) {
                         console.log('ICE candidate error:', e);
                     }
                 }
             }
-            if (data && data.answer && peerConnection && !peerConnection.currentRemoteDescription) {
+            
+            if (data.answer && !peerConnection.currentRemoteDescription && currentCall && !currentCall.isIncoming) {
                 try {
                     await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
+                    console.log('Remote description set from listener');
                 } catch(e) {
                     console.log('Set remote description error:', e);
                 }
@@ -1447,6 +1648,7 @@
     }
     
     async function endCall() {
+        console.log('Ending call');
         if (currentCall) {
             if (currentCall.callId) {
                 try {
@@ -1536,11 +1738,13 @@
     function listenForCalls() {
         if (!currentUser) return;
         
+        console.log('Listening for calls...');
         const q = query(collection(db, "calls"), where("callee", "==", currentUser.username), where("status", "==", "calling"));
         const unsubscribe = onSnapshot(q, (snap) => {
             snap.docChanges().forEach(change => {
                 if (change.type === 'added') {
                     const callData = change.doc.data();
+                    console.log('Incoming call detected:', callData);
                     if (!currentCall && callData.status === 'calling') {
                         playSound('call');
                         startCall(callData.caller, true, change.doc.id);
@@ -1778,7 +1982,7 @@
         const images = post.imagesBase64 || [];
         const avatarStyle = authorProfile.avatarBase64 ? `background-image: url(${authorProfile.avatarBase64});` : '';
         const imagesHtml = images.length > 0 ? `<div class="post-images">${images.map(img => `<div class="post-image" data-image="${img}"><img src="${img}" alt="Post image" loading="lazy"></div>`).join('')}</div>` : '';
-        return `<div class="post-card" data-post-id="${post.id}"><div class="post-header"><div class="post-avatar" data-user="${post.author}" style="${avatarStyle}">${!authorProfile.avatarBase64 ? escapeHtml(post.author.charAt(0).toUpperCase()) : ''}</div><div class="post-author-info"><div class="post-author-name" data-user="${post.author}">${escapeHtml(authorProfile.displayName)} ${authorProfile.isVerified ? '<i class="fas fa-check-circle" style="color:#2a5885; font-size: 14px;"></i>' : ''}</div><div class="post-author-username">@${escapeHtml(post.author)}</div><div class="post-date">${formatDate(post.timestamp)}</div></div></div>${post.text ? `<div class="post-text">${escapeHtml(post.text)}</div>` : ''}${imagesHtml}<div class="post-actions"><div class="post-action like-btn" data-id="${post.id}"><i class="${hasLiked ? 'fas fa-heart' : 'far fa-heart'}"></i><span>${post.likesCount || 0}</span></div><div class="post-action show-comments-btn" data-id="${post.id}"><i class="far fa-comment"></i><span>${post.commentsCount || 0} комментариев</span></div></div><div class="comments-section" style="display: ${showComments ? 'block' : 'none'}"><div id="comments-${post.id}" class="comments-list"></div><div class="add-comment"><input type="text" id="comment-input-${post.id}" placeholder="Написать комментарий..."><button class="comment-send-btn" data-post="${post.id}">Отправить</button></div></div></div>`;
+        return `<div class="post-card" data-post-id="${post.id}"><div class="post-header"><div class="post-avatar" data-user="${post.author}" style="${avatarStyle}">${!authorProfile.avatarBase64 ? escapeHtml(post.author.charAt(0).toUpperCase()) : ''}</div><div class="post-author-info"><div class="post-author-name" data-user="${post.author}">${escapeHtml(authorProfile.displayName)} ${authorProfile.isVerified ? '<i class="fas fa-check-circle" style="color:#2a5885; font-size: 14px;"></i>' : ''}</div><div class="post-author-username">@${escapeHtml(post.author)}</div><div class="post-date">${formatDate(post.timestamp)}</div></div></div>${post.text ? `<div class="post-text">${escapeHtml(post.text)}</div>` : ''}${imagesHtml}<div class="post-actions"><div class="post-action like-btn" data-id="${post.id}"><i class="${hasLiked ? 'fas fa-heart' : 'far fa-heart'}"></i><span>${post.likesCount || 0}</span></div><div class="post-action show-comments-btn" data-id="${post.id}"><i class="far fa-comment"></i><span>${post.commentsCount || 0}</span></div></div><div class="comments-section" style="display: ${showComments ? 'block' : 'none'}"><div id="comments-${post.id}" class="comments-list"></div><div class="add-comment"><input type="text" id="comment-input-${post.id}" placeholder="Написать комментарий..."><button class="comment-send-btn" data-post="${post.id}">Отпр.</button></div></div></div>`;
     }
     
     async function handleSendComment(postId) {
@@ -1979,13 +2183,11 @@
     }
     
     function openChat(chatId, partnerName) {
-        // Очищаем предыдущую подписку на чат
         if (unsubscribeCurrentChat) {
             unsubscribeCurrentChat();
             unsubscribeCurrentChat = null;
         }
         
-        // Показываем встроенный чат и скрываем список чатов
         document.getElementById('chatsListView').style.display = 'none';
         document.getElementById('newChatUsers').style.display = 'none';
         const chatView = document.getElementById('chatView');
@@ -2120,7 +2322,6 @@
     }
     
     function setPanel(panel) {
-        // Закрываем чат при переключении панели
         if (currentPanel === 'messages' && panel !== 'messages') {
             closeChat();
         }
